@@ -1,0 +1,543 @@
+openapi: 3.1.0
+info:
+  title: Veho labels manifests API
+  version: '2.2'
+  contact:
+    email: info@shipveho.com
+    url: https://shipveho.com/
+    name: Veho
+  description: 'Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.
+
+    You''re viewing Version 2 of the Veho API, which is our current version, meaning it''s actively supported. Veho API V1 is deprecated.'
+  summary: Veho API to programmatically create shipments and download shipping labels
+servers:
+- url: https://api.shipveho.com/v2
+  description: Production
+- url: https://api.sandbox.shipveho.com/v2
+  description: Sandbox
+security:
+- apiKey: []
+tags:
+- name: manifests
+  description: Manifests
+paths:
+  /manifests/notify:
+    post:
+      summary: Asynchronously submit packages set to be injected on a specific date
+      description: The packages must exist already in our systems. The package identifiers can be package IDs, tracking IDs, external IDs or barcodes. The validation is asynchronous, thus the endpoint will respond a 201 status as soon as possible.
+      tags:
+      - manifests
+      operationId: postManifestsAsync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/ManifestRequestWithPackageIds'
+              - $ref: '#/components/schemas/ManifestRequestWithBarcodes'
+              - $ref: '#/components/schemas/ManifestRequestWithExternalIds'
+              - $ref: '#/components/schemas/ManifestRequestWithTrackingIds'
+            examples:
+              packageIds:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  packageIds:
+                  - packageId1
+                  - packageId2
+              barcodes:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  barcodes:
+                  - barcode1
+                  - barcode2
+              externalIds:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  externalIds:
+                  - externalId1
+                  - externalId2
+              trackingIds:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  trackingIds:
+                  - trackingId1
+                  - trackingId2
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /manifests:
+    post:
+      summary: Synchronously post a list of packages to set their dispatch date
+      description: The packages must exist already in our systems. The package identifiers can be package IDs, tracking IDs, external IDs or barcodes. The validation is synchronous, thus the endpoint will respond accordingly depending on the data provided.
+      tags:
+      - manifests
+      operationId: postManifestsSync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/ManifestRequestWithPackageIds'
+              - $ref: '#/components/schemas/ManifestRequestWithBarcodes'
+              - $ref: '#/components/schemas/ManifestRequestWithExternalIds'
+              - $ref: '#/components/schemas/ManifestRequestWithTrackingIds'
+            examples:
+              packageIds:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  packageIds:
+                  - packageId1
+                  - packageId2
+              barcodes:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  barcodes:
+                  - barcode1
+                  - barcode2
+              externalIds:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  externalIds:
+                  - externalId1
+                  - externalId2
+              trackingIds:
+                value:
+                  transitType: truck
+                  dispatchDate: '2025-01-01'
+                  trackingIds:
+                  - trackingId1
+                  - trackingId2
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManifestResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    FacilityId:
+      type: string
+      minLength: 17
+      maxLength: 26
+      description: "ID of the facility where the package will be first tendered to Veho. Primarily used for the [manifest API](#section/Manifest-API), but\nmay be provided in the [create order API](#operation/createOrder) with shipDate to improve package scheduling accuracy.\n\nAvailable facilities and their markets are shown below. Note that we're expanding rapidly, so this list may not be up to date. \nPlease reach out to api@shipveho.com if you don't see the location you're looking for in the list.\n\n- Atlanta - Flowery Branch: dCXhH5MUgazmhGfKeJE9B4\n- Atlanta - Fulton Industrial: GRhhgCv5gDgLS6Qka\n- Austin - North Burnet: 3iov7ubHhs94aEPBL\n- Baltimore - Elkridge: dMXtHiHjrYoh4i3De\n- Birmingham - Bessemer: gfq9t2DxppGyCXJ34RGqEY\n- Boston - Framingham: woYEFuLfPRUzrkVU3JawVg\n- Boston - Walpole: ux91QaswnPYeVaUE81eKFx\n- Brooklyn - East Williamsburg: w83soVN16cPgGz3Ctivgdp\n- Buffalo - Park Meadow: 01KTY6EAAF2CTJPGEAQ6GDAYD8\n- Charlotte - Davis Lake-Eastfield: qAtfork2ynpbgiw4H\n- Chicago - Franklin Park: dEoWcaMvuHaraXQDUVRFKX\n- Cincinnati - West Chester Twp: wMT2Qvnp2BakKxY1AQGkMB\n- Cleveland - North Randall: bVpL7Lc44QZcpWumEYhqxn\n- Colorado Springs - Northeast Colorado Springs: ta54XMNfRwq9zL5qA\n- Columbus - Parsons Industrial: WKeYjAqygeKAgmqck\n- Dallas - Flower Mound: 6Ao5iHPxXztinf5iK\n- Dallas - Grand Prairie: 6avT1L2rnhHRCEt9C2jcWJ\n- Denver - Northeast Park Hill: ddrDmNaR9rEp5vjCk\n- Detroit - Highland Park: qVn1ReCYZR5aKwVA1DR7Zb\n- Fort Collins: tK9ZEsADJbZP48PEk\n- Fort Myers - Three Oaks: a5o8VHxsLgvU7hktgrW17X\n- Greensboro - Winston Salem: 3ngUhZdL2Hngq9bqkwK7gN\n- Harrisburg: 01KTY6YYT73MFS7BDVH7QFEM74\n- Hartford - Newington: hk6YYM1Bz4HkVnPLLNzveg\n- Houston - Carverdale: 3MbxHDDS364R4TXDK\n- Indianapolis - Park 100: HoCzKZdLkqecd8JhG\n- Inland Empire - Ontario: 9a8BfAzsWS35pw6ME2tQwv\n- Jacksonville - Pine Forest: jvsKgT3GqRdXWr8Ee\n- Kansas City - Lee's Summit: 01KP8R2VMCSWG4WX9XV30Z8TF1\n- Las Vegas - North Las Vegas: 19P5QQXpsT3pXcLwfdW5ZS\n- Long Island - Plainview: jbDcupiysexpFfWHQFRvbG\n- Los Angeles - Santa Fe Springs: 31FBXPhg5yGg41DXHpCyGX\n- Louisville - Greenwood: qEYMv6yBFr63He5s3UmZ4u\n- Memphis - Whitehaven: 8PtYA5VzSXAD4dK6yvrwgf\n- Milwaukee - Mitchell West: ZHsMxYNvS2oYWsXDJ\n- Minneapolis - Eagan: vQTApMmprwW5A6NbEQUS3B\n- Nashville - Airport South: tW6dmmFfjbzUUFzN1CqUae\n- Newark - Avenel: qABpPZ6gVsACXNkmyMEuLA\n- Norfolk - Fairmont Park: kMwuuGVtEkkFMuvP28g6ih\n- Northern Virginia - Alexandria: EMAy3J3o7vs9XEkXd\n- Oklahoma City - Capitol View: 57AC8VFocVtqyMU3FJaJRN\n- Orlando - Southchase: yECerwQzfpqNTwXXq\n- Philadelphia - Bridesburg: fT3MwATFjkCwGQ6W9\n- Phoenix - West Gate: gy42rdnmYv6n7tLroLh7Qv\n- Pittsburgh - Fairywood: cUDHZY9YoQT15XJ1USK7GW\n- Raleigh - Garner: ECqn5c9CtPCcNyiHf\n- Richmond - Sandston: 88RZK4vnVXsEkP9trPoMUx\n- Rochester - Brighton: 01KTY6KMQY0VACBEB0DMKNMRHB\n- Sacramento - Dos Rios: 01KR3X20A9AP27PMM0GDWWMP4H\n- San Antonio - Blossoms Park: MqGres8scbvRp6jT8\n- San Diego - Morena: ciSJ5yQGofLyWGCWtRduPQ\n- San Francisco - Union City: 01KR3W879M7ZZT2KNEWRYES77R\n- South Florida - Hialeah: e1WrdksedyHiGuneQtUFPK\n- South Florida - Pompano Beach: i7bWs6aMTnGP76Eab\n- St. Louis - Marine Villa: fjyrh4T5C8ZcKLubxVPcX6\n- Tampa - Riverview: kgR6wzjoLoHKKkutypDXTJ\n- Tampa - Tampa Bay: emLLeyNvZbZxF3wBc\n- Tucson - Milton Manor: 01KTY6SN8705Z22FVK661E3C8T\n- Tulsa - Rosewood: vJ5DrzqgRcRPD3UGZzdYZ2\n- Valdosta (trailer swap): hi8okn7qC65DvmJ5rPPbrw\n- Westchester - Mount Vernon: b1dApFZdTnvirmWMCvFxJp\n- Westchester - Yonkers: iz15JEArSje2K2by8NHaCM\n"
+      enum:
+      - dCXhH5MUgazmhGfKeJE9B4
+      - GRhhgCv5gDgLS6Qka
+      - 3iov7ubHhs94aEPBL
+      - dMXtHiHjrYoh4i3De
+      - gfq9t2DxppGyCXJ34RGqEY
+      - woYEFuLfPRUzrkVU3JawVg
+      - ux91QaswnPYeVaUE81eKFx
+      - w83soVN16cPgGz3Ctivgdp
+      - 01KTY6EAAF2CTJPGEAQ6GDAYD8
+      - qAtfork2ynpbgiw4H
+      - dEoWcaMvuHaraXQDUVRFKX
+      - wMT2Qvnp2BakKxY1AQGkMB
+      - bVpL7Lc44QZcpWumEYhqxn
+      - ta54XMNfRwq9zL5qA
+      - WKeYjAqygeKAgmqck
+      - 6Ao5iHPxXztinf5iK
+      - 6avT1L2rnhHRCEt9C2jcWJ
+      - ddrDmNaR9rEp5vjCk
+      - qVn1ReCYZR5aKwVA1DR7Zb
+      - tK9ZEsADJbZP48PEk
+      - a5o8VHxsLgvU7hktgrW17X
+      - 3ngUhZdL2Hngq9bqkwK7gN
+      - 01KTY6YYT73MFS7BDVH7QFEM74
+      - hk6YYM1Bz4HkVnPLLNzveg
+      - 3MbxHDDS364R4TXDK
+      - HoCzKZdLkqecd8JhG
+      - 9a8BfAzsWS35pw6ME2tQwv
+      - jvsKgT3GqRdXWr8Ee
+      - 01KP8R2VMCSWG4WX9XV30Z8TF1
+      - 19P5QQXpsT3pXcLwfdW5ZS
+      - jbDcupiysexpFfWHQFRvbG
+      - 31FBXPhg5yGg41DXHpCyGX
+      - qEYMv6yBFr63He5s3UmZ4u
+      - 8PtYA5VzSXAD4dK6yvrwgf
+      - ZHsMxYNvS2oYWsXDJ
+      - vQTApMmprwW5A6NbEQUS3B
+      - tW6dmmFfjbzUUFzN1CqUae
+      - qABpPZ6gVsACXNkmyMEuLA
+      - kMwuuGVtEkkFMuvP28g6ih
+      - EMAy3J3o7vs9XEkXd
+      - 57AC8VFocVtqyMU3FJaJRN
+      - yECerwQzfpqNTwXXq
+      - fT3MwATFjkCwGQ6W9
+      - gy42rdnmYv6n7tLroLh7Qv
+      - cUDHZY9YoQT15XJ1USK7GW
+      - ECqn5c9CtPCcNyiHf
+      - 88RZK4vnVXsEkP9trPoMUx
+      - 01KTY6KMQY0VACBEB0DMKNMRHB
+      - 01KR3X20A9AP27PMM0GDWWMP4H
+      - MqGres8scbvRp6jT8
+      - ciSJ5yQGofLyWGCWtRduPQ
+      - 01KR3W879M7ZZT2KNEWRYES77R
+      - e1WrdksedyHiGuneQtUFPK
+      - i7bWs6aMTnGP76Eab
+      - fjyrh4T5C8ZcKLubxVPcX6
+      - kgR6wzjoLoHKKkutypDXTJ
+      - emLLeyNvZbZxF3wBc
+      - 01KTY6SN8705Z22FVK661E3C8T
+      - vJ5DrzqgRcRPD3UGZzdYZ2
+      - hi8okn7qC65DvmJ5rPPbrw
+      - b1dApFZdTnvirmWMCvFxJp
+      - iz15JEArSje2K2by8NHaCM
+    ManifestResponse:
+      type: object
+      description: Manifest response structure
+      properties:
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          optional: false
+          format: date
+        shipDate:
+          type: string
+          format: date
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+          optional: true
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+          optional: true
+        packageIdsUpdated:
+          type: array
+          items:
+            type: string
+          description: An array of package IDs for packages that were updated with the new dispatch date
+          optional: true
+        packageIdsNotFound:
+          type: array
+          items:
+            type: string
+          description: An array of package IDs for packages that were not found within the system
+          optional: true
+        barcodesUpdated:
+          type: array
+          items:
+            type: string
+          description: An array of barcodes for packages that were updated with the new dispatch date
+          optional: true
+        barcodesNotFound:
+          type: array
+          items:
+            type: string
+          description: An array of barcodes for packages that were not found within the system
+          optional: true
+        trackingIdsUpdated:
+          type: array
+          items:
+            type: string
+          description: An array of tracking IDs for packages that were updated with the new dispatch date
+          optional: true
+        trackingIdsNotFound:
+          type: array
+          items:
+            type: string
+          description: An array of tracking IDs for packages that were not found within the system
+          optional: true
+        externalIdsUpdated:
+          type: array
+          items:
+            type: string
+          description: An array of external IDs for packages that were updated with the new dispatch date
+          optional: true
+        externalIdsNotFound:
+          type: array
+          items:
+            type: string
+          description: An array of external IDs for packages that were not found within the system
+          optional: true
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
+            type: object
+            required:
+            - code
+            - message
+            - path
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
+              message:
+                type: string
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
+    ManifestRequestWithPackageIds:
+      type: object
+      required:
+      - packageIds
+      properties:
+        transitType:
+          type: string
+          default: truck
+          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
+          enum:
+          - truck
+          - plane
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          format: date
+        packageIds:
+          type: array
+          description: An array of packages to be updated with new dispatchDates
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+        loadId:
+          type: string
+          description: Client-provided load identifier for the manifest
+    ManifestRequestWithBarcodes:
+      type: object
+      required:
+      - barcodes
+      properties:
+        transitType:
+          type: string
+          default: truck
+          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
+          enum:
+          - truck
+          - plane
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        barcodes:
+          type: array
+          description: An array of packages to be updated with new dispatchDates
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+        loadId:
+          type: string
+          description: Client-provided load identifier for the manifest
+    ManifestRequestWithExternalIds:
+      type: object
+      required:
+      - externalIds
+      properties:
+        transitType:
+          type: string
+          default: truck
+          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
+          enum:
+          - truck
+          - plane
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        externalIds:
+          type: array
+          description: An array of packages to be updated with new dispatchDates
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+        loadId:
+          type: string
+          description: Client-provided load identifier for the manifest
+    ManifestRequestWithTrackingIds:
+      type: object
+      required:
+      - trackingIds
+      properties:
+        transitType:
+          type: string
+          default: truck
+          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
+          enum:
+          - truck
+          - plane
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        trackingIds:
+          type: array
+          description: An array of packages to be updated with new dispatchDates
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+        loadId:
+          type: string
+          description: Client-provided load identifier for the manifest
+  responses:
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '201':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: A message indicating the request was successful
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '429':
+      description: Too Many Requests
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+  securitySchemes:
+    apiKey:
+      name: apikey
+      type: apiKey
+      in: header
+x-stoplight:
+  id: e777wryv1msks

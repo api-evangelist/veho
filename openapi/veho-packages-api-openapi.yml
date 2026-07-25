@@ -1,0 +1,637 @@
+openapi: 3.1.0
+info:
+  title: Veho labels packages API
+  version: '2.2'
+  contact:
+    email: info@shipveho.com
+    url: https://shipveho.com/
+    name: Veho
+  description: 'Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.
+
+    You''re viewing Version 2 of the Veho API, which is our current version, meaning it''s actively supported. Veho API V1 is deprecated.'
+  summary: Veho API to programmatically create shipments and download shipping labels
+servers:
+- url: https://api.shipveho.com/v2
+  description: Production
+- url: https://api.sandbox.shipveho.com/v2
+  description: Sandbox
+security:
+- apiKey: []
+tags:
+- name: packages
+  description: Packages
+paths:
+  /packages/{_id}:
+    parameters:
+    - schema:
+        type: string
+      name: _id
+      in: path
+      required: true
+      description: The Veho ID of the Package (starts with "PKG_"), or the tracking ID (starts with "VH").
+    - schema:
+        type: string
+      in: query
+      name: includeDeliveryImage
+      description: 'Whether to include URL to access the delivery image for package, if available. Delivery image URLs are valid for one week.
+
+        >  Requesting the delivery image will result in a slower response time than omitting it from the response.
+
+        '
+      required: false
+    get:
+      summary: Get a package by id
+      tags:
+      - packages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPackageByIdResponse'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: getPackageById
+      description: Retrieves all details of an existing package. Either package ID or tracking ID can be used to query the package.
+  /packages/tracking:
+    get:
+      summary: Get package tracking information
+      tags:
+      - packages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPackageByIdResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: getPackageTrackingInformation
+      parameters:
+      - schema:
+          type: string
+        name: trackingId
+        in: query
+        required: false
+        description: Package tracking ID
+      - schema:
+          type: string
+        name: barcode
+        in: query
+        required: false
+        description: Package barcode
+      - schema:
+          type: string
+        name: externalId
+        in: query
+        required: false
+        description: External package ID
+      - schema:
+          type: string
+        name: packageId
+        in: query
+        required: false
+        description: Package ID
+      - schema:
+          type: string
+        name: includeDeliveryImage
+        in: query
+        required: false
+        description: Include URL to access the delivery image for package, if available
+      description: Retrieves package tracking information using one of the supported identifiers. Only one of trackingId, barcode, externalId, or packageId should be provided. If the requesting API key was not used to create the order, limited information will be returned. externalId can only be tracked by the client that created the order. includeDeliveryImage is an optional parameter that will include a URL to access the package's delivery image, if available.
+  /packages:
+    get:
+      summary: Get a package by barcode
+      tags:
+      - packages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageResponse'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: getPackagesByBarcode
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: barCode
+        description: barCode of the package to retrieve
+        required: true
+      description: 'Retrieve all details of an existing package with a specified barcode.
+
+        Note that this endpoint returns an array of packages, though there is usually only a single package matching the provided barcode.'
+components:
+  schemas:
+    FacilityId:
+      type: string
+      minLength: 17
+      maxLength: 26
+      description: "ID of the facility where the package will be first tendered to Veho. Primarily used for the [manifest API](#section/Manifest-API), but\nmay be provided in the [create order API](#operation/createOrder) with shipDate to improve package scheduling accuracy.\n\nAvailable facilities and their markets are shown below. Note that we're expanding rapidly, so this list may not be up to date. \nPlease reach out to api@shipveho.com if you don't see the location you're looking for in the list.\n\n- Atlanta - Flowery Branch: dCXhH5MUgazmhGfKeJE9B4\n- Atlanta - Fulton Industrial: GRhhgCv5gDgLS6Qka\n- Austin - North Burnet: 3iov7ubHhs94aEPBL\n- Baltimore - Elkridge: dMXtHiHjrYoh4i3De\n- Birmingham - Bessemer: gfq9t2DxppGyCXJ34RGqEY\n- Boston - Framingham: woYEFuLfPRUzrkVU3JawVg\n- Boston - Walpole: ux91QaswnPYeVaUE81eKFx\n- Brooklyn - East Williamsburg: w83soVN16cPgGz3Ctivgdp\n- Buffalo - Park Meadow: 01KTY6EAAF2CTJPGEAQ6GDAYD8\n- Charlotte - Davis Lake-Eastfield: qAtfork2ynpbgiw4H\n- Chicago - Franklin Park: dEoWcaMvuHaraXQDUVRFKX\n- Cincinnati - West Chester Twp: wMT2Qvnp2BakKxY1AQGkMB\n- Cleveland - North Randall: bVpL7Lc44QZcpWumEYhqxn\n- Colorado Springs - Northeast Colorado Springs: ta54XMNfRwq9zL5qA\n- Columbus - Parsons Industrial: WKeYjAqygeKAgmqck\n- Dallas - Flower Mound: 6Ao5iHPxXztinf5iK\n- Dallas - Grand Prairie: 6avT1L2rnhHRCEt9C2jcWJ\n- Denver - Northeast Park Hill: ddrDmNaR9rEp5vjCk\n- Detroit - Highland Park: qVn1ReCYZR5aKwVA1DR7Zb\n- Fort Collins: tK9ZEsADJbZP48PEk\n- Fort Myers - Three Oaks: a5o8VHxsLgvU7hktgrW17X\n- Greensboro - Winston Salem: 3ngUhZdL2Hngq9bqkwK7gN\n- Harrisburg: 01KTY6YYT73MFS7BDVH7QFEM74\n- Hartford - Newington: hk6YYM1Bz4HkVnPLLNzveg\n- Houston - Carverdale: 3MbxHDDS364R4TXDK\n- Indianapolis - Park 100: HoCzKZdLkqecd8JhG\n- Inland Empire - Ontario: 9a8BfAzsWS35pw6ME2tQwv\n- Jacksonville - Pine Forest: jvsKgT3GqRdXWr8Ee\n- Kansas City - Lee's Summit: 01KP8R2VMCSWG4WX9XV30Z8TF1\n- Las Vegas - North Las Vegas: 19P5QQXpsT3pXcLwfdW5ZS\n- Long Island - Plainview: jbDcupiysexpFfWHQFRvbG\n- Los Angeles - Santa Fe Springs: 31FBXPhg5yGg41DXHpCyGX\n- Louisville - Greenwood: qEYMv6yBFr63He5s3UmZ4u\n- Memphis - Whitehaven: 8PtYA5VzSXAD4dK6yvrwgf\n- Milwaukee - Mitchell West: ZHsMxYNvS2oYWsXDJ\n- Minneapolis - Eagan: vQTApMmprwW5A6NbEQUS3B\n- Nashville - Airport South: tW6dmmFfjbzUUFzN1CqUae\n- Newark - Avenel: qABpPZ6gVsACXNkmyMEuLA\n- Norfolk - Fairmont Park: kMwuuGVtEkkFMuvP28g6ih\n- Northern Virginia - Alexandria: EMAy3J3o7vs9XEkXd\n- Oklahoma City - Capitol View: 57AC8VFocVtqyMU3FJaJRN\n- Orlando - Southchase: yECerwQzfpqNTwXXq\n- Philadelphia - Bridesburg: fT3MwATFjkCwGQ6W9\n- Phoenix - West Gate: gy42rdnmYv6n7tLroLh7Qv\n- Pittsburgh - Fairywood: cUDHZY9YoQT15XJ1USK7GW\n- Raleigh - Garner: ECqn5c9CtPCcNyiHf\n- Richmond - Sandston: 88RZK4vnVXsEkP9trPoMUx\n- Rochester - Brighton: 01KTY6KMQY0VACBEB0DMKNMRHB\n- Sacramento - Dos Rios: 01KR3X20A9AP27PMM0GDWWMP4H\n- San Antonio - Blossoms Park: MqGres8scbvRp6jT8\n- San Diego - Morena: ciSJ5yQGofLyWGCWtRduPQ\n- San Francisco - Union City: 01KR3W879M7ZZT2KNEWRYES77R\n- South Florida - Hialeah: e1WrdksedyHiGuneQtUFPK\n- South Florida - Pompano Beach: i7bWs6aMTnGP76Eab\n- St. Louis - Marine Villa: fjyrh4T5C8ZcKLubxVPcX6\n- Tampa - Riverview: kgR6wzjoLoHKKkutypDXTJ\n- Tampa - Tampa Bay: emLLeyNvZbZxF3wBc\n- Tucson - Milton Manor: 01KTY6SN8705Z22FVK661E3C8T\n- Tulsa - Rosewood: vJ5DrzqgRcRPD3UGZzdYZ2\n- Valdosta (trailer swap): hi8okn7qC65DvmJ5rPPbrw\n- Westchester - Mount Vernon: b1dApFZdTnvirmWMCvFxJp\n- Westchester - Yonkers: iz15JEArSje2K2by8NHaCM\n"
+      enum:
+      - dCXhH5MUgazmhGfKeJE9B4
+      - GRhhgCv5gDgLS6Qka
+      - 3iov7ubHhs94aEPBL
+      - dMXtHiHjrYoh4i3De
+      - gfq9t2DxppGyCXJ34RGqEY
+      - woYEFuLfPRUzrkVU3JawVg
+      - ux91QaswnPYeVaUE81eKFx
+      - w83soVN16cPgGz3Ctivgdp
+      - 01KTY6EAAF2CTJPGEAQ6GDAYD8
+      - qAtfork2ynpbgiw4H
+      - dEoWcaMvuHaraXQDUVRFKX
+      - wMT2Qvnp2BakKxY1AQGkMB
+      - bVpL7Lc44QZcpWumEYhqxn
+      - ta54XMNfRwq9zL5qA
+      - WKeYjAqygeKAgmqck
+      - 6Ao5iHPxXztinf5iK
+      - 6avT1L2rnhHRCEt9C2jcWJ
+      - ddrDmNaR9rEp5vjCk
+      - qVn1ReCYZR5aKwVA1DR7Zb
+      - tK9ZEsADJbZP48PEk
+      - a5o8VHxsLgvU7hktgrW17X
+      - 3ngUhZdL2Hngq9bqkwK7gN
+      - 01KTY6YYT73MFS7BDVH7QFEM74
+      - hk6YYM1Bz4HkVnPLLNzveg
+      - 3MbxHDDS364R4TXDK
+      - HoCzKZdLkqecd8JhG
+      - 9a8BfAzsWS35pw6ME2tQwv
+      - jvsKgT3GqRdXWr8Ee
+      - 01KP8R2VMCSWG4WX9XV30Z8TF1
+      - 19P5QQXpsT3pXcLwfdW5ZS
+      - jbDcupiysexpFfWHQFRvbG
+      - 31FBXPhg5yGg41DXHpCyGX
+      - qEYMv6yBFr63He5s3UmZ4u
+      - 8PtYA5VzSXAD4dK6yvrwgf
+      - ZHsMxYNvS2oYWsXDJ
+      - vQTApMmprwW5A6NbEQUS3B
+      - tW6dmmFfjbzUUFzN1CqUae
+      - qABpPZ6gVsACXNkmyMEuLA
+      - kMwuuGVtEkkFMuvP28g6ih
+      - EMAy3J3o7vs9XEkXd
+      - 57AC8VFocVtqyMU3FJaJRN
+      - yECerwQzfpqNTwXXq
+      - fT3MwATFjkCwGQ6W9
+      - gy42rdnmYv6n7tLroLh7Qv
+      - cUDHZY9YoQT15XJ1USK7GW
+      - ECqn5c9CtPCcNyiHf
+      - 88RZK4vnVXsEkP9trPoMUx
+      - 01KTY6KMQY0VACBEB0DMKNMRHB
+      - 01KR3X20A9AP27PMM0GDWWMP4H
+      - MqGres8scbvRp6jT8
+      - ciSJ5yQGofLyWGCWtRduPQ
+      - 01KR3W879M7ZZT2KNEWRYES77R
+      - e1WrdksedyHiGuneQtUFPK
+      - i7bWs6aMTnGP76Eab
+      - fjyrh4T5C8ZcKLubxVPcX6
+      - kgR6wzjoLoHKKkutypDXTJ
+      - emLLeyNvZbZxF3wBc
+      - 01KTY6SN8705Z22FVK661E3C8T
+      - vJ5DrzqgRcRPD3UGZzdYZ2
+      - hi8okn7qC65DvmJ5rPPbrw
+      - b1dApFZdTnvirmWMCvFxJp
+      - iz15JEArSje2K2by8NHaCM
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
+            type: object
+            required:
+            - code
+            - message
+            - path
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
+              message:
+                type: string
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
+    PackageResponse:
+      additionalProperties: true
+      title: Package Response
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique Package ID. Generated by Veho.
+          readOnly: true
+        orderId:
+          type: string
+          description: Id of the order this package belongs to.
+          readOnly: true
+        clientId:
+          type: string
+          description: Client ID
+          readOnly: true
+        pdfShippingLabelLink:
+          type: string
+          description: 'Link to pdf shipping label file. Note that while the label link is immediately generated with the order, please account for an extra 100ms-5000ms after order creation for the label to be generated. Before that, this link may return a 404 error.
+
+            '
+          readOnly: true
+        pngShippingLabelLink:
+          type: string
+          description: 'Link to png shipping label file. Note that while the label link is immediately generated with the order, please account for an extra 100ms-5000ms after order creation for the label to be generated. Before that, this link may return a 404 error.
+
+            '
+          readOnly: true
+        zplShippingLabelLink:
+          type: string
+          description: 'Link to zpl shipping label file. Note that while the label link is immediately generated with the order, please account for an extra 100ms-5000ms after order creation for the label to be generated. Before that, this link may return a 404 error.
+
+            '
+          readOnly: true
+        lastEvent:
+          type: string
+          description: Latest state of the package
+          enum:
+          - created
+          - pending
+          - notFound
+          - pickedUpFromClient
+          - droppedOffAtVeho
+          - pickedUpFromVeho
+          - delivered
+          - returned
+          - cancelled
+          - misdelivered
+          - discarded
+          - returnedToClient
+          - returnedToVeho
+          - notReceivedFromClient
+          - removedForRescue
+          - removedForRollover
+          - outForPickup
+          - pickedUpFromConsumer
+          - pickupSkipped
+          - pickupFailed
+          - pickupDroppedOffAtVeho
+          - pickupTransferredToExternalCarrier
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        trackingId:
+          type: string
+          description: A unique 14-character string designed to be visually unambiguous that clients and recipients can use to track package status.
+          readOnly: true
+        eventLog:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Event'
+        externalCarrier:
+          type: object
+          description: 'External Carrier
+
+            '
+          properties:
+            name:
+              type: string
+              description: 'External Carrier Name
+
+                '
+              readOnly: true
+            trackingId:
+              type: string
+              description: 'External Carrier Tracking ID
+
+                '
+              readOnly: true
+        externalShippingLabelLink:
+          type: string
+          description: 'Link to shipping label file provided by the client
+
+            '
+        externalId:
+          type: string
+          description: Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object.
+        length:
+          type: integer
+          maximum: 48
+          description: Length (inches) of the package
+        width:
+          type: integer
+          maximum: 48
+          description: Width (inches) of the package
+        height:
+          type: integer
+          maximum: 48
+          description: Height (inches) of the package
+        weight:
+          type: integer
+          maximum: 50
+          description: Weight (pounds) of the package
+        declaredValue:
+          type: number
+          description: Declared value of package, in USD pennies (5000 is $50 USD).
+        description:
+          type: string
+          description: Description of the package. Note that this description will appear on the label.
+        signatureRequired:
+          description: Specify whether recipient has to sign for this package.
+          type: boolean
+          default: false
+          deprecated: true
+        barCode:
+          type: string
+          description: The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.
+          minLength: 7
+          maxLength: 20
+        consumerId:
+          type: string
+          description: ID of consumer
+          deprecated: true
+        specialHandling:
+          $ref: '#/components/schemas/SpecialHandling'
+        attendedDelivery:
+          $ref: '#/components/schemas/AttendedDelivery'
+        scheduledServiceDate:
+          type: string
+          description: Scheduled service date for the package
+          format: date-time
+          readOnly: true
+        actualServiceDate:
+          type: string
+          description: Date of actual service for the package
+          format: date-time
+          readOnly: true
+        quoteId:
+          type: string
+          description: The ID of the quote that was used to rate this package. Represented as a UUID.
+          format: uuid
+          readOnly: true
+        dispatchDate:
+          type: string
+          format: date
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          readOnly: true
+        shipDate:
+          type: string
+          format: date
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+          readOnly: true
+        slaServiceDate:
+          type: string
+          format: date
+          description: The date by which the package is expected to be delivered. Replacement for slaDeliveryDate
+          readOnly: true
+        perishable:
+          type: boolean
+          description: Indicates whether the package is perishable
+          readOnly: true
+        humanReadableOperation:
+          type: string
+          description: The lastEvent on the package as a more detailed string. For example, "Package out for delivery" instead of "pickedUpFromVeho"
+          readOnly: true
+    GetPackageByIdResponse:
+      allOf:
+      - $ref: '#/components/schemas/PackageResponse'
+      - type: object
+        properties:
+          deliveryImage:
+            type: string
+            description: URL to access the delivery image for package, on request, if available. This field can be requested by setting the "includeDeliveryImage" query parameter to true
+    Event:
+      type: object
+      description: 'The eventLog object represents an event in the lifecycle of the package:'
+      properties:
+        eventType:
+          type: string
+          description: enum representing the event that occurred
+          enum:
+          - created
+          - pending
+          - notFound
+          - pickedUpFromClient
+          - droppedOffAtVeho
+          - pickedUpFromVeho
+          - delivered
+          - returned
+          - cancelled
+          - misdelivered
+          - discarded
+          - PackageArrivedAtFacility
+          - PackageDepartedFromFacility
+          - PackageHadDeliveryIssue
+          - PackageLoadedOntoFirstMileTransit
+          - pendingReturnToClient
+          - returnedToClient
+          - returnedToVeho
+          - notReceivedFromClient
+          - removedForRescue
+          - removedForRollover
+          - outForPickup
+          - pickedUpFromConsumer
+          - pickupSkipped
+          - pickupFailed
+          - pickupDroppedOffAtVeho
+          - pickupTransferredToExternalCarrier
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: time at which the event occurred
+          readOnly: true
+        message:
+          type: string
+          description: message associated with the event
+          readOnly: true
+        city:
+          type: string
+          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        state:
+          type: string
+          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        meta:
+          type: object
+          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
+          readOnly: true
+      readOnly: true
+    DryIce:
+      title: Dry Ice
+      additionalProperties: false
+      deprecated: true
+      type: object
+      description: Note that Veho no longer supports shipping dry ice, and will reject packages containing dry ice. Indicates that this package contains dry ice (carbon dioxide, solid).
+      required:
+      - weight
+      properties:
+        weight:
+          type: number
+          description: Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.
+          minimum: 0
+    AttendedDelivery:
+      title: Attended Delivery
+      additionalProperties: false
+      type: object
+      description: Configuration for attended delivery on this package. Attended delivery requires interaction between the driver and the recipient to confirm delivery. Currently only PIN verification is supported. Required fields within this object  may vary based on your account configuration.
+      required:
+      - verificationType
+      properties:
+        verificationType:
+          type: string
+          enum:
+          - pinVerification
+          description: 'The type of delivery verification required for this package.
+
+            pinVerification — A unique PIN is sent to the recipient and must be provided to the driver to release the package.'
+    SpecialHandling:
+      title: Special Handling
+      additionalProperties: false
+      type: object
+      description: Special handling modifiers.
+      properties:
+        dryIce:
+          $ref: '#/components/schemas/DryIce'
+        hazmat:
+          $ref: '#/components/schemas/Hazmat'
+    Hazmat:
+      title: Hazmat (Hazardous Materials)
+      additionalProperties: false
+      type: object
+      description: Indicates that this package contains hazardous materials. If you intend to ship hazardous materials, please get in contact with a Veho representative.
+      required:
+      - limitedQuantity
+      properties:
+        limitedQuantity:
+          type: boolean
+          description: Indicates whether this package contains limited quantity (LQ) hazardous materials or not.
+  responses:
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '404':
+      description: Not Found -- The requested resource could not be found.
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '429':
+      description: Too Many Requests
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+  securitySchemes:
+    apiKey:
+      name: apikey
+      type: apiKey
+      in: header
+x-stoplight:
+  id: e777wryv1msks

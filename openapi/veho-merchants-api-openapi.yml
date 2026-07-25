@@ -1,0 +1,304 @@
+openapi: 3.1.0
+info:
+  title: Veho labels merchants API
+  version: '2.2'
+  contact:
+    email: info@shipveho.com
+    url: https://shipveho.com/
+    name: Veho
+  description: 'Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.
+
+    You''re viewing Version 2 of the Veho API, which is our current version, meaning it''s actively supported. Veho API V1 is deprecated.'
+  summary: Veho API to programmatically create shipments and download shipping labels
+servers:
+- url: https://api.shipveho.com/v2
+  description: Production
+- url: https://api.sandbox.shipveho.com/v2
+  description: Sandbox
+security:
+- apiKey: []
+tags:
+- name: merchants
+  description: Merchants
+paths:
+  /merchants:
+    parameters: []
+    post:
+      summary: Create a merchant for client
+      tags:
+      - merchants
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: createMerchants
+      description: 'For 3PL Clients shipping on behalf of merchants that you manage upstream, you can use this API to let us know who they are and manage them under your Client account.
+
+        For example, if you are a 3PL named "ShipFast" and you''re shipping to us on behalf of "Flintstone''s Wheels", you can use this API to let us know that you''re working with "Flintstone''s Wheels". After POST Merchants, you''ll use the _id from the response body with POST Orders to link between the order and the merchant you''re working with upstream.
+
+        This endpoint creates a new merchant for client based on the client''s apiKey in headers.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantRequest'
+    get:
+      summary: Get all merchants for client
+      tags:
+      - merchants
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MerchantRequest'
+              examples:
+                example-1:
+                  value:
+                  - _id: TuN75hYYBicRsaLWo
+                    name: Flintstone's Wheels
+                  - _id: diQFDqSXcEp6ixpQ3
+                    name: Flintstone's Cars
+                  - _id: tccnNSTZfRxwcqmMN
+                    name: Flintstone's Parts
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: getMerchants
+      description: Retrieve all merchants for client based on the client's apiKey in headers.
+  /merchants/{_id}:
+    parameters:
+    - schema:
+        type: string
+      name: _id
+      in: path
+      required: true
+      description: Merchant ID
+    put:
+      summary: Update a merchant for client
+      tags:
+      - merchants
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: updateMerchants
+      description: This endpoint updates an existing merchant for client based on the client's apiKey in headers.
+    delete:
+      summary: Delete a merchant for client
+      tags:
+      - merchants
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      operationId: deleteMerchant
+      description: This endpoint deletes an existing merchant for client based on the client's apiKey in headers.
+components:
+  responses:
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '404':
+      description: Not Found -- The requested resource could not be found.
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '429':
+      description: Too Many Requests
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+  schemas:
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
+            type: object
+            required:
+            - code
+            - message
+            - path
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
+              message:
+                type: string
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
+    MerchantResponse:
+      type: object
+      x-examples:
+        example-1:
+          _id: TuN75hYYBicRsaLWo
+          name: Flintstone's Wheels
+      description: Merchants. For 3PL clients who ship on behalf of merchants
+      title: Merchant Response
+      properties:
+        _id:
+          type: string
+          description: Merchant ID
+        name:
+          type: string
+          description: Merchant Name
+        clientId:
+          type: string
+          description: Client ID
+          readOnly: true
+    MerchantRequest:
+      type: object
+      x-examples:
+        example-1:
+          name: Flintstone's Wheels
+      description: Merchants. For 3PL clients who ship on behalf of merchants
+      title: Merchant Request
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Merchant Name
+  securitySchemes:
+    apiKey:
+      name: apikey
+      type: apiKey
+      in: header
+x-stoplight:
+  id: e777wryv1msks

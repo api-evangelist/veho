@@ -1,0 +1,85 @@
+openapi: 3.1.0
+info:
+  title: Veho labels API
+  version: '2.2'
+  contact:
+    email: info@shipveho.com
+    url: https://shipveho.com/
+    name: Veho
+  description: 'Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.
+
+    You''re viewing Version 2 of the Veho API, which is our current version, meaning it''s actively supported. Veho API V1 is deprecated.'
+  summary: Veho API to programmatically create shipments and download shipping labels
+servers:
+- url: https://api.shipveho.com/v2
+  description: Production
+- url: https://api.sandbox.shipveho.com/v2
+  description: Sandbox
+security:
+- apiKey: []
+tags:
+- name: labels
+  description: Labels
+paths:
+  /labels/{packageId}.{format}:
+    get:
+      operationId: getPackageLabel
+      summary: Get a package label
+      description: 'Veho strongly recommends that clients use the Veho generated labels on their packages. The label for any package can be retrived through our labels endpoint.
+
+        '
+      tags:
+      - labels
+      parameters:
+      - name: packageId
+        description: The id of the package object (the _id field on the Package Response object)
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: format
+        description: The format you would like the label in
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - zpl
+          - pdf
+          - png
+      responses:
+        '200':
+          description: A package lable in the requested format
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  responses:
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '404':
+      description: Not Found -- The requested resource could not be found.
+    '429':
+      description: Too Many Requests
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+  securitySchemes:
+    apiKey:
+      name: apikey
+      type: apiKey
+      in: header
+x-stoplight:
+  id: e777wryv1msks

@@ -1,0 +1,336 @@
+openapi: 3.1.0
+info:
+  title: Veho labels quotes API
+  version: '2.2'
+  contact:
+    email: info@shipveho.com
+    url: https://shipveho.com/
+    name: Veho
+  description: 'Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.
+
+    You''re viewing Version 2 of the Veho API, which is our current version, meaning it''s actively supported. Veho API V1 is deprecated.'
+  summary: Veho API to programmatically create shipments and download shipping labels
+servers:
+- url: https://api.shipveho.com/v2
+  description: Production
+- url: https://api.sandbox.shipveho.com/v2
+  description: Sandbox
+security:
+- apiKey: []
+tags:
+- name: quotes
+  description: Quotes
+paths:
+  /quote/rate:
+    post:
+      servers:
+      - url: https://api.shipveho.com/v2
+        description: Production
+      operationId: createSimpleQuote
+      summary: Create a simple quote for a provisional order
+      description: 'Create a simple quote.
+
+        This endpoint should be used to retrieve the rate and transit time for a package that travels through the zips provided.
+
+        > BY ACCESSING AND USING THE QUOTES API ENDPOINT, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT ("CONTRACT"), VEHO MAKES NO TIME COMMITMENTS FOR PACKAGE TRANSIT. QUOTED RATES MAY VARY FROM FINAL ACTUAL AMOUNT(S) INVOICED DEPENDING ON VARIABLES INCLUDING BUT NOT LIMITED TO SERVICE DATE AND TIME, ROUTE, CHANGES IN PARCEL OR SHIPPING CHARACTERISTICS, APPLICABLE SURCHARGES, AGREED UPON ADDITIONAL FEES, AND/OR SERVICE AVAILABILITY. IN THE EVENT OF ANY CONFLICT BETWEEN THE QUOTED RATES RETURNED VIA THE QUOTES API ENDPOINT AND THE RATES SET FORTH IN VEHO''S CONTRACT WITH YOU/COMPANY, THE RATES SET FORTH IN SUCH CONTRACT SHALL PREVAIL, GOVERN, AND APPLY.
+
+        '
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleQuoteResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleQuoteRequest'
+              x-examples:
+                example-1:
+                  originationZip: '22001'
+                  deliveryZip: '22001'
+                  shipDate: '2024-06-01'
+                  length: 50
+                  width: 50
+                  height: 50
+                  weight: 10
+      parameters: []
+      tags:
+      - quotes
+components:
+  responses:
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '429':
+      description: Too Many Requests
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+  schemas:
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
+            type: object
+            required:
+            - code
+            - message
+            - path
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
+              message:
+                type: string
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
+    SimpleQuoteRequest:
+      type: object
+      description: Required fields for a simple quote generation request
+      required:
+      - originationZip
+      - deliveryZip
+      - packages
+      properties:
+        originationZip:
+          type: string
+          description: ZIP code the package originates from
+          pattern: ^\d{5}(-?\d{4})?$
+        deliveryZip:
+          type: string
+          description: The delivery ZIP code
+          pattern: ^\d{5}(-?\d{4})?$
+        packages:
+          type: array
+          description: An array of packages to be quoted
+          minItems: 1
+          maxItems: 10
+          items:
+            type: object
+            required:
+            - length
+            - width
+            - height
+            - weight
+            properties:
+              length:
+                type: number
+                maximum: 48
+                minimum: 0
+                description: Length (inches) of the package
+              width:
+                type: number
+                maximum: 48
+                minimum: 0
+                description: Width (inches) of the package
+              height:
+                type: number
+                maximum: 48
+                minimum: 0
+                description: Height (inches) of the package
+              weight:
+                type: number
+                maximum: 50
+                exclusiveMinimum: 0
+                description: Weight (pounds) of the package
+              attendedDelivery:
+                type: object
+                description: Optional attended delivery configuration for the package
+                properties:
+                  verificationType:
+                    type: string
+                    description: The type of verification required for attended delivery
+                    enum:
+                    - pinVerification
+                required:
+                - verificationType
+        shipDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+          format: date
+        serviceClass:
+          type: string
+          default: groundPlus
+          optional: true
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+    SimpleQuoteResponse:
+      type: array
+      description: An array of quoted packages, including rates and assumed dates
+      items:
+        $ref: '#/components/schemas/SimpleQuoteItem'
+    SimpleQuoteItem:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          description: ID of the generated quote associated to the rated package
+        transitTime:
+          type: number
+          description: Days package will be in transit
+        serviceClass:
+          type: string
+          default: groundPlus
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+        currency:
+          type: string
+          default: USD
+          description: Currency for rate, currently only `USD` is available
+          enum:
+          - USD
+        rate:
+          type: number
+          description: All-in rate for quoted order
+          minimum: 0
+        assumedInjectionZip:
+          type: string
+          description: The injection ZIP code assumed for the quote calculation
+        createdAt:
+          type: string
+          description: Time at which the quote was created
+          format: date-time
+        shipDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+          format: date
+        weight:
+          type: number
+          description: Weight (pounds) of the package
+        billableWeight:
+          type: number
+          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
+        length:
+          type: number
+          description: Length (inches) of the package
+        width:
+          type: number
+          description: Width (inches) of the package
+        height:
+          type: number
+          description: Height (inches) of the package
+        zone:
+          type: string
+          description: Zone of the package
+  securitySchemes:
+    apiKey:
+      name: apikey
+      type: apiKey
+      in: header
+x-stoplight:
+  id: e777wryv1msks
