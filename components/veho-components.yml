@@ -1,0 +1,17 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.api.shipveho.com/docs/veho-api/20p7mm4lt2dor-package-tracking-url
+description: >-
+  Veho's client-side / hosted surfaces. Veho ships no embeddable JS component
+  library, but publishes a hosted, customer-facing package tracker that
+  shippers link their customers to by constructing a URL from the package
+  trackingId. Recipients use it to see package status on their order and to
+  provide delivery instructions to the Veho driver.
+families:
+  - name: Hosted package tracker
+    kind: hosted-page
+    url_template: "https://track.shipveho.com/#/trackingid/{trackingId}"
+    sandbox_url_template: "https://track-sandbox.shipveho.com/#/trackingid/{trackingId}"
+    input: package.trackingId (returned on Package objects)
+    docs: https://docs.api.shipveho.com/docs/veho-api/20p7mm4lt2dor-package-tracking-url
+loader_libraries: []

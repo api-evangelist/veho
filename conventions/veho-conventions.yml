@@ -1,0 +1,80 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.api.shipveho.com/docs/veho-api/j2rbld9w9jm76-introduction plus
+  the Authentication and Handling Errors docs pages, cross-checked against
+  openapi/veho-api-openapi-original.yml.
+description: >-
+  Cross-cutting request/response semantics of the Veho API: a REST API with
+  resource-oriented URLs, JSON-encoded request bodies and responses, standard
+  HTTP verbs and status codes, header API-key authentication, URI-path major
+  versioning (/v2), and a message + errors[] validation-error envelope.
+
+base_url: https://api.shipveho.com/v2
+api_style: REST over HTTPS, JSON requests and responses
+
+authentication:
+  scheme: API key in the `apikey` request header (issued by Veho; separate key for sandbox)
+  docs: https://docs.api.shipveho.com/docs/veho-api/jn0u5escxmisw-authentication
+  detail: authentication/veho-authentication.yml
+
+idempotency:
+  supported: false
+  notes: >-
+    No idempotency-key header or replay contract is documented. The closest
+    mechanism is barcode uniqueness validation on order creation: provided
+    barcodes must be unique within the last 30 days (changelog 2023.04.07),
+    which prevents duplicate packages but is not a general idempotency contract.
+
+pagination:
+  style: none-documented
+  notes: >-
+    No cursor or offset pagination parameters are documented in the OpenAPI;
+    list endpoints (findOrders, getMerchants, getWebhookEvents) use query
+    filters rather than documented page parameters.
+
+field_expansion:
+  supported: false
+  notes: >-
+    No general expansion mechanism. One response-shaping flag exists:
+    includeDeliveryImage query parameter on GET /packages/{id} returns the
+    proof-of-delivery photo (changelog 2024.10.08).
+
+versioning:
+  scheme: uri-path major version
+  current: v2 (OpenAPI info.version 2.2)
+  notes: Veho API V1 (api-basic subdomain, veho-technologies/api-basic-docs) is deprecated.
+  detail: lifecycle/veho-lifecycle.yml
+
+error_envelope:
+  shape: >-
+    JSON object with a required `message` string; validation failures (400/422)
+    add an `errors[]` array of {code, message, path, ...} objects. A legacy
+    `error` property is still returned but deprecated. Veho recommends relying
+    only on the machine-readable `code` of each error object, as messages may change.
+  docs: https://docs.api.shipveho.com/docs/veho-api/q9wwdobob8fta-handling-errors
+  detail: errors/veho-problem-types.yml
+
+request_tracing:
+  documented: false
+
+rate_limits:
+  signaling: >-
+    429 Too Many Requests is declared on most operations in the OpenAPI; no
+    rate-limit headers, quotas, or numeric limits are documented.
+
+bulk_operations:
+  supported: true
+  notes: >-
+    Manifest uploads (JSON, CSV, or pipe-separated) via POST /manifests,
+    POST /manifests/notify, S3 PutObject, or SFTP (sftp.shipveho.com /
+    sandbox.sftp.shipveho.com) create or cancel orders in bulk as an
+    alternative to per-order HTTP calls.
+  docs: https://docs.api.shipveho.com/docs/veho-api/rt9j3eazng229-manifest-uploads
+
+cross_links:
+  authentication: authentication/veho-authentication.yml
+  errors: errors/veho-problem-types.yml
+  lifecycle: lifecycle/veho-lifecycle.yml
+  sandbox: sandbox/veho-sandbox.yml
+  webhooks: asyncapi/veho-webhooks.yml

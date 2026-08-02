@@ -1,0 +1,46 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.api.shipveho.com/docs/veho-api/zrliezy4pnyej-sandbox-environment
+description: >-
+  Veho provides a full sandbox environment that mimics the behaviors and
+  responses of the production environment. Sandbox endpoints take the same
+  form as production endpoints but append -sandbox or .sandbox to the
+  subdomain, and use a separate sandbox API key issued by Veho. The sandbox
+  contains a subset of serviceable ZIP codes, so orders must use a destination
+  ZIP from the sandbox serviceable ZIP list.
+docs:
+  - https://docs.api.shipveho.com/docs/veho-api/zrliezy4pnyej-sandbox-environment
+
+modes:
+  - name: production
+    api_base: https://api.shipveho.com/v2
+    tracker: https://track.shipveho.com/#/
+    sftp: sftp.shipveho.com
+  - name: sandbox
+    api_base: https://api.sandbox.shipveho.com/v2
+    tracker: https://track-sandbox.shipveho.com/#/
+    sftp: sandbox.sftp.shipveho.com
+    notes: >-
+      Separate API URL and API key from production. Mimics production
+      behaviors and responses without affecting live data or interacting
+      with real systems.
+
+separation: >-
+  Sandbox is separated by host (append -sandbox or .sandbox to the subdomain)
+  and by a distinct API key that Veho provides; there is no key-prefix
+  convention documented.
+
+unauthenticated_endpoints:
+  - description: List serviceable ZIP codes (does not require authentication)
+    url: https://api.sandbox.shipveho.com/v2/serviceable-zips
+
+fixtures:
+  - name: sandbox serviceable ZIP list
+    description: >-
+      The sandbox contains a subset of ZIP codes within Veho's serviceable
+      areas; destination ZIPs for sandbox orders must come from this list.
+    url: https://api.sandbox.shipveho.com/v2/serviceable-zips
+
+sftp_static_ips:
+  sandbox: ['44.207.227.172', '44.208.149.201']
+  production: ['54.144.130.251', '54.82.228.211']

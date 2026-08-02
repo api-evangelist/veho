@@ -1,0 +1,28 @@
+{
+  "provider": "veho",
+  "sources": [
+    "veho-labels-api-openapi.yml",
+    "veho-manifests-api-openapi.yml",
+    "veho-merchants-api-openapi.yml",
+    "veho-orders-api-openapi.yml",
+    "veho-packages-api-openapi.yml",
+    "veho-quotes-api-openapi.yml",
+    "veho-webhooks-api-openapi.yml",
+    "veho-zips-api-openapi.yml"
+  ],
+  "outputs": [
+    "veho-labels-api-openapi.yml",
+    "veho-manifests-api-openapi.yml",
+    "veho-merchants-api-openapi.yml",
+    "veho-orders-api-openapi.yml",
+    "veho-packages-api-openapi.yml",
+    "veho-quotes-api-openapi.yml",
+    "veho-webhooks-api-openapi.yml",
+    "veho-zips-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

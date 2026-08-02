@@ -1,0 +1,26 @@
+generated: '2026-07-21'
+method: searched
+description: >-
+  Probe of the /.well-known/ discovery surface on Veho's website and API
+  hosts, 2026-07-21. No well-known documents were found: the marketing site
+  returns 404 for every path, and api.shipveho.com fronts every
+  unauthenticated request (including /.well-known/*) with a 403. Absence
+  recorded as valid data; no raw files saved (no 200 responses).
+hosts:
+  - host: https://www.shipveho.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+      - {path: /llms.txt, status: 404}
+  - host: https://shipveho.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+  - host: https://api.shipveho.com
+    documents:
+      - {path: /.well-known/security.txt, status: 403}
+      - {path: /.well-known/openid-configuration, status: 403}
+      - {path: /.well-known/oauth-authorization-server, status: 403}
+      - {path: /.well-known/api-catalog, status: 403}
+      - {path: /.well-known/ai-plugin.json, status: 403}

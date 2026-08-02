@@ -1,0 +1,50 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://www.shipveho.com/security (compliance claims) plus derivation from
+  openapi/veho-api-openapi-original.yml and the docs conventions pages.
+standards:
+  - id: iso-27001
+    conforms: true
+    evidence: >-
+      Veho is certified to ISO/IEC 27001 for its information security
+      management system (certified 2023-07-27, audited by Schellman, ANAB and
+      UKAS accredited) — https://www.shipveho.com/security
+  - id: iso-27035
+    conforms: true
+    evidence: >-
+      Security incident management program aligned to ISO 27035 per
+      https://www.shipveho.com/security
+  - id: oauth2
+    conforms: false
+    evidence: no oauth2 securityScheme; authentication is a static apikey header
+  - id: oidc
+    conforms: false
+    evidence: no openIdConnect securityScheme and no /.well-known/openid-configuration (404)
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      errors use a custom message + errors[] JSON envelope (ErrorResponse
+      schema), not application/problem+json
+  - id: json:api
+    conforms: false
+    evidence: plain JSON resource payloads; no JSON:API media type
+  - id: pagination
+    conforms: false
+    evidence: no documented pagination parameters in the OpenAPI or docs
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      no Idempotency-Key header or replay contract documented; barcode
+      uniqueness within 30 days is the only duplicate guard
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt returns 404 on www.shipveho.com and shipveho.com
+  - id: openapi-3.1
+    conforms: true
+    evidence: published spec is OpenAPI 3.1.0 (openapi/veho-api-openapi-original.yml)
+  - id: webhooks
+    conforms: true
+    evidence: >-
+      first-class webhook configuration API with 22 package milestone event
+      types, event log, and replay (asyncapi/veho-webhooks.yml)

@@ -1,0 +1,74 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  openapi/veho-api-openapi-original.yml (webhooks tag, EventType /
+  WebhookConfiguration* / WebhookEvent schemas) and
+  https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api.
+spec_type: Webhooks
+description: >-
+  Veho's event surface. Veho publishes no AsyncAPI document, but ships a
+  first-class webhook system managed via the API: clients register endpoint
+  configurations per event type (with optional custom headers such as an API
+  key for the receiving endpoint), receive package milestone events as HTTP
+  POSTs, and can list, inspect, and replay delivered webhook events.
+management_api:
+  - operationId: getWebhookConfigurations
+    method: GET
+    path: /webhooks/webhookConfigurations
+  - operationId: addWebhookConfiguration
+    method: POST
+    path: /webhooks/webhookConfigurations
+  - operationId: findWebhookConfigurationById
+    method: GET
+    path: /webhooks/webhookConfigurations/{id}
+  - operationId: updateWebhookConfigurationById
+    method: PATCH
+    path: /webhooks/webhookConfigurations/{id}
+  - operationId: deleteWebhookConfigurationById
+    method: DELETE
+    path: /webhooks/webhookConfigurations/{id}
+  - operationId: getWebhookEvents
+    method: GET
+    path: /webhooks/webhookEvents
+  - operationId: getWebhookEventsById
+    method: GET
+    path: /webhooks/webhookEvents/{id}
+  - operationId: replayWebhookEvents
+    method: POST
+    path: /webhooks/replay
+configuration:
+  schema: openapi/veho-api-openapi-original.yml#/components/schemas/WebhookConfigurationRequest
+  fields:
+    endpoint: URL webhook events are POSTed to
+    eventType: one of the package milestone event types below
+    serviceType: delivery | pickup
+    customHeaders: headers to send when calling the endpoint (e.g. an API key)
+event_envelope:
+  schema: openapi/veho-api-openapi-original.yml#/components/schemas/WebhookEvent
+  fields: [id, createdAt, updatedAt, webhookConfigurationId, packageId, orderId, serviceType, eventType, endpoint, occurredAt, payload, trackingId, barcode, result]
+events:
+  - package.created
+  - package.pickedUpFromClient
+  - package.droppedOffAtVeho
+  - package.pickedUpFromVeho
+  - package.delivered
+  - package.cancelled
+  - package.misdelivered
+  - package.discarded
+  - package.notReceivedFromClient
+  - package.pendingReturnToClient
+  - package.returnedToClient
+  - package.rescheduled
+  - package.delayed
+  - package.arrivedAtFacility
+  - package.departedFromFacility
+  - package.hadDeliveryIssue
+  - package.outForPickup
+  - package.pickedUpFromConsumer
+  - package.pickupSkipped
+  - package.pickupDroppedOffAtVeho
+  - package.pickupFailed
+  - package.pickupTransferredToExternalCarrier
+replay:
+  supported: true
+  operationId: replayWebhookEvents

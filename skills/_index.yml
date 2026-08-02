@@ -1,0 +1,20 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/veho-api-openapi-original.yml
+skills:
+  - file: veho-create-order-and-label.md
+    name: Create a Veho order and download its shipping label
+    api: openapi/veho-api-openapi-original.yml
+    operations: [createSimpleQuote, createOrder, getOrderById, getPackageLabel]
+  - file: veho-track-a-package.md
+    name: Track a Veho package
+    api: openapi/veho-api-openapi-original.yml
+    operations: [getPackageById, getPackageTrackingInformation, getPackagesByBarcode]
+  - file: veho-subscribe-to-package-events.md
+    name: Subscribe to Veho package events via webhooks
+    api: openapi/veho-api-openapi-original.yml
+    operations: [addWebhookConfiguration, getWebhookConfigurations, getWebhookEvents, replayWebhookEvents]
+  - file: veho-quote-and-serviceability.md
+    name: Quote a Veho shipment and check serviceability
+    api: openapi/veho-api-openapi-original.yml
+    operations: [getServiceableZips, createSimpleQuote]

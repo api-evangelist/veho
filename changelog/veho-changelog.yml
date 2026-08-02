@@ -1,0 +1,66 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.api.shipveho.com/docs/veho-api/gkxy75st2tf4y-changelog
+description: >-
+  Structured capture of Veho's dated API changelog. Veho dates entries by day
+  (YYYY.MM.DD) against the current Veho API Version 2 (the OpenAPI carries
+  info.version 2.2); V1 is deprecated. The live changelog in the Stoplight
+  docs is the source of truth; this artifact records the recent window.
+docs: https://docs.api.shipveho.com/docs/veho-api/gkxy75st2tf4y-changelog
+versioning:
+  scheme: dated entries (YYYY.MM.DD) against a major-versioned API (V2)
+  current: '2.2'
+  detail: lifecycle/veho-lifecycle.yml
+entries:
+  - date: '2025-10-13'
+    changes:
+      - Added validation for package volume to be less than or equal to 9849.6 cubic inches (5.7 cu. ft.)
+      - Updated help email in docs introduction
+  - date: '2025-10-06'
+    changes:
+      - Added new fields to package response across GET endpoints to align with webhook bodies (package.humanReadableOperation, package.eventLog.message, package.eventLog.meta, package.eventLog.city, package.eventLog.state)
+      - Exposed more events (arrivedAtFacility, departedFromFacility, hadDeliveryIssue, pendingReturnToClient)
+  - date: '2025-10-01'
+    changes:
+      - Added slaServiceDate to GET package responses
+  - date: '2025-09-22'
+    changes:
+      - Updated injectable facilities list (docs)
+  - date: '2025-06-05'
+    changes:
+      - Added support for Hazardous Materials (Hazmat) Limited Quantity in package special handling
+  - date: '2025-05-15'
+    changes:
+      - Changed barcode max length from 17 to 20 characters
+  - date: '2025-04-25'
+    changes:
+      - Added validation for shipDate with grace period in order and manifest handlers
+      - Added check to remove SLA date if Premium Economy (PE) is provided
+      - Updated slaDeliveryDate documentation
+  - date: '2025-04-15'
+    changes:
+      - Fixed manifest validation with added grace period
+  - date: '2025-04-02'
+    changes:
+      - Changed maximum package dimensions to 48" on any axis (was 72")
+      - Added validation for package weight to be less than or equal to 50 lbs
+  - date: '2025-01-31'
+    breaking: true
+    changes:
+      - Deprecated pickups endpoints (POST /pickups, GET /pickups/{id}, PUT /pickups/{id}/cancel)
+  - date: '2024-10-24'
+    changes:
+      - Added PATCH order endpoint (currently only supports updating instructions)
+  - date: '2024-10-23'
+    changes:
+      - Added serviceClass field to /quote/rate endpoint request
+  - date: '2024-10-15'
+    breaking: true
+    changes:
+      - Removed dry ice support
+  - date: '2024-10-08'
+    changes:
+      - Added includeDeliveryImage query parameter to /packages/{id} endpoint to return POD photo
+  - date: '2024-07-12'
+    changes:
+      - Added weight, length, width, height, and zone fields to /quote/rate response

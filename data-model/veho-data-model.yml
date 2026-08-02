@@ -1,0 +1,36 @@
+generated: '2026-07-21'
+method: derived
+source: >-
+  Derived from schema $ref links and id-reference fields in
+  openapi/veho-api-openapi-original.yml (OrderResponse, PackageResponse,
+  MerchantResponse, WebhookConfigurationResponse, WebhookEvent,
+  SimpleQuoteResponse) and the docs introduction's key-concepts section.
+docs: https://docs.api.shipveho.com/docs/veho-api/j2rbld9w9jm76-introduction
+notation: >-
+  relationships use has_one / has_many / belongs_to with the foreign-key field
+  name; direction is from the entity that owns the reference.
+entities:
+  - {name: Client, description: The Veho shipper account an apikey belongs to; owns orders, packages, merchants, and webhook configurations.}
+  - {name: Order, description: A request for Veho to pick up package(s) and deliver them to a customer; carries destination, recipient, service class, and rate.}
+  - {name: Package, description: The item-level object — dimensions, weight, declared value, barcode, tracking id, and shipping label links; belongs to an Order.}
+  - {name: Merchant, description: A merchant managed under a 3PL Client account, referenced by orders shipped on the merchant's behalf.}
+  - {name: WebhookConfiguration, description: A registered endpoint + eventType + serviceType subscription for package milestone events.}
+  - {name: WebhookEvent, description: A delivered (or attempted) webhook event with payload, result, and references to the package and order.}
+  - {name: Quote, description: A simple rate quote for a provisional order (quoteId), referenceable from a package.}
+  - {name: Label, description: A shipping label rendered per package in pdf, png, or zpl format.}
+relationships:
+  - {from: Order, to: Package, type: has_many, via: packages}
+  - {from: Package, to: Order, type: belongs_to, via: orderId}
+  - {from: Order, to: Client, type: belongs_to, via: clientId}
+  - {from: Package, to: Client, type: belongs_to, via: clientId}
+  - {from: Order, to: Merchant, type: belongs_to, via: merchantId}
+  - {from: Merchant, to: Client, type: belongs_to, via: clientId}
+  - {from: WebhookEvent, to: WebhookConfiguration, type: belongs_to, via: webhookConfigurationId}
+  - {from: WebhookEvent, to: Package, type: belongs_to, via: packageId}
+  - {from: WebhookEvent, to: Order, type: belongs_to, via: orderId}
+  - {from: Package, to: Quote, type: belongs_to, via: quoteId}
+  - {from: Package, to: Label, type: has_many, via: pdfShippingLabelLink / pngShippingLabelLink / zplShippingLabelLink}
+id_conventions:
+  primary_key: _id (string)
+  tracking: Package.trackingId builds the customer-facing tracker URL (components/veho-components.yml)
+  external: externalId supported on Order and Package for client-side reconciliation

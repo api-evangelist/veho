@@ -1,0 +1,38 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.api.shipveho.com/docs/veho-api/j2rbld9w9jm76-introduction and
+  https://docs.api.shipveho.com/docs/veho-api/gkxy75st2tf4y-changelog plus
+  https://github.com/veho-technologies/api-basic-docs (V1, marked deprecated).
+description: >-
+  Veho API lifecycle posture. The API is major-versioned in the URI path;
+  Version 2 (current, actively supported) lives at api.shipveho.com/v2.
+  Version 1 (the api-basic subdomain, documented in
+  veho-technologies/api-basic-docs) is explicitly deprecated. Deprecations
+  are announced in the dated changelog — most recently the pickups endpoints
+  (2025.01.31). No public status page, SLA page, or Sunset/Deprecation
+  header support is published.
+versioning:
+  scheme: uri-path
+  current: v2
+  current_info_version: '2.2'
+  docs: https://docs.api.shipveho.com/docs/veho-api/j2rbld9w9jm76-introduction
+deprecation:
+  practice: announced in the dated changelog; superseded major version marked deprecated in docs
+  sunset_header: false
+  deprecated_versions:
+    - version: v1
+      docs: https://veho-technologies.github.io/api-basic-docs/
+      note: "V1 IS DEPRECATED! This repo is inactive." # verbatim from the repo description
+  deprecated_surfaces:
+    - surface: pickups endpoints (POST /pickups, GET /pickups/{id}, PUT /pickups/{id}/cancel)
+      announced: '2025-01-31'
+      source: https://docs.api.shipveho.com/docs/veho-api/gkxy75st2tf4y-changelog
+    - surface: order.rate field
+      announced: '2021-11-01'
+      source: https://docs.api.shipveho.com/docs/veho-api/gkxy75st2tf4y-changelog
+    - surface: ErrorResponse legacy `error` property
+      source: openapi/veho-api-openapi-original.yml#/components/schemas/ErrorResponse
+sla: null
+status_page: null
+deprecated_operations: []

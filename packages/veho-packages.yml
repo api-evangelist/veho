@@ -1,0 +1,50 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  npm, PyPI, RubyGems, NuGet, crates.io, Packagist searched 2026-07-21 for
+  first-party Veho client libraries, plus the github.com/veho-technologies
+  org and docs.api.shipveho.com.
+description: >-
+  Veho publishes no first-party API client SDKs; the docs show raw curl and
+  axios examples against api.shipveho.com/v2. The @veho-tech npm scope
+  carries first-party open-source utility libraries (not API clients).
+  Unscoped "veho" packages on PyPI/NuGet/crates.io are unrelated third-party
+  iterable-toolset libraries. Integration is also available indirectly via
+  EasyPost and ShipEngine carrier integrations.
+sdks: []
+packages:
+  - language: javascript
+    registry: npm
+    name: "@veho-tech/deploy-meteor"
+    url: https://www.npmjs.com/package/@veho-tech/deploy-meteor
+    official: true
+    sdk: false
+    notes: internal-tooling utility (Meteor deployment), not an API client
+  - language: javascript
+    registry: npm
+    name: "@veho-tech/error"
+    url: https://www.npmjs.com/package/@veho-tech/error
+    official: true
+    sdk: false
+    notes: error class utility, not an API client
+  - language: javascript
+    registry: npm
+    name: "@veho-tech/react-native-aws3"
+    url: https://www.npmjs.com/package/@veho-tech/react-native-aws3
+    official: true
+    sdk: false
+    notes: React Native S3 upload library, not an API client
+  - language: javascript
+    registry: npm
+    name: "@veho-tech/material-icons-react"
+    url: https://www.npmjs.com/package/@veho-tech/material-icons-react
+    official: true
+    sdk: false
+    notes: React icon library, not an API client
+third_party_integrations:
+  - name: EasyPost
+    docs: https://docs.api.shipveho.com/docs/veho-api/mtiy9p82s3xxz-easy-post
+    notes: Veho is an integrated EasyPost carrier; EasyPost SDKs can create Veho shipments
+  - name: ShipEngine
+    docs: https://help.shipengine.com/hc/en-us/articles/39121228841755-Veho
+    notes: Veho is available as a ShipEngine carrier

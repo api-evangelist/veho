@@ -1,0 +1,73 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.api.shipveho.com/docs/veho-api/q9wwdobob8fta-handling-errors
+  enriched over the 4xx/5xx responses in openapi/veho-api-openapi-original.yml.
+format: json-envelope
+description: >-
+  Veho error catalog. Errors are conventional HTTP status codes with a JSON
+  body carrying a required `message` string and, for 400/422 validation
+  failures, an `errors[]` array of {code, message, path} detail objects
+  (ErrorResponse schema). Not RFC 9457 problem+json. Veho recommends parsing
+  only the `code` property programmatically; messages may change.
+envelope:
+  schema: openapi/veho-api-openapi-original.yml#/components/schemas/ErrorResponse
+  fields:
+    message: Error description (always present)
+    errors: List of validation errors (400/422), each with code, message, path, and optional expected/received/keys/options/minimum/maximum
+    error: Legacy error description (deprecated)
+problems:
+  - status: 400
+    title: Bad Request
+    detail: The request wasn't valid JSON or had missing or invalid fields. Check the body for details.
+  - status: 401
+    title: Unauthorized
+    detail: The request was missing an `apikey` header, or the `apikey` was invalid.
+  - status: 403
+    title: Forbidden
+    detail: The `apikey` used doesn't have permission to access the requested resource.
+  - status: 404
+    title: Not Found
+    detail: The requested resource doesn't exist.
+  - status: 422
+    title: Validation Error
+    detail: >-
+      The request was well-formed (had all required fields) but failed
+      validation — including blocked data in address fields. Check the
+      errors[] array for details.
+  - status: 429
+    title: Too Many Requests
+    detail: Rate limited; declared on most operations in the OpenAPI.
+  - status: 500
+    title: Internal Server Error
+    detail: Veho had a problem with its server. Try again later.
+  - status: 503
+    title: Service Unavailable
+    detail: Temporarily offline for maintenance. Try again later.
+validation_error_codes:
+  - code: invalid_type
+    meaning: Wrong input type — expected/received report the types
+  - code: unrecognized_keys
+    meaning: Request contains fields the API does not accept (keys[] lists them)
+  - code: invalid_string
+    meaning: String failed format validation (e.g. ZIP code format, barcode charset)
+  - code: invalid_enum_value
+    meaning: Value not in the allowed set (options[] lists valid values)
+  - code: invalid_date
+    meaning: Invalid date value
+  - code: too_small
+    meaning: Below minimum length or value (minimum reports the bound)
+  - code: too_big
+    meaning: Above maximum length or value (maximum reports the bound)
+  - code: invalid_packages
+    meaning: Invalid packageCount or packages array
+  - code: invalid_address_field
+    meaning: Blocked or invalid data present in an address field (returns 422)
+  - code: unserviceable_zip_code
+    meaning: Destination ZIP is not in Veho's serviceable area
+  - code: invalid_merchant
+    meaning: Merchant reference invalid for this client
+  - code: invalid_external_client
+    meaning: External client reference invalid
+  - code: missing_package_description
+    meaning: Package description required but missing
