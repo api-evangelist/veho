@@ -1,0 +1,1735 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://raw.githubusercontent.com/api-evangelist/veho-tech/refs/heads/main/json-schema/veho-tech-quote-request.json",
+ "title": "SimpleQuoteRequest",
+ "x-generated": "2026-07-21",
+ "x-method": "derived",
+ "x-source": "openapi/veho-tech-api-openapi-original.yml#/components/schemas/SimpleQuoteRequest",
+ "$ref": "#/$defs/SimpleQuoteRequest",
+ "$defs": {
+  "OrderRequest": {
+   "type": "object",
+   "properties": {
+    "destination": {
+     "$ref": "#/$defs/OrderAddress"
+    },
+    "fromAddress": {
+     "description": "Address where this order is originating from. Required only if requesting a quote\nwith the order, as this is used to infer the nearest supported Veho injection facility",
+     "$ref": "#/$defs/FromAddress"
+    },
+    "fromName": {
+     "type": "string",
+     "description": "Any name you want to use to identify where the order is coming from"
+    },
+    "serviceClass": {
+     "type": "string",
+     "default": "groundPlus",
+     "description": "Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility",
+     "enum": [
+      "nextDay",
+      "sameDay",
+      "twoDay",
+      "vehoValue",
+      "groundPlus",
+      "premiumEconomy",
+      "expressAir",
+      "groundPlusOne",
+      "groundPlusTwo",
+      "groundPlusThree",
+      "groundPlusFour"
+     ]
+    },
+    "recipient": {
+     "type": "string",
+     "description": "Full name of recipient."
+    },
+    "externalId": {
+     "type": "string",
+     "description": "Any ID you want to associate with this order, e.g. your order ID."
+    },
+    "merchantId": {
+     "type": "string",
+     "description": "If you are shipping on behalf of a merchant and have registered that merchant with us, supply that ID here."
+    },
+    "packages": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/OrderRequestPackage"
+     }
+    },
+    "company": {
+     "type": "string",
+     "description": "Recipient's company, if applicable."
+    },
+    "phone": {
+     "type": "string",
+     "description": "Recipient's phone number (used for SMS)."
+    },
+    "email": {
+     "type": "string",
+     "format": "email",
+     "description": "Recipient's email address. Used for delivery notifications and verification communications. May be required depending on your account configuration and delivery verification settings."
+    },
+    "instructions": {
+     "type": "string",
+     "description": "Any additional delivery instructions provided by recipient to assist driver with delivery."
+    },
+    "slaDeliveryDate": {
+     "type": "string",
+     "format": "date",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package must be delivered.  The date must be the next day or greater. If not included, Veho will generate one for you. By standard, that date will be the first scan in a Veho warehouse + days from service class.\n\nNote: Veho will disregard any date provided in slaDeliveryDate for  any package marked as premiumEconomy in the serviceClass."
+    },
+    "consumerExpectedServiceDate": {
+     "type": "string",
+     "format": "date",
+     "description": "A string in the ISO 8601 calendar date and time extended format, e.g. 2023-05-19T12:34:56.789Z, representing the date and time by which the customer is expecting the package to be delivered."
+    },
+    "packageCount": {
+     "type": "integer",
+     "description": "Number of packages associated with this order. Use this field to create one or more packages without supplying additional information. To include package-specific information, use the packages field instead.",
+     "writeOnly": true,
+     "minimum": 1
+    },
+    "rate": {
+     "type": "number",
+     "description": "Deprecated rate field",
+     "deprecated": true,
+     "x-internal": true
+    }
+   },
+   "required": [
+    "destination",
+    "recipient",
+    "fromAddress"
+   ],
+   "title": "Order Request",
+   "additionalProperties": false
+  },
+  "PatchOrderRequest": {
+   "type": "object",
+   "properties": {
+    "instructions": {
+     "type": "string",
+     "description": "Delivery instructions for the order"
+    }
+   }
+  },
+  "OrderResponse": {
+   "title": "Order Response",
+   "type": "object",
+   "properties": {
+    "_id": {
+     "type": "string",
+     "readOnly": true
+    },
+    "createdAt": {
+     "type": "string",
+     "format": "date-time",
+     "readOnly": true
+    },
+    "clientId": {
+     "type": "string",
+     "description": "Client ID",
+     "readOnly": true
+    },
+    "lastEvent": {
+     "type": "string",
+     "readOnly": true
+    },
+    "eventLog": {
+     "type": "array",
+     "readOnly": true,
+     "items": {
+      "$ref": "#/$defs/OrderEvent"
+     }
+    },
+    "serviceType": {
+     "type": "string",
+     "description": "Requested type of service, currently delivery or pickup.",
+     "enum": [
+      "delivery",
+      "pickup"
+     ],
+     "readOnly": true
+    },
+    "destination": {
+     "$ref": "#/$defs/OrderAddress"
+    },
+    "fromAddress": {
+     "$ref": "#/$defs/FromAddress"
+    },
+    "fromName": {
+     "type": "string",
+     "description": "Any name you want to use to identify where the order is coming from"
+    },
+    "serviceClass": {
+     "type": "string",
+     "default": "groundPlus",
+     "description": "Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility",
+     "enum": [
+      "nextDay",
+      "sameDay",
+      "twoDay",
+      "vehoValue",
+      "groundPlus",
+      "premiumEconomy",
+      "expressAir",
+      "groundPlusOne",
+      "groundPlusTwo",
+      "groundPlusThree",
+      "groundPlusFour"
+     ]
+    },
+    "recipient": {
+     "type": "string",
+     "description": "Full name of recipient."
+    },
+    "externalId": {
+     "type": "string",
+     "description": "Any ID you want to associate with this order, e.g. your order ID."
+    },
+    "merchantId": {
+     "type": "string",
+     "description": "If you are shipping on behalf of a merchant and have registered that merchant with us, supply that ID here."
+    },
+    "company": {
+     "type": "string",
+     "description": "Recipient's company, if applicable."
+    },
+    "phone": {
+     "type": "string",
+     "description": "Recipient's phone number (used for SMS)."
+    },
+    "email": {
+     "type": "string",
+     "format": "email",
+     "description": "Recipient's email address. Used for delivery notifications and verification communications. May be required depending on your account configuration and delivery verification settings."
+    },
+    "instructions": {
+     "type": "string",
+     "description": "Any additional delivery instructions provided by recipient to assist driver with delivery."
+    },
+    "slaDeliveryDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package must be delivered.  The date must be the next day or greater. If not included, Veho will generate one for you. By standard, that date will be the first scan in a Veho warehouse + days from service class.\n\nNote: Veho will disregard any date provided in slaDeliveryDate for  any package marked as premiumEconomy in the serviceClass."
+    },
+    "consumerExpectedServiceDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$",
+     "description": "A string in the ISO 8601 calendar date and time extended format, e.g. 2023-05-19T12:34:56.789Z, representing the date and time by which the customer is expecting the package to be delivered."
+    },
+    "packages": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/PackageResponse"
+     }
+    },
+    "rate": {
+     "type": "number",
+     "description": "Deprecated rate field",
+     "deprecated": true,
+     "x-internal": true
+    }
+   },
+   "description": "The Order is the container for any number of Packages going to the same recipient and address. An Order can have a single Package, or you can add as my packages to an order as you like."
+  },
+  "QuotedOrderResponse": {
+   "additionalProperties": true,
+   "title": "Order Response with Quoted Packages",
+   "allOf": [
+    {
+     "$ref": "#/$defs/OrderResponse"
+    },
+    {
+     "type": "object",
+     "properties": {
+      "packages": {
+       "type": "array",
+       "items": {
+        "$ref": "#/$defs/QuotedPackageResponse"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "OrderRequestPackage": {
+   "type": "object",
+   "title": "Order Request Package",
+   "additionalProperties": false,
+   "x-examples": {
+    "example-1": {
+     "externalId": "myPackageId1",
+     "length": 12,
+     "width": 10,
+     "height": 9,
+     "weight": 25,
+     "declaredValue": 7500,
+     "barCode": "GqN8v5wvGNxmnFu4Y",
+     "quoteId": "dd4b0d81-a237-44c6-89f1-3be7650bb7ff"
+    }
+   },
+   "examples": [
+    {
+     "externalId": "myPackageId1",
+     "length": 12,
+     "width": 10,
+     "height": 9,
+     "weight": 25,
+     "declaredValue": 7500,
+     "barCode": "GqN8v5wvGNxmnFu4Y",
+     "quoteId": "dd4b0d81-a237-44c6-89f1-3be7650bb7ff"
+    }
+   ],
+   "properties": {
+    "externalId": {
+     "type": "string",
+     "description": "Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object."
+    },
+    "length": {
+     "type": "number",
+     "maximum": 48,
+     "description": "Length (inches) of the package. Required if requesting a quote with a\nnew order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet)."
+    },
+    "lengthDim": {
+     "type": "integer",
+     "maximum": 48,
+     "description": "Alias for length. Do not use as future support is not guaranteed",
+     "deprecated": true
+    },
+    "width": {
+     "type": "number",
+     "maximum": 48,
+     "description": "Width (inches) of the package. Required if requesting a quote with a\nnew order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet)."
+    },
+    "height": {
+     "type": "number",
+     "maximum": 48,
+     "description": "Height (inches) of the package. Required if requesting a quote with a\nnew order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet)."
+    },
+    "weight": {
+     "type": "number",
+     "maximum": 50,
+     "description": "Weight (pounds) of the package. Required if requesting a quote with a\nnew order"
+    },
+    "declaredValue": {
+     "type": "number",
+     "description": "Declared value of package, in USD pennies (5000 is $50 USD)."
+    },
+    "signatureRequired": {
+     "description": "Specify whether recipient has to sign for this package. Not currently supported by operations and will always be set to false.",
+     "default": false,
+     "deprecated": true
+    },
+    "barCode": {
+     "type": "string",
+     "description": "The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.",
+     "minLength": 14,
+     "maxLength": 20,
+     "pattern": "^[a-zA-Z0-9]+$"
+    },
+    "description": {
+     "type": "string",
+     "description": "Description of the package. Note that this description will appear on the label."
+    },
+    "specialHandling": {
+     "$ref": "#/$defs/SpecialHandling"
+    },
+    "attendedDelivery": {
+     "$ref": "#/$defs/AttendedDelivery"
+    },
+    "quoteId": {
+     "type": "string",
+     "description": "The ID of the quote that was used to rate this package. Represented as a UUID.",
+     "format": "uuid"
+    },
+    "dispatchDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used."
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past."
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId"
+    }
+   }
+  },
+  "SpecialHandling": {
+   "title": "Special Handling",
+   "additionalProperties": false,
+   "type": "object",
+   "description": "Special handling modifiers.",
+   "properties": {
+    "dryIce": {
+     "$ref": "#/$defs/DryIce"
+    },
+    "hazmat": {
+     "$ref": "#/$defs/Hazmat"
+    }
+   }
+  },
+  "DryIce": {
+   "title": "Dry Ice",
+   "additionalProperties": false,
+   "deprecated": true,
+   "type": "object",
+   "description": "Note that Veho no longer supports shipping dry ice, and will reject packages containing dry ice. Indicates that this package contains dry ice (carbon dioxide, solid).",
+   "required": [
+    "weight"
+   ],
+   "properties": {
+    "weight": {
+     "type": "number",
+     "description": "Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.",
+     "minimum": 0
+    }
+   }
+  },
+  "Hazmat": {
+   "title": "Hazmat (Hazardous Materials)",
+   "additionalProperties": false,
+   "type": "object",
+   "description": "Indicates that this package contains hazardous materials. If you intend to ship hazardous materials, please get in contact with a Veho representative.",
+   "required": [
+    "limitedQuantity"
+   ],
+   "properties": {
+    "limitedQuantity": {
+     "type": "boolean",
+     "description": "Indicates whether this package contains limited quantity (LQ) hazardous materials or not."
+    }
+   }
+  },
+  "AttendedDelivery": {
+   "title": "Attended Delivery",
+   "additionalProperties": false,
+   "type": "object",
+   "description": "Configuration for attended delivery on this package. Attended delivery requires interaction between the driver and the recipient to confirm delivery. Currently only PIN verification is supported. Required fields within this object  may vary based on your account configuration.",
+   "required": [
+    "verificationType"
+   ],
+   "properties": {
+    "verificationType": {
+     "type": "string",
+     "enum": [
+      "pinVerification"
+     ],
+     "description": "The type of delivery verification required for this package.\npinVerification \u2014 A unique PIN is sent to the recipient and must be provided to the driver to release the package."
+    }
+   }
+  },
+  "PackageResponse": {
+   "additionalProperties": true,
+   "title": "Package Response",
+   "type": "object",
+   "properties": {
+    "_id": {
+     "type": "string",
+     "description": "Unique Package ID. Generated by Veho.",
+     "readOnly": true
+    },
+    "orderId": {
+     "type": "string",
+     "description": "Id of the order this package belongs to.",
+     "readOnly": true
+    },
+    "clientId": {
+     "type": "string",
+     "description": "Client ID",
+     "readOnly": true
+    },
+    "pdfShippingLabelLink": {
+     "type": "string",
+     "description": "Link to pdf shipping label file. Note that while the label link is immediately generated with the order, please account for an extra 100ms-5000ms after order creation for the label to be generated. Before that, this link may return a 404 error.\n",
+     "readOnly": true
+    },
+    "pngShippingLabelLink": {
+     "type": "string",
+     "description": "Link to png shipping label file. Note that while the label link is immediately generated with the order, please account for an extra 100ms-5000ms after order creation for the label to be generated. Before that, this link may return a 404 error.\n",
+     "readOnly": true
+    },
+    "zplShippingLabelLink": {
+     "type": "string",
+     "description": "Link to zpl shipping label file. Note that while the label link is immediately generated with the order, please account for an extra 100ms-5000ms after order creation for the label to be generated. Before that, this link may return a 404 error.\n",
+     "readOnly": true
+    },
+    "lastEvent": {
+     "type": "string",
+     "description": "Latest state of the package",
+     "enum": [
+      "created",
+      "pending",
+      "notFound",
+      "pickedUpFromClient",
+      "droppedOffAtVeho",
+      "pickedUpFromVeho",
+      "delivered",
+      "returned",
+      "cancelled",
+      "misdelivered",
+      "discarded",
+      "returnedToClient",
+      "returnedToVeho",
+      "notReceivedFromClient",
+      "removedForRescue",
+      "removedForRollover",
+      "outForPickup",
+      "pickedUpFromConsumer",
+      "pickupSkipped",
+      "pickupFailed",
+      "pickupDroppedOffAtVeho",
+      "pickupTransferredToExternalCarrier"
+     ],
+     "readOnly": true
+    },
+    "createdAt": {
+     "type": "string",
+     "format": "date-time",
+     "readOnly": true
+    },
+    "updatedAt": {
+     "type": "string",
+     "format": "date-time",
+     "readOnly": true
+    },
+    "trackingId": {
+     "type": "string",
+     "description": "A unique 14-character string designed to be visually unambiguous that clients and recipients can use to track package status.",
+     "readOnly": true
+    },
+    "eventLog": {
+     "type": "array",
+     "readOnly": true,
+     "items": {
+      "$ref": "#/$defs/Event"
+     }
+    },
+    "externalCarrier": {
+     "type": "object",
+     "description": "External Carrier\n",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "External Carrier Name\n",
+       "readOnly": true
+      },
+      "trackingId": {
+       "type": "string",
+       "description": "External Carrier Tracking ID\n",
+       "readOnly": true
+      }
+     }
+    },
+    "externalShippingLabelLink": {
+     "type": "string",
+     "description": "Link to shipping label file provided by the client\n"
+    },
+    "externalId": {
+     "type": "string",
+     "description": "Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object."
+    },
+    "length": {
+     "type": "integer",
+     "maximum": 48,
+     "description": "Length (inches) of the package"
+    },
+    "width": {
+     "type": "integer",
+     "maximum": 48,
+     "description": "Width (inches) of the package"
+    },
+    "height": {
+     "type": "integer",
+     "maximum": 48,
+     "description": "Height (inches) of the package"
+    },
+    "weight": {
+     "type": "integer",
+     "maximum": 50,
+     "description": "Weight (pounds) of the package"
+    },
+    "declaredValue": {
+     "type": "number",
+     "description": "Declared value of package, in USD pennies (5000 is $50 USD)."
+    },
+    "description": {
+     "type": "string",
+     "description": "Description of the package. Note that this description will appear on the label."
+    },
+    "signatureRequired": {
+     "description": "Specify whether recipient has to sign for this package.",
+     "type": "boolean",
+     "default": false,
+     "deprecated": true
+    },
+    "barCode": {
+     "type": "string",
+     "description": "The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.",
+     "minLength": 7,
+     "maxLength": 20
+    },
+    "consumerId": {
+     "type": "string",
+     "description": "ID of consumer",
+     "deprecated": true
+    },
+    "specialHandling": {
+     "$ref": "#/$defs/SpecialHandling"
+    },
+    "attendedDelivery": {
+     "$ref": "#/$defs/AttendedDelivery"
+    },
+    "scheduledServiceDate": {
+     "type": "string",
+     "description": "Scheduled service date for the package",
+     "format": "date-time",
+     "readOnly": true
+    },
+    "actualServiceDate": {
+     "type": "string",
+     "description": "Date of actual service for the package",
+     "format": "date-time",
+     "readOnly": true
+    },
+    "quoteId": {
+     "type": "string",
+     "description": "The ID of the quote that was used to rate this package. Represented as a UUID.",
+     "format": "uuid",
+     "readOnly": true
+    },
+    "dispatchDate": {
+     "type": "string",
+     "format": "date",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.",
+     "readOnly": true
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past."
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId",
+     "readOnly": true
+    },
+    "slaServiceDate": {
+     "type": "string",
+     "format": "date",
+     "description": "The date by which the package is expected to be delivered. Replacement for slaDeliveryDate",
+     "readOnly": true
+    },
+    "perishable": {
+     "type": "boolean",
+     "description": "Indicates whether the package is perishable",
+     "readOnly": true
+    },
+    "humanReadableOperation": {
+     "type": "string",
+     "description": "The lastEvent on the package as a more detailed string. For example, \"Package out for delivery\" instead of \"pickedUpFromVeho\"",
+     "readOnly": true
+    }
+   }
+  },
+  "QuotedPackageResponse": {
+   "allOf": [
+    {
+     "$ref": "#/$defs/PackageResponse"
+    },
+    {
+     "type": "object",
+     "properties": {
+      "quote": {
+       "$ref": "#/$defs/SimpleQuoteItem"
+      }
+     }
+    }
+   ]
+  },
+  "GetPackageByIdResponse": {
+   "allOf": [
+    {
+     "$ref": "#/$defs/PackageResponse"
+    },
+    {
+     "type": "object",
+     "properties": {
+      "deliveryImage": {
+       "type": "string",
+       "description": "URL to access the delivery image for package, on request, if available. This field can be requested by setting the \"includeDeliveryImage\" query parameter to true"
+      }
+     }
+    }
+   ]
+  },
+  "Event": {
+   "type": "object",
+   "description": "The eventLog object represents an event in the lifecycle of the package:",
+   "properties": {
+    "eventType": {
+     "type": "string",
+     "description": "enum representing the event that occurred",
+     "enum": [
+      "created",
+      "pending",
+      "notFound",
+      "pickedUpFromClient",
+      "droppedOffAtVeho",
+      "pickedUpFromVeho",
+      "delivered",
+      "returned",
+      "cancelled",
+      "misdelivered",
+      "discarded",
+      "PackageArrivedAtFacility",
+      "PackageDepartedFromFacility",
+      "PackageHadDeliveryIssue",
+      "PackageLoadedOntoFirstMileTransit",
+      "pendingReturnToClient",
+      "returnedToClient",
+      "returnedToVeho",
+      "notReceivedFromClient",
+      "removedForRescue",
+      "removedForRollover",
+      "outForPickup",
+      "pickedUpFromConsumer",
+      "pickupSkipped",
+      "pickupFailed",
+      "pickupDroppedOffAtVeho",
+      "pickupTransferredToExternalCarrier"
+     ],
+     "readOnly": true
+    },
+    "timestamp": {
+     "type": "string",
+     "format": "date-time",
+     "description": "time at which the event occurred",
+     "readOnly": true
+    },
+    "message": {
+     "type": "string",
+     "description": "message associated with the event",
+     "readOnly": true
+    },
+    "city": {
+     "type": "string",
+     "description": "The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.",
+     "readOnly": true
+    },
+    "state": {
+     "type": "string",
+     "description": "The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.",
+     "readOnly": true
+    },
+    "meta": {
+     "type": "object",
+     "description": "freeform JSON metadata associated with the event. The fields presented in this object are subject to change",
+     "readOnly": true
+    }
+   },
+   "readOnly": true
+  },
+  "OrderEvent": {
+   "type": "object",
+   "description": "The eventLog object represents an event in the lifecycle of the order",
+   "properties": {
+    "eventType": {
+     "type": "string",
+     "enum": [
+      "created",
+      "cancelled"
+     ],
+     "description": "enum representing the event that occurred",
+     "readOnly": true
+    },
+    "timestamp": {
+     "type": "string",
+     "format": "date-time",
+     "description": "time at which the event occurred",
+     "readOnly": true
+    }
+   }
+  },
+  "MerchantRequest": {
+   "type": "object",
+   "x-examples": {
+    "example-1": {
+     "name": "Flintstone's Wheels"
+    }
+   },
+   "description": "Merchants. For 3PL clients who ship on behalf of merchants",
+   "title": "Merchant Request",
+   "required": [
+    "name"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Merchant Name"
+    }
+   }
+  },
+  "MerchantResponse": {
+   "type": "object",
+   "x-examples": {
+    "example-1": {
+     "_id": "TuN75hYYBicRsaLWo",
+     "name": "Flintstone's Wheels"
+    }
+   },
+   "description": "Merchants. For 3PL clients who ship on behalf of merchants",
+   "title": "Merchant Response",
+   "properties": {
+    "_id": {
+     "type": "string",
+     "description": "Merchant ID"
+    },
+    "name": {
+     "type": "string",
+     "description": "Merchant Name"
+    },
+    "clientId": {
+     "type": "string",
+     "description": "Client ID",
+     "readOnly": true
+    }
+   }
+  },
+  "OrderAddress": {
+   "title": "Order Address",
+   "type": "object",
+   "description": "Delivery address",
+   "required": [
+    "zipCode",
+    "street",
+    "city",
+    "state"
+   ],
+   "properties": {
+    "street": {
+     "type": "string",
+     "description": "Street address"
+    },
+    "city": {
+     "type": "string",
+     "description": "City"
+    },
+    "state": {
+     "type": "string",
+     "description": "State. 2 letter postal code or full state name",
+     "example": "CO"
+    },
+    "zipCode": {
+     "type": "string",
+     "description": "ZIP code",
+     "pattern": "^\\d{5}(-?\\d{4})?$"
+    },
+    "apartment": {
+     "type": "string",
+     "description": "Apartment number, suite number or any info on the second line of an address"
+    },
+    "country": {
+     "type": "string",
+     "description": "2 letter ISO country code"
+    }
+   }
+  },
+  "FromAddress": {
+   "title": "From Address",
+   "type": "object",
+   "description": "Address where this order is originating from",
+   "required": [
+    "addressLine1",
+    "city",
+    "state",
+    "zipCode"
+   ],
+   "properties": {
+    "addressLine1": {
+     "type": "string",
+     "description": "Address line 1"
+    },
+    "addressLine2": {
+     "type": "string",
+     "description": "Address line 2"
+    },
+    "city": {
+     "type": "string",
+     "description": "City"
+    },
+    "state": {
+     "type": "string",
+     "description": "State. 2 letter postal code or full state name",
+     "example": "CO"
+    },
+    "zipCode": {
+     "type": "string",
+     "description": "ZIP code",
+     "pattern": "^\\d{5}(-?\\d{4})?$"
+    },
+    "country": {
+     "type": "string",
+     "description": "2 letter ISO country code"
+    }
+   }
+  },
+  "WebhookConfigurationResponse": {
+   "description": "Webhook Configurations define what endpoint Veho will send webhook events to, and which package milestone events it will send them for.",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "example": "abcd1234"
+    },
+    "createdAt": {
+     "type": "string",
+     "format": "date-time",
+     "example": "2021-01-30T08:30:00Z"
+    },
+    "updatedAt": {
+     "type": "string",
+     "format": "date-time",
+     "example": "2021-01-30T08:30:00Z"
+    },
+    "endpoint": {
+     "description": "The URL that Veho will send webhook events to for this configuration",
+     "type": "string",
+     "format": "url",
+     "example": "https://www.example.com"
+    },
+    "eventType": {
+     "$ref": "#/$defs/EventType"
+    },
+    "serviceType": {
+     "$ref": "#/$defs/ServiceType"
+    },
+    "customHeaders": {
+     "description": "Headers needed to call the endpoint correctly, ex. an API key",
+     "type": "object",
+     "additionalProperties": {
+      "type": "string"
+     },
+     "example": {
+      "KEY-1": "SOMETHING-1",
+      "KEY-2": "SOMETHING-2"
+     }
+    }
+   }
+  },
+  "WebhookConfigurationListResponse": {
+   "type": "object",
+   "properties": {
+    "configurations": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/WebhookConfigurationResponse"
+     }
+    }
+   }
+  },
+  "WebhookConfigurationRequest": {
+   "description": "Defines a webhook configuration",
+   "type": "object",
+   "properties": {
+    "endpoint": {
+     "type": "string",
+     "description": "The endpoint that webhook events will be sent to for this configuration",
+     "format": "url",
+     "example": "https://www.example.com"
+    },
+    "eventType": {
+     "$ref": "#/$defs/EventType"
+    },
+    "serviceType": {
+     "$ref": "#/$defs/ServiceType"
+    },
+    "customHeaders": {
+     "description": "Headers needed to call the endpoint correctly, ex. an API key",
+     "type": "object",
+     "additionalProperties": {
+      "type": "string"
+     },
+     "example": {
+      "KEY-1": "SOMETHING-1",
+      "KEY-2": "SOMETHING-2"
+     }
+    }
+   },
+   "required": [
+    "endpoint",
+    "serviceType",
+    "eventType"
+   ]
+  },
+  "WebhookEvent": {
+   "description": "A webhook event represents a single event that Veho attempted to send to a webhook endpoint. Each webhook event contains information about the attempted send, as well as a `payload` field to represent the webhook event object that was sent.",
+   "type": "object",
+   "properties": {
+    "id": {
+     "description": "ID of the event that occured",
+     "type": "string"
+    },
+    "createdAt": {
+     "description": "time this webhook event initially tried to send",
+     "type": "string",
+     "format": "date-time"
+    },
+    "updatedAt": {
+     "description": "time of last update to this webhook event",
+     "type": "string",
+     "format": "date-time"
+    },
+    "webhookConfigurationId": {
+     "description": "ID of the webhook configuration that triggered this send",
+     "type": "string"
+    },
+    "packageId": {
+     "description": "package ID associated with this event",
+     "type": "string"
+    },
+    "orderId": {
+     "description": "order ID associated with this event",
+     "type": "string"
+    },
+    "serviceType": {
+     "$ref": "#/$defs/ServiceType"
+    },
+    "eventType": {
+     "$ref": "#/$defs/EventType"
+    },
+    "endpoint": {
+     "description": "url this event attempted to send to",
+     "type": "string",
+     "format": "url"
+    },
+    "occurredAt": {
+     "description": "time the originating event happened",
+     "type": "string",
+     "format": "date-time"
+    },
+    "payload": {
+     "description": "the webhook event object sent",
+     "type": "object",
+     "properties": {
+      "_id": {
+       "type": "string"
+      }
+     },
+     "additionalProperties": true
+    },
+    "trackingId": {
+     "description": "external tracking id supplied to Veho to track this package",
+     "type": "string"
+    },
+    "barcode": {
+     "description": "the custom or generated barcode value for the package",
+     "type": "string"
+    },
+    "result": {
+     "description": "the final result of this webhook",
+     "type": "string",
+     "enum": [
+      "success",
+      "failure"
+     ]
+    }
+   }
+  },
+  "ServiceType": {
+   "description": "Type of service associated, delivery or pickup",
+   "type": "string",
+   "enum": [
+    "delivery",
+    "pickup"
+   ]
+  },
+  "EventType": {
+   "description": "Type of package milestone event associated with the webhook",
+   "type": "string",
+   "enum": [
+    "package.created",
+    "package.pickedUpFromClient",
+    "package.droppedOffAtVeho",
+    "package.pickedUpFromVeho",
+    "package.delivered",
+    "package.cancelled",
+    "package.misdelivered",
+    "package.discarded",
+    "package.notReceivedFromClient",
+    "package.pendingReturnToClient",
+    "package.returnedToClient",
+    "package.rescheduled",
+    "package.delayed",
+    "package.arrivedAtFacility",
+    "package.departedFromFacility",
+    "package.hadDeliveryIssue",
+    "package.outForPickup",
+    "package.pickedUpFromConsumer",
+    "package.pickupSkipped",
+    "package.pickupDroppedOffAtVeho",
+    "package.pickupFailed",
+    "package.pickupTransferredToExternalCarrier"
+   ]
+  },
+  "ServiceableZipsResponse": {
+   "type": "object",
+   "required": [
+    "zipCodes"
+   ],
+   "properties": {
+    "zipCodes": {
+     "type": "array",
+     "description": "Serviceable ZIP codes",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "SimpleQuoteRequest": {
+   "type": "object",
+   "description": "Required fields for a simple quote generation request",
+   "required": [
+    "originationZip",
+    "deliveryZip",
+    "packages"
+   ],
+   "properties": {
+    "originationZip": {
+     "type": "string",
+     "description": "ZIP code the package originates from",
+     "pattern": "^\\d{5}(-?\\d{4})?$"
+    },
+    "deliveryZip": {
+     "type": "string",
+     "description": "The delivery ZIP code",
+     "pattern": "^\\d{5}(-?\\d{4})?$"
+    },
+    "packages": {
+     "type": "array",
+     "description": "An array of packages to be quoted",
+     "minItems": 1,
+     "maxItems": 10,
+     "items": {
+      "type": "object",
+      "required": [
+       "length",
+       "width",
+       "height",
+       "weight"
+      ],
+      "properties": {
+       "length": {
+        "type": "number",
+        "maximum": 48,
+        "minimum": 0,
+        "description": "Length (inches) of the package"
+       },
+       "width": {
+        "type": "number",
+        "maximum": 48,
+        "minimum": 0,
+        "description": "Width (inches) of the package"
+       },
+       "height": {
+        "type": "number",
+        "maximum": 48,
+        "minimum": 0,
+        "description": "Height (inches) of the package"
+       },
+       "weight": {
+        "type": "number",
+        "maximum": 50,
+        "exclusiveMinimum": 0,
+        "description": "Weight (pounds) of the package"
+       },
+       "attendedDelivery": {
+        "type": "object",
+        "description": "Optional attended delivery configuration for the package",
+        "properties": {
+         "verificationType": {
+          "type": "string",
+          "description": "The type of verification required for attended delivery",
+          "enum": [
+           "pinVerification"
+          ]
+         }
+        },
+        "required": [
+         "verificationType"
+        ]
+       }
+      }
+     }
+    },
+    "shipDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.",
+     "format": "date"
+    },
+    "serviceClass": {
+     "type": "string",
+     "default": "groundPlus",
+     "optional": true,
+     "description": "Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility",
+     "enum": [
+      "nextDay",
+      "sameDay",
+      "twoDay",
+      "vehoValue",
+      "groundPlus",
+      "premiumEconomy",
+      "expressAir",
+      "groundPlusOne",
+      "groundPlusTwo",
+      "groundPlusThree",
+      "groundPlusFour"
+     ]
+    }
+   }
+  },
+  "SimpleQuoteResponse": {
+   "type": "array",
+   "description": "An array of quoted packages, including rates and assumed dates",
+   "items": {
+    "$ref": "#/$defs/SimpleQuoteItem"
+   }
+  },
+  "SimpleQuoteItem": {
+   "type": "object",
+   "properties": {
+    "quoteId": {
+     "type": "string",
+     "description": "ID of the generated quote associated to the rated package"
+    },
+    "transitTime": {
+     "type": "number",
+     "description": "Days package will be in transit"
+    },
+    "serviceClass": {
+     "type": "string",
+     "default": "groundPlus",
+     "description": "Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility",
+     "enum": [
+      "nextDay",
+      "sameDay",
+      "twoDay",
+      "vehoValue",
+      "groundPlus",
+      "premiumEconomy",
+      "expressAir",
+      "groundPlusOne",
+      "groundPlusTwo",
+      "groundPlusThree",
+      "groundPlusFour"
+     ]
+    },
+    "currency": {
+     "type": "string",
+     "default": "USD",
+     "description": "Currency for rate, currently only `USD` is available",
+     "enum": [
+      "USD"
+     ]
+    },
+    "rate": {
+     "type": "number",
+     "description": "All-in rate for quoted order",
+     "minimum": 0
+    },
+    "assumedInjectionZip": {
+     "type": "string",
+     "description": "The injection ZIP code assumed for the quote calculation"
+    },
+    "createdAt": {
+     "type": "string",
+     "description": "Time at which the quote was created",
+     "format": "date-time"
+    },
+    "shipDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.",
+     "format": "date"
+    },
+    "weight": {
+     "type": "number",
+     "description": "Weight (pounds) of the package"
+    },
+    "billableWeight": {
+     "type": "number",
+     "description": "Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor."
+    },
+    "length": {
+     "type": "number",
+     "description": "Length (inches) of the package"
+    },
+    "width": {
+     "type": "number",
+     "description": "Width (inches) of the package"
+    },
+    "height": {
+     "type": "number",
+     "description": "Height (inches) of the package"
+    },
+    "zone": {
+     "type": "string",
+     "description": "Zone of the package"
+    }
+   }
+  },
+  "ManifestRequestWithPackageIds": {
+   "type": "object",
+   "required": [
+    "packageIds"
+   ],
+   "properties": {
+    "transitType": {
+     "type": "string",
+     "default": "truck",
+     "description": "The type of vehicle that the package has been loaded onto. Will default to 'truck'",
+     "enum": [
+      "truck",
+      "plane"
+     ]
+    },
+    "dispatchDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "format": "date"
+    },
+    "packageIds": {
+     "type": "array",
+     "description": "An array of packages to be updated with new dispatchDates",
+     "minItems": 1,
+     "maxItems": 100,
+     "items": {
+      "type": "string"
+     }
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past."
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId"
+    },
+    "loadId": {
+     "type": "string",
+     "description": "Client-provided load identifier for the manifest"
+    }
+   }
+  },
+  "ManifestRequestWithBarcodes": {
+   "type": "object",
+   "required": [
+    "barcodes"
+   ],
+   "properties": {
+    "transitType": {
+     "type": "string",
+     "default": "truck",
+     "description": "The type of vehicle that the package has been loaded onto. Will default to 'truck'",
+     "enum": [
+      "truck",
+      "plane"
+     ]
+    },
+    "dispatchDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "barcodes": {
+     "type": "array",
+     "description": "An array of packages to be updated with new dispatchDates",
+     "minItems": 1,
+     "maxItems": 100,
+     "items": {
+      "type": "string"
+     }
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past."
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId"
+    },
+    "loadId": {
+     "type": "string",
+     "description": "Client-provided load identifier for the manifest"
+    }
+   }
+  },
+  "ManifestRequestWithExternalIds": {
+   "type": "object",
+   "required": [
+    "externalIds"
+   ],
+   "properties": {
+    "transitType": {
+     "type": "string",
+     "default": "truck",
+     "description": "The type of vehicle that the package has been loaded onto. Will default to 'truck'",
+     "enum": [
+      "truck",
+      "plane"
+     ]
+    },
+    "dispatchDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "externalIds": {
+     "type": "array",
+     "description": "An array of packages to be updated with new dispatchDates",
+     "minItems": 1,
+     "maxItems": 100,
+     "items": {
+      "type": "string"
+     }
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past."
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId"
+    },
+    "loadId": {
+     "type": "string",
+     "description": "Client-provided load identifier for the manifest"
+    }
+   }
+  },
+  "ManifestRequestWithTrackingIds": {
+   "type": "object",
+   "required": [
+    "trackingIds"
+   ],
+   "properties": {
+    "transitType": {
+     "type": "string",
+     "default": "truck",
+     "description": "The type of vehicle that the package has been loaded onto. Will default to 'truck'",
+     "enum": [
+      "truck",
+      "plane"
+     ]
+    },
+    "dispatchDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "trackingIds": {
+     "type": "array",
+     "description": "An array of packages to be updated with new dispatchDates",
+     "minItems": 1,
+     "maxItems": 100,
+     "items": {
+      "type": "string"
+     }
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past."
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId"
+    },
+    "loadId": {
+     "type": "string",
+     "description": "Client-provided load identifier for the manifest"
+    }
+   }
+  },
+  "ManifestResponse": {
+   "type": "object",
+   "description": "Manifest response structure",
+   "properties": {
+    "dispatchDate": {
+     "type": "string",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.",
+     "optional": false,
+     "format": "date"
+    },
+    "shipDate": {
+     "type": "string",
+     "format": "date",
+     "description": "A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.",
+     "optional": true
+    },
+    "tenderFacilityId": {
+     "$ref": "#/$defs/FacilityId",
+     "optional": true
+    },
+    "packageIdsUpdated": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of package IDs for packages that were updated with the new dispatch date",
+     "optional": true
+    },
+    "packageIdsNotFound": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of package IDs for packages that were not found within the system",
+     "optional": true
+    },
+    "barcodesUpdated": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of barcodes for packages that were updated with the new dispatch date",
+     "optional": true
+    },
+    "barcodesNotFound": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of barcodes for packages that were not found within the system",
+     "optional": true
+    },
+    "trackingIdsUpdated": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of tracking IDs for packages that were updated with the new dispatch date",
+     "optional": true
+    },
+    "trackingIdsNotFound": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of tracking IDs for packages that were not found within the system",
+     "optional": true
+    },
+    "externalIdsUpdated": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of external IDs for packages that were updated with the new dispatch date",
+     "optional": true
+    },
+    "externalIdsNotFound": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "An array of external IDs for packages that were not found within the system",
+     "optional": true
+    }
+   }
+  },
+  "FacilityId": {
+   "type": "string",
+   "minLength": 17,
+   "maxLength": 26,
+   "description": "ID of the facility where the package will be first tendered to Veho. Primarily used for the [manifest API](#section/Manifest-API), but\nmay be provided in the [create order API](#operation/createOrder) with shipDate to improve package scheduling accuracy.\n\nAvailable facilities and their markets are shown below. Note that we're expanding rapidly, so this list may not be up to date. \nPlease reach out to api@shipveho.com if you don't see the location you're looking for in the list.\n\n- Atlanta - Flowery Branch: dCXhH5MUgazmhGfKeJE9B4\n- Atlanta - Fulton Industrial: GRhhgCv5gDgLS6Qka\n- Austin - North Burnet: 3iov7ubHhs94aEPBL\n- Baltimore - Elkridge: dMXtHiHjrYoh4i3De\n- Birmingham - Bessemer: gfq9t2DxppGyCXJ34RGqEY\n- Boston - Framingham: woYEFuLfPRUzrkVU3JawVg\n- Boston - Walpole: ux91QaswnPYeVaUE81eKFx\n- Brooklyn - East Williamsburg: w83soVN16cPgGz3Ctivgdp\n- Buffalo - Park Meadow: 01KTY6EAAF2CTJPGEAQ6GDAYD8\n- Charlotte - Davis Lake-Eastfield: qAtfork2ynpbgiw4H\n- Chicago - Franklin Park: dEoWcaMvuHaraXQDUVRFKX\n- Cincinnati - West Chester Twp: wMT2Qvnp2BakKxY1AQGkMB\n- Cleveland - North Randall: bVpL7Lc44QZcpWumEYhqxn\n- Colorado Springs - Northeast Colorado Springs: ta54XMNfRwq9zL5qA\n- Columbus - Parsons Industrial: WKeYjAqygeKAgmqck\n- Dallas - Flower Mound: 6Ao5iHPxXztinf5iK\n- Dallas - Grand Prairie: 6avT1L2rnhHRCEt9C2jcWJ\n- Denver - Northeast Park Hill: ddrDmNaR9rEp5vjCk\n- Detroit - Highland Park: qVn1ReCYZR5aKwVA1DR7Zb\n- Fort Collins: tK9ZEsADJbZP48PEk\n- Fort Myers - Three Oaks: a5o8VHxsLgvU7hktgrW17X\n- Greensboro - Winston Salem: 3ngUhZdL2Hngq9bqkwK7gN\n- Harrisburg: 01KTY6YYT73MFS7BDVH7QFEM74\n- Hartford - Newington: hk6YYM1Bz4HkVnPLLNzveg\n- Houston - Carverdale: 3MbxHDDS364R4TXDK\n- Indianapolis - Park 100: HoCzKZdLkqecd8JhG\n- Inland Empire - Ontario: 9a8BfAzsWS35pw6ME2tQwv\n- Jacksonville - Pine Forest: jvsKgT3GqRdXWr8Ee\n- Kansas City - Lee's Summit: 01KP8R2VMCSWG4WX9XV30Z8TF1\n- Las Vegas - North Las Vegas: 19P5QQXpsT3pXcLwfdW5ZS\n- Long Island - Plainview: jbDcupiysexpFfWHQFRvbG\n- Los Angeles - Santa Fe Springs: 31FBXPhg5yGg41DXHpCyGX\n- Louisville - Greenwood: qEYMv6yBFr63He5s3UmZ4u\n- Memphis - Whitehaven: 8PtYA5VzSXAD4dK6yvrwgf\n- Milwaukee - Mitchell West: ZHsMxYNvS2oYWsXDJ\n- Minneapolis - Eagan: vQTApMmprwW5A6NbEQUS3B\n- Nashville - Airport South: tW6dmmFfjbzUUFzN1CqUae\n- Newark - Avenel: qABpPZ6gVsACXNkmyMEuLA\n- Norfolk - Fairmont Park: kMwuuGVtEkkFMuvP28g6ih\n- Northern Virginia - Alexandria: EMAy3J3o7vs9XEkXd\n- Oklahoma City - Capitol View: 57AC8VFocVtqyMU3FJaJRN\n- Orlando - Southchase: yECerwQzfpqNTwXXq\n- Philadelphia - Bridesburg: fT3MwATFjkCwGQ6W9\n- Phoenix - West Gate: gy42rdnmYv6n7tLroLh7Qv\n- Pittsburgh - Fairywood: cUDHZY9YoQT15XJ1USK7GW\n- Raleigh - Garner: ECqn5c9CtPCcNyiHf\n- Richmond - Sandston: 88RZK4vnVXsEkP9trPoMUx\n- Rochester - Brighton: 01KTY6KMQY0VACBEB0DMKNMRHB\n- Sacramento - Dos Rios: 01KR3X20A9AP27PMM0GDWWMP4H\n- San Antonio - Blossoms Park: MqGres8scbvRp6jT8\n- San Diego - Morena: ciSJ5yQGofLyWGCWtRduPQ\n- San Francisco - Union City: 01KR3W879M7ZZT2KNEWRYES77R\n- South Florida - Hialeah: e1WrdksedyHiGuneQtUFPK\n- South Florida - Pompano Beach: i7bWs6aMTnGP76Eab\n- St. Louis - Marine Villa: fjyrh4T5C8ZcKLubxVPcX6\n- Tampa - Riverview: kgR6wzjoLoHKKkutypDXTJ\n- Tampa - Tampa Bay: emLLeyNvZbZxF3wBc\n- Tucson - Milton Manor: 01KTY6SN8705Z22FVK661E3C8T\n- Tulsa - Rosewood: vJ5DrzqgRcRPD3UGZzdYZ2\n- Valdosta (trailer swap): hi8okn7qC65DvmJ5rPPbrw\n- Westchester - Mount Vernon: b1dApFZdTnvirmWMCvFxJp\n- Westchester - Yonkers: iz15JEArSje2K2by8NHaCM\n",
+   "enum": [
+    "dCXhH5MUgazmhGfKeJE9B4",
+    "GRhhgCv5gDgLS6Qka",
+    "3iov7ubHhs94aEPBL",
+    "dMXtHiHjrYoh4i3De",
+    "gfq9t2DxppGyCXJ34RGqEY",
+    "woYEFuLfPRUzrkVU3JawVg",
+    "ux91QaswnPYeVaUE81eKFx",
+    "w83soVN16cPgGz3Ctivgdp",
+    "01KTY6EAAF2CTJPGEAQ6GDAYD8",
+    "qAtfork2ynpbgiw4H",
+    "dEoWcaMvuHaraXQDUVRFKX",
+    "wMT2Qvnp2BakKxY1AQGkMB",
+    "bVpL7Lc44QZcpWumEYhqxn",
+    "ta54XMNfRwq9zL5qA",
+    "WKeYjAqygeKAgmqck",
+    "6Ao5iHPxXztinf5iK",
+    "6avT1L2rnhHRCEt9C2jcWJ",
+    "ddrDmNaR9rEp5vjCk",
+    "qVn1ReCYZR5aKwVA1DR7Zb",
+    "tK9ZEsADJbZP48PEk",
+    "a5o8VHxsLgvU7hktgrW17X",
+    "3ngUhZdL2Hngq9bqkwK7gN",
+    "01KTY6YYT73MFS7BDVH7QFEM74",
+    "hk6YYM1Bz4HkVnPLLNzveg",
+    "3MbxHDDS364R4TXDK",
+    "HoCzKZdLkqecd8JhG",
+    "9a8BfAzsWS35pw6ME2tQwv",
+    "jvsKgT3GqRdXWr8Ee",
+    "01KP8R2VMCSWG4WX9XV30Z8TF1",
+    "19P5QQXpsT3pXcLwfdW5ZS",
+    "jbDcupiysexpFfWHQFRvbG",
+    "31FBXPhg5yGg41DXHpCyGX",
+    "qEYMv6yBFr63He5s3UmZ4u",
+    "8PtYA5VzSXAD4dK6yvrwgf",
+    "ZHsMxYNvS2oYWsXDJ",
+    "vQTApMmprwW5A6NbEQUS3B",
+    "tW6dmmFfjbzUUFzN1CqUae",
+    "qABpPZ6gVsACXNkmyMEuLA",
+    "kMwuuGVtEkkFMuvP28g6ih",
+    "EMAy3J3o7vs9XEkXd",
+    "57AC8VFocVtqyMU3FJaJRN",
+    "yECerwQzfpqNTwXXq",
+    "fT3MwATFjkCwGQ6W9",
+    "gy42rdnmYv6n7tLroLh7Qv",
+    "cUDHZY9YoQT15XJ1USK7GW",
+    "ECqn5c9CtPCcNyiHf",
+    "88RZK4vnVXsEkP9trPoMUx",
+    "01KTY6KMQY0VACBEB0DMKNMRHB",
+    "01KR3X20A9AP27PMM0GDWWMP4H",
+    "MqGres8scbvRp6jT8",
+    "ciSJ5yQGofLyWGCWtRduPQ",
+    "01KR3W879M7ZZT2KNEWRYES77R",
+    "e1WrdksedyHiGuneQtUFPK",
+    "i7bWs6aMTnGP76Eab",
+    "fjyrh4T5C8ZcKLubxVPcX6",
+    "kgR6wzjoLoHKKkutypDXTJ",
+    "emLLeyNvZbZxF3wBc",
+    "01KTY6SN8705Z22FVK661E3C8T",
+    "vJ5DrzqgRcRPD3UGZzdYZ2",
+    "hi8okn7qC65DvmJ5rPPbrw",
+    "b1dApFZdTnvirmWMCvFxJp",
+    "iz15JEArSje2K2by8NHaCM"
+   ]
+  },
+  "ErrorResponse": {
+   "description": "Error response object",
+   "type": "object",
+   "required": [
+    "message"
+   ],
+   "properties": {
+    "message": {
+     "description": "Error description",
+     "type": "string"
+    },
+    "errors": {
+     "description": "List of validation errors",
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "code",
+       "message",
+       "path"
+      ],
+      "properties": {
+       "code": {
+        "description": "Error code",
+        "type": "string",
+        "enum": [
+         "invalid_type",
+         "unrecognized_keys",
+         "invalid_string",
+         "invalid_enum_value",
+         "invalid_date",
+         "too_small",
+         "too_big",
+         "invalid_packages",
+         "invalid_address_field",
+         "unserviceable_zip_code",
+         "invalid_merchant",
+         "invalid_external_client",
+         "missing_package_description"
+        ]
+       },
+       "message": {
+        "type": "string",
+        "description": "Error description"
+       },
+       "path": {
+        "description": "Path to the invalid field in your input",
+        "type": "array",
+        "items": {
+         "type": [
+          "string",
+          "number"
+         ]
+        }
+       },
+       "expected": {
+        "type": "string",
+        "description": "Expected type"
+       },
+       "received": {
+        "type": "string",
+        "description": "Received type"
+       },
+       "keys": {
+        "description": "List of unrecognized keys",
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "options": {
+        "description": "Valid string values for the enum",
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "minimum": {
+        "type": "number",
+        "description": "Minimum expected length/value"
+       },
+       "maximum": {
+        "type": "number",
+        "description": "Maximum expected length/value"
+       }
+      }
+     }
+    },
+    "error": {
+     "description": "Legacy error description (deprecated)",
+     "deprecated": true,
+     "oneOf": [
+      {
+       "type": "object",
+       "properties": {
+        "code": {
+         "type": "integer"
+        },
+        "error": {
+         "type": "string"
+        }
+       }
+      },
+      {
+       "type": "string"
+      }
+     ]
+    }
+   }
+  }
+ }
+}
