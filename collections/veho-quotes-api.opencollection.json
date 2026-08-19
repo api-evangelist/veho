@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels quotes API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "quotes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a simple quote for a provisional order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/quote/rate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a simple quote.\nThis endpoint should be used to retrieve the rate and transit time for a package that travels through the zips provided.\n> BY ACCESSING AND USING THE QUOTES API ENDPOINT, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT (\"CONTRACT\"), VEHO MAKES NO TIME COMMITMENTS "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

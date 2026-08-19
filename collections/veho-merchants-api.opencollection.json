@@ -1,0 +1,90 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels merchants API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "merchants",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all merchants for client",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/merchants"
+          },
+          "docs": "Retrieve all merchants for client based on the client's apiKey in headers."
+        },
+        {
+          "info": {
+            "name": "Create a merchant for client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/merchants",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "For 3PL Clients shipping on behalf of merchants that you manage upstream, you can use this API to let us know who they are and manage them under your Client account.\nFor example, if you are a 3PL named \"ShipFast\" and you're shipping to us on behalf of \"Flintstone's Wheels\", you can use this API to let us know that you're working with \"Flintstone's Wheels\". After POST Merchants, you'll use the _id from the response body with POST Orders to link between the order and the merchant you're working wi"
+        },
+        {
+          "info": {
+            "name": "Update a merchant for client",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.shipveho.com/v2/merchants/:_id",
+            "params": [
+              {
+                "name": "_id",
+                "value": "",
+                "type": "path",
+                "description": "Merchant ID"
+              }
+            ]
+          },
+          "docs": "This endpoint updates an existing merchant for client based on the client's apiKey in headers."
+        },
+        {
+          "info": {
+            "name": "Delete a merchant for client",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.shipveho.com/v2/merchants/:_id",
+            "params": [
+              {
+                "name": "_id",
+                "value": "",
+                "type": "path",
+                "description": "Merchant ID"
+              }
+            ]
+          },
+          "docs": "This endpoint deletes an existing merchant for client based on the client's apiKey in headers."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

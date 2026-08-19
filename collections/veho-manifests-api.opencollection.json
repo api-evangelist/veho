@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels manifests API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "manifests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Asynchronously submit packages set to be injected on a specific date",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/manifests/notify",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The packages must exist already in our systems. The package identifiers can be package IDs, tracking IDs, external IDs or barcodes. The validation is asynchronous, thus the endpoint will respond a 201 status as soon as possible."
+        },
+        {
+          "info": {
+            "name": "Synchronously post a list of packages to set their dispatch date",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/manifests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The packages must exist already in our systems. The package identifiers can be package IDs, tracking IDs, external IDs or barcodes. The validation is synchronous, thus the endpoint will respond accordingly depending on the data provided."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

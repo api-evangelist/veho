@@ -1,0 +1,930 @@
+{
+  "item": [
+    {
+      "id": "deac9dc9-a5df-46d9-8007-dda9ee00f583",
+      "name": "manifests",
+      "description": {
+        "content": "Manifests",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6f90b410-2947-4b24-b360-5bcbbe9ec0d9",
+          "name": "Asynchronously submit packages set to be injected on a specific date",
+          "request": {
+            "name": "Asynchronously submit packages set to be injected on a specific date",
+            "description": {
+              "content": "The packages must exist already in our systems. The package identifiers can be package IDs, tracking IDs, external IDs or barcodes. The validation is asynchronous, thus the endpoint will respond a 201 status as soon as possible.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "manifests",
+                "notify"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageIds\": [\n    \"<string>\"\n  ],\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"<date>\",\n  \"shipDate\": \"<date>\",\n  \"tenderFacilityId\": \"<string>\",\n  \"loadId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "df1d16ab-a1f5-42c5-b441-8e4aa4042ef1",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "af76d1fa-1116-4f38-9c87-d076faad601a",
+              "name": "Bad Request -- The request wasn't valid JSON or had missing or invalid fields",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"code\": \"invalid_date\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 699.5587870093323,\n      \"maximum\": 2251.7613447145013\n    },\n    {\n      \"code\": \"missing_package_description\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 607.896208078944,\n      \"maximum\": 3670.0595275960313\n    }\n  ],\n  \"error\": {\n    \"code\": 8477,\n    \"error\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8f1e6bc9-0e9d-40a9-9fcc-f47314fde6ea",
+              "name": "Unauthorized -- The header did not include a valid apiKey header.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "538e47a6-9861-4197-a4cb-759571692ffd",
+              "name": "Forbidden -- The requested resource cannot be accessed with this apiKey.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d5e65f2f-294a-41b1-bafc-5c69c888373e",
+              "name": "Unprocessable Entity -- The request was well formatted, but failed validation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"code\": \"invalid_date\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 699.5587870093323,\n      \"maximum\": 2251.7613447145013\n    },\n    {\n      \"code\": \"missing_package_description\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 607.896208078944,\n      \"maximum\": 3670.0595275960313\n    }\n  ],\n  \"error\": {\n    \"code\": 8477,\n    \"error\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b8b3a5bc-7e9a-4738-b973-5f14260381da",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b1c1c88c-f17d-44ce-8214-512fcb42d596",
+              "name": "Internal Server Error -- We had a problem with our server. Try again later.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9d584dda-5ad8-43de-a14d-448719bfda0a",
+              "name": "Service Unavailable -- We're temporarily offline for maintenance. Please try again later.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests",
+                    "notify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f6792b68-6e6a-4fd3-8f21-f8b34d58773f",
+          "name": "Synchronously post a list of packages to set their dispatch date",
+          "request": {
+            "name": "Synchronously post a list of packages to set their dispatch date",
+            "description": {
+              "content": "The packages must exist already in our systems. The package identifiers can be package IDs, tracking IDs, external IDs or barcodes. The validation is synchronous, thus the endpoint will respond accordingly depending on the data provided.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "manifests"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageIds\": [\n    \"<string>\"\n  ],\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"<date>\",\n  \"shipDate\": \"<date>\",\n  \"tenderFacilityId\": \"<string>\",\n  \"loadId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dd2957a7-605e-4f63-9f1f-f78d302fbf98",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"dispatchDate\": \"1996-12-05\",\n  \"shipDate\": \"2007-03-25\",\n  \"tenderFacilityId\": \"w83soVN16cPgGz3Ctivgdp\",\n  \"packageIdsUpdated\": [\n    \"string\",\n    \"string\"\n  ],\n  \"packageIdsNotFound\": [\n    \"string\",\n    \"string\"\n  ],\n  \"barcodesUpdated\": [\n    \"string\",\n    \"string\"\n  ],\n  \"barcodesNotFound\": [\n    \"string\",\n    \"string\"\n  ],\n  \"trackingIdsUpdated\": [\n    \"string\",\n    \"string\"\n  ],\n  \"trackingIdsNotFound\": [\n    \"string\",\n    \"string\"\n  ],\n  \"externalIdsUpdated\": [\n    \"string\",\n    \"string\"\n  ],\n  \"externalIdsNotFound\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2b3b18f0-5762-4031-8234-cf9824f5f6f9",
+              "name": "Bad Request -- The request wasn't valid JSON or had missing or invalid fields",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"code\": \"too_big\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 2.523951221411469,\n      \"maximum\": 5500.776753405322\n    },\n    {\n      \"code\": \"unrecognized_keys\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 5217.195239037266,\n      \"maximum\": 8631.221144278097\n    }\n  ],\n  \"error\": {\n    \"code\": 5435,\n    \"error\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2f8b629c-ada2-4ad8-853e-018223045aa9",
+              "name": "Unauthorized -- The header did not include a valid apiKey header.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "70ad2e7f-99ec-46a0-954d-c3c1fc7160bd",
+              "name": "Forbidden -- The requested resource cannot be accessed with this apiKey.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "caf3c58d-5fc8-4a04-a3bd-4ed43a0a2a36",
+              "name": "Unprocessable Entity -- The request was well formatted, but failed validation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"code\": \"too_big\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 2.523951221411469,\n      \"maximum\": 5500.776753405322\n    },\n    {\n      \"code\": \"unrecognized_keys\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 5217.195239037266,\n      \"maximum\": 8631.221144278097\n    }\n  ],\n  \"error\": {\n    \"code\": 5435,\n    \"error\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77c44427-7a01-4344-97de-c678066db1df",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "442117a4-43ef-46bd-b5d2-e7407cb003d9",
+              "name": "Internal Server Error -- We had a problem with our server. Try again later.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "43991a73-bcb3-476c-a3f0-a1cccdd930f6",
+              "name": "Service Unavailable -- We're temporarily offline for maintenance. Please try again later.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "manifests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transitType\": \"truck\",\n  \"dispatchDate\": \"2025-01-01\",\n  \"packageIds\": [\n    \"packageId1\",\n    \"packageId2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.shipveho.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "apikey"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b385776c-6f7a-45bd-8878-4a33626c5291",
+    "name": "Veho labels manifests API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.\nYou're viewing Version 2 of the Veho API, which is our current version, meaning it's actively supported. Veho API V1 is deprecated.\n\nContact Support:\n Name: Veho\n Email: info@shipveho.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels orders API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Find orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/orders",
+            "params": [
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "External Order ID, provided at order creation"
+              }
+            ]
+          },
+          "docs": "Finds orders that match query parameters.\nCurrently only supports lookup by externalId\n"
+        },
+        {
+          "info": {
+            "name": "Create an order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/orders",
+            "params": [
+              {
+                "name": "includeQuote",
+                "value": "",
+                "type": "query",
+                "description": "Boolean flag whether or not to estimate the billable rate for the package, and return that with the order response.\nIf a quote would fail to generate for any reason, it will be returned as  \"null\" in the response, rather than fail to respond with a created order.  Quotes generated with this parameter are proxied through the normal /rate  endpoint, and follow the same rules and limitations as that API, plus a  strict 2 second timeout. Orders with more than 10 packages must request quotes in (concurrent)  batches, and are more likely to return without quotes due to this timeout.\nQuotes are a best guess of a package's rate based on assumptions from the information provided. In order to successfully generate a quote, fromAddress, package dimensions, and weight must be provided.\n> BY ACCESSING AND USING THE INCLUDE QUOTE QUERY PARAMETER, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT (\"CONTRACT\"), VEHO MAKES NO TIME COMMITMENTS FOR PACKAGE TRANSIT. QUOTED RATES MAY VARY FROM FINAL ACTUAL AMOUNT(S) INVOICED DEPENDING ON VARIABLES INCLUDING BUT NOT LIMITED TO SERVICE DATE AND TIME, ROUTE, CHANGES IN PARCEL OR SHIPPING CHARACTERISTICS, APPLICABLE SURCHARGES, AGREED UPON ADDITIONAL FEES, AND/OR SERVICE AVAILABILITY. IN THE EVENT OF ANY CONFLICT BETWEEN THE QUOTED RATES RETURNED VIA THE QUOTES API ENDPOINT AND THE RATES SET FORTH IN VEHO'S CONTRACT WITH YOU/COMPANY, THE RATES SET FORTH IN SUCH CONTRACT SHALL PREVAIL, GOVERN, AND APPLY."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new order.\nThis endpoint should be used by a client upon order completion or fulfillment of an item in order to notify Veho that there are packages to be shipped, and to obtain a barcode and/or shipping label from Veho.\n"
+        },
+        {
+          "info": {
+            "name": "Get an order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/orders/:_id",
+            "params": [
+              {
+                "name": "_id",
+                "value": "",
+                "type": "path",
+                "description": "Order ID"
+              }
+            ]
+          },
+          "docs": "Retrieves and order and its packages.\n"
+        },
+        {
+          "info": {
+            "name": "Update an order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.shipveho.com/v2/orders/:_id",
+            "params": [
+              {
+                "name": "_id",
+                "value": "",
+                "type": "path",
+                "description": "Order ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update specific fields on an existing order. Currently supports updating delivery instructions. Some updates may not be -immediately- reflected subsequent get requests."
+        },
+        {
+          "info": {
+            "name": "Cancel an order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.shipveho.com/v2/orders/:_id/events/cancelled",
+            "params": [
+              {
+                "name": "_id",
+                "value": "",
+                "type": "path",
+                "description": "Order ID"
+              }
+            ]
+          },
+          "docs": "Cancel an existing order."
+        },
+        {
+          "info": {
+            "name": "Cancel an order by an alternative ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.shipveho.com/v2/orders/events/cancelled",
+            "params": [
+              {
+                "name": "barcode",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Cancels an order that matches the given query parameter.\nCurrently only supports canceling by barcode.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,530 @@
+{
+  "item": [
+    {
+      "id": "1b9521c7-d08c-4d40-b580-c65a346d6d63",
+      "name": "quotes",
+      "description": {
+        "content": "Quotes",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "38bd9896-84bc-4820-9b18-70365fdc11b1",
+          "name": "Create a simple quote for a provisional order",
+          "request": {
+            "name": "Create a simple quote for a provisional order",
+            "description": {
+              "content": "Create a simple quote.\nThis endpoint should be used to retrieve the rate and transit time for a package that travels through the zips provided.\n> BY ACCESSING AND USING THE QUOTES API ENDPOINT, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT (\"CONTRACT\"), VEHO MAKES NO TIME COMMITMENTS FOR PACKAGE TRANSIT. QUOTED RATES MAY VARY FROM FINAL ACTUAL AMOUNT(S) INVOICED DEPENDING ON VARIABLES INCLUDING BUT NOT LIMITED TO SERVICE DATE AND TIME, ROUTE, CHANGES IN PARCEL OR SHIPPING CHARACTERISTICS, APPLICABLE SURCHARGES, AGREED UPON ADDITIONAL FEES, AND/OR SERVICE AVAILABILITY. IN THE EVENT OF ANY CONFLICT BETWEEN THE QUOTED RATES RETURNED VIA THE QUOTES API ENDPOINT AND THE RATES SET FORTH IN VEHO'S CONTRACT WITH YOU/COMPANY, THE RATES SET FORTH IN SUCH CONTRACT SHALL PREVAIL, GOVERN, AND APPLY.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v2",
+                "quote",
+                "rate"
+              ],
+              "host": [
+                "api",
+                "shipveho",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a45f70ae-669a-4172-b124-51cdf38d3d3d",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"quoteId\": \"string\",\n    \"transitTime\": 7043.394919856286,\n    \"serviceClass\": \"groundPlus\",\n    \"currency\": \"USD\",\n    \"rate\": 3092.6802847637423,\n    \"assumedInjectionZip\": \"string\",\n    \"createdAt\": \"2002-08-08T22:14:01.866Z\",\n    \"shipDate\": \"1958-06-12\",\n    \"weight\": 8955.64668993254,\n    \"billableWeight\": 4094.6424382108316,\n    \"length\": 2138.827866865205,\n    \"width\": 6838.633747490315,\n    \"height\": 5908.289353220015,\n    \"zone\": \"string\"\n  },\n  {\n    \"quoteId\": \"string\",\n    \"transitTime\": 7391.23666483958,\n    \"serviceClass\": \"groundPlus\",\n    \"currency\": \"USD\",\n    \"rate\": 5942.295542248818,\n    \"assumedInjectionZip\": \"string\",\n    \"createdAt\": \"1990-06-07T05:01:36.789Z\",\n    \"shipDate\": \"2016-09-21\",\n    \"weight\": 8340.859484650464,\n    \"billableWeight\": 4516.987921962362,\n    \"length\": 2579.712917141673,\n    \"width\": 5072.812564502133,\n    \"height\": 1510.2559140995686,\n    \"zone\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "934d4fb0-3caf-40db-92ec-9942c933acc6",
+              "name": "Bad Request -- The request wasn't valid JSON or had missing or invalid fields",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"code\": \"unserviceable_zip_code\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 3747.33715269961,\n      \"maximum\": 1181.2767349780895\n    },\n    {\n      \"code\": \"invalid_packages\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 9561.475813260466,\n      \"maximum\": 5859.390580503456\n    }\n  ],\n  \"error\": {\n    \"code\": 7633,\n    \"error\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "04c18fd6-0d72-43e8-bc69-17519cb662fb",
+              "name": "Unauthorized -- The header did not include a valid apiKey header.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "25ec3e88-ce3e-448f-9f7e-e9c7c1484901",
+              "name": "Forbidden -- The requested resource cannot be accessed with this apiKey.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d36dfa53-8881-422e-8fa5-d54a14a2dbed",
+              "name": "Unprocessable Entity -- The request was well formatted, but failed validation.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"code\": \"unserviceable_zip_code\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 3747.33715269961,\n      \"maximum\": 1181.2767349780895\n    },\n    {\n      \"code\": \"invalid_packages\",\n      \"message\": \"string\",\n      \"path\": [\n        \"string\",\n        \"string\"\n      ],\n      \"expected\": \"string\",\n      \"received\": \"string\",\n      \"keys\": [\n        \"string\",\n        \"string\"\n      ],\n      \"options\": [\n        \"string\",\n        \"string\"\n      ],\n      \"minimum\": 9561.475813260466,\n      \"maximum\": 5859.390580503456\n    }\n  ],\n  \"error\": {\n    \"code\": 7633,\n    \"error\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fc6ba524-de08-4642-8ee7-74362aa775da",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "21f74e9e-6485-40ab-8977-669b51c25a36",
+              "name": "Internal Server Error -- We had a problem with our server. Try again later.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "73cf6f4b-78a1-422e-a20a-b438297c4453",
+              "name": "Service Unavailable -- We're temporarily offline for maintenance. Please try again later.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v2",
+                    "quote",
+                    "rate"
+                  ],
+                  "host": [
+                    "api",
+                    "shipveho",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "apikey",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"originationZip\": \"<string>\",\n  \"deliveryZip\": \"<string>\",\n  \"packages\": [\n    {\n      \"length\": \"<number>\",\n      \"width\": \"<number>\",\n      \"height\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"attendedDelivery\": {\n        \"verificationType\": \"<string>\"\n      }\n    }\n  ],\n  \"shipDate\": \"<date>\",\n  \"serviceClass\": \"groundPlus\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.shipveho.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "apikey"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "33bfc71b-204b-456d-90f8-12c2abeb2caa",
+    "name": "Veho labels quotes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Welcome to the Veho API documentation! You can use the Veho API to programmatically create shipments and download shipping labels.\nYou're viewing Version 2 of the Veho API, which is our current version, meaning it's actively supported. Veho API V1 is deprecated.\n\nContact Support:\n Name: Veho\n Email: info@shipveho.com",
+      "type": "text/plain"
+    }
+  }
+}

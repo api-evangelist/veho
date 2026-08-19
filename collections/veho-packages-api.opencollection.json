@@ -1,0 +1,113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels packages API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "packages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a package by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/packages/:_id",
+            "params": [
+              {
+                "name": "_id",
+                "value": "",
+                "type": "path",
+                "description": "The Veho ID of the Package (starts with \"PKG_\"), or the tracking ID (starts with \"VH\")."
+              },
+              {
+                "name": "includeDeliveryImage",
+                "value": "",
+                "type": "query",
+                "description": "Whether to include URL to access the delivery image for package, if available. Delivery image URLs are valid for one week.\n>  Requesting the delivery image will result in a slower response time than omitting it from the response.\n"
+              }
+            ]
+          },
+          "docs": "Retrieves all details of an existing package. Either package ID or tracking ID can be used to query the package."
+        },
+        {
+          "info": {
+            "name": "Get package tracking information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/packages/tracking",
+            "params": [
+              {
+                "name": "trackingId",
+                "value": "",
+                "type": "query",
+                "description": "Package tracking ID"
+              },
+              {
+                "name": "barcode",
+                "value": "",
+                "type": "query",
+                "description": "Package barcode"
+              },
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "External package ID"
+              },
+              {
+                "name": "packageId",
+                "value": "",
+                "type": "query",
+                "description": "Package ID"
+              },
+              {
+                "name": "includeDeliveryImage",
+                "value": "",
+                "type": "query",
+                "description": "Include URL to access the delivery image for package, if available"
+              }
+            ]
+          },
+          "docs": "Retrieves package tracking information using one of the supported identifiers. Only one of trackingId, barcode, externalId, or packageId should be provided. If the requesting API key was not used to create the order, limited information will be returned. externalId can only be tracked by the client that created the order. includeDeliveryImage is an optional parameter that will include a URL to access the package's delivery image, if available."
+        },
+        {
+          "info": {
+            "name": "Get a package by barcode",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/packages",
+            "params": [
+              {
+                "name": "barCode",
+                "value": "",
+                "type": "query",
+                "description": "barCode of the package to retrieve"
+              }
+            ]
+          },
+          "docs": "Retrieve all details of an existing package with a specified barcode.\nNote that this endpoint returns an array of packages, though there is usually only a single package matching the provided barcode."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

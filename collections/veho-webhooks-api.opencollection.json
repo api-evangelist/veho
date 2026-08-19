@@ -1,0 +1,244 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels webhooks API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get current webhook configurations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookConfigurations",
+            "auth": {
+              "type": "apikey",
+              "key": "apikey",
+              "value": "{{apikey}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint returns a list of all webhook configurations for the client associated with the API key used in the request header."
+        },
+        {
+          "info": {
+            "name": "Add a new webhook configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookConfigurations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "apikey",
+              "value": "{{apikey}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint creates a new webhook configuration for the client associated with the API key used in the request header."
+        },
+        {
+          "info": {
+            "name": "Get a webhook configuration by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookConfigurations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the configuration you want to see"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "apikey",
+              "value": "{{apikey}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint returns a single webhook configuration by its ID."
+        },
+        {
+          "info": {
+            "name": "Update a Webhook Configuration by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookConfigurations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the configuration you want to see"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint updates a single webhook configuration by ID."
+        },
+        {
+          "info": {
+            "name": "Delete a webhook configuration by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookConfigurations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the configuration you want to delete"
+              }
+            ]
+          },
+          "docs": "This endpoint deletes a single webhook configuration by ID."
+        },
+        {
+          "info": {
+            "name": "Get webhook events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookEvents",
+            "params": [
+              {
+                "name": "occurredAtMin",
+                "value": "",
+                "type": "query",
+                "description": "Defines the earliest time to search - the query will return webhook events occurring AFTER this time"
+              },
+              {
+                "name": "occurredAtMax",
+                "value": "",
+                "type": "query",
+                "description": "Define the latest time to search - the query will return webhook events occurring BEFORE this time"
+              },
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "query",
+                "description": "Get all webhook events associated with a specific order"
+              },
+              {
+                "name": "packageId",
+                "value": "",
+                "type": "query",
+                "description": "Get all webhook events associated with a specific package"
+              },
+              {
+                "name": "endpoint",
+                "value": "",
+                "type": "query",
+                "description": "Get all webhook events associated with a specific endpoint"
+              },
+              {
+                "name": "trackingId",
+                "value": "",
+                "type": "query",
+                "description": "Get all webhook events associated with a specific tracking ID"
+              },
+              {
+                "name": "barcode",
+                "value": "",
+                "type": "query",
+                "description": "Get all webhook events associated with a specific barcode"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Get all webhook events with associated with a specific success status"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "apikey",
+              "value": "{{apikey}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint returns a list of all webhook events that fit the given search criteria, for the client associated with the API key used in the request header."
+        },
+        {
+          "info": {
+            "name": "Get a webhook event by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/webhooks/webhookEvents/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the individual event"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "apikey",
+              "value": "{{apikey}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint returns a single webhook event by ID"
+        },
+        {
+          "info": {
+            "name": "Replay webhook events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.shipveho.com/v2/webhooks/replay",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "apikey",
+              "value": "{{apikey}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint will take a list of webhook event IDs and re-attempt to send the payload from each event to the configured endpoint. This endpoint is best used in conjunction with the `getWebhookEvents` endpoint - you can use that endpoint to find the IDs of events that failed, using the necessary search criteria, then replay them using this endpoint."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

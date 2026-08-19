@@ -2,90 +2,95 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/veho-api-openapi-original.yml
-description: >-
-  No official Veho MCP server was found (npm, the MCP registry, and the Veho
-  docs were searched 2026-07-21). This is a candidate tool list derived one
-  tool per operationId from the published OpenAPI 3.1 spec.
+description: No official Veho MCP server was found (npm, the MCP registry, and the Veho docs were searched
+  2026-07-21). This is a candidate tool list derived one tool per operationId from the published OpenAPI
+  3.1 spec.
 server:
   name: veho
   transport: http
   url: null
 tools:
-  - name: createOrder
-    description: Create an order (a request for Veho to pick up and deliver packages)
-    source_operation: openapi/veho-api-openapi-original.yml#createOrder
-  - name: findOrders
-    description: Find orders
-    source_operation: openapi/veho-api-openapi-original.yml#findOrders
-  - name: getOrderById
-    description: Get an order
-    source_operation: openapi/veho-api-openapi-original.yml#getOrderById
-  - name: updateOrder
-    description: Update an order (instructions)
-    source_operation: openapi/veho-api-openapi-original.yml#updateOrder
-  - name: cancelOrder
-    description: Cancel an order
-    source_operation: openapi/veho-api-openapi-original.yml#cancelOrder
-  - name: cancelOrderById
-    description: Cancel an order by an alternative ID
-    source_operation: openapi/veho-api-openapi-original.yml#cancelOrderById
-  - name: getPackageById
-    description: Get a package by id (optionally including the POD delivery image)
-    source_operation: openapi/veho-api-openapi-original.yml#getPackageById
-  - name: getPackageTrackingInformation
-    description: Get package tracking information
-    source_operation: openapi/veho-api-openapi-original.yml#getPackageTrackingInformation
-  - name: getPackagesByBarcode
-    description: Get a package by barcode
-    source_operation: openapi/veho-api-openapi-original.yml#getPackagesByBarcode
-  - name: getServiceableZips
-    description: List serviceable ZIP codes
-    source_operation: openapi/veho-api-openapi-original.yml#getServiceableZips
-  - name: createMerchants
-    description: Create a merchant for client (3PL)
-    source_operation: openapi/veho-api-openapi-original.yml#createMerchants
-  - name: getMerchants
-    description: Get all merchants for client
-    source_operation: openapi/veho-api-openapi-original.yml#getMerchants
-  - name: updateMerchants
-    description: Update a merchant for client
-    source_operation: openapi/veho-api-openapi-original.yml#updateMerchants
-  - name: deleteMerchant
-    description: Delete a merchant for client
-    source_operation: openapi/veho-api-openapi-original.yml#deleteMerchant
-  - name: getWebhookConfigurations
-    description: Get current webhook configurations
-    source_operation: openapi/veho-api-openapi-original.yml#getWebhookConfigurations
-  - name: addWebhookConfiguration
-    description: Add a new webhook configuration
-    source_operation: openapi/veho-api-openapi-original.yml#addWebhookConfiguration
-  - name: findWebhookConfigurationById
-    description: Get a webhook configuration by ID
-    source_operation: openapi/veho-api-openapi-original.yml#findWebhookConfigurationById
-  - name: updateWebhookConfigurationById
-    description: Update a webhook configuration by ID
-    source_operation: openapi/veho-api-openapi-original.yml#updateWebhookConfigurationById
-  - name: deleteWebhookConfigurationById
-    description: Delete a webhook configuration by ID
-    source_operation: openapi/veho-api-openapi-original.yml#deleteWebhookConfigurationById
-  - name: getWebhookEvents
-    description: Get webhook events
-    source_operation: openapi/veho-api-openapi-original.yml#getWebhookEvents
-  - name: getWebhookEventsById
-    description: Get a webhook event by ID
-    source_operation: openapi/veho-api-openapi-original.yml#getWebhookEventsById
-  - name: replayWebhookEvents
-    description: Replay webhook events
-    source_operation: openapi/veho-api-openapi-original.yml#replayWebhookEvents
-  - name: getPackageLabel
-    description: Get a package label (pdf, png, or zpl)
-    source_operation: openapi/veho-api-openapi-original.yml#getPackageLabel
-  - name: createSimpleQuote
-    description: Create a simple quote for a provisional order
-    source_operation: openapi/veho-api-openapi-original.yml#createSimpleQuote
-  - name: postManifestsAsync
-    description: Asynchronously submit packages set to be injected on a specific date
-    source_operation: openapi/veho-api-openapi-original.yml#postManifestsAsync
-  - name: postManifestsSync
-    description: Synchronously post a list of packages to set their dispatch date
-    source_operation: openapi/veho-api-openapi-original.yml#postManifestsSync
+- name: createOrder
+  description: Create an order (a request for Veho to pick up and deliver packages)
+  source_operation: openapi/veho-api-openapi-original.yml#createOrder
+- name: findOrders
+  description: Find orders
+  source_operation: openapi/veho-api-openapi-original.yml#findOrders
+- name: getOrderById
+  description: Get an order
+  source_operation: openapi/veho-api-openapi-original.yml#getOrderById
+- name: updateOrder
+  description: Update an order (instructions)
+  source_operation: openapi/veho-api-openapi-original.yml#updateOrder
+- name: cancelOrder
+  description: Cancel an order
+  source_operation: openapi/veho-api-openapi-original.yml#cancelOrder
+- name: cancelOrderById
+  description: Cancel an order by an alternative ID
+  source_operation: openapi/veho-api-openapi-original.yml#cancelOrderById
+- name: getPackageById
+  description: Get a package by id (optionally including the POD delivery image)
+  source_operation: openapi/veho-api-openapi-original.yml#getPackageById
+- name: getPackageTrackingInformation
+  description: Get package tracking information
+  source_operation: openapi/veho-api-openapi-original.yml#getPackageTrackingInformation
+- name: getPackagesByBarcode
+  description: Get a package by barcode
+  source_operation: openapi/veho-api-openapi-original.yml#getPackagesByBarcode
+- name: getServiceableZips
+  description: List serviceable ZIP codes
+  source_operation: openapi/veho-api-openapi-original.yml#getServiceableZips
+- name: createMerchants
+  description: Create a merchant for client (3PL)
+  source_operation: openapi/veho-api-openapi-original.yml#createMerchants
+- name: getMerchants
+  description: Get all merchants for client
+  source_operation: openapi/veho-api-openapi-original.yml#getMerchants
+- name: updateMerchants
+  description: Update a merchant for client
+  source_operation: openapi/veho-api-openapi-original.yml#updateMerchants
+- name: deleteMerchant
+  description: Delete a merchant for client
+  source_operation: openapi/veho-api-openapi-original.yml#deleteMerchant
+- name: getWebhookConfigurations
+  description: Get current webhook configurations
+  source_operation: openapi/veho-api-openapi-original.yml#getWebhookConfigurations
+- name: addWebhookConfiguration
+  description: Add a new webhook configuration
+  source_operation: openapi/veho-api-openapi-original.yml#addWebhookConfiguration
+- name: findWebhookConfigurationById
+  description: Get a webhook configuration by ID
+  source_operation: openapi/veho-api-openapi-original.yml#findWebhookConfigurationById
+- name: updateWebhookConfigurationById
+  description: Update a webhook configuration by ID
+  source_operation: openapi/veho-api-openapi-original.yml#updateWebhookConfigurationById
+- name: deleteWebhookConfigurationById
+  description: Delete a webhook configuration by ID
+  source_operation: openapi/veho-api-openapi-original.yml#deleteWebhookConfigurationById
+- name: getWebhookEvents
+  description: Get webhook events
+  source_operation: openapi/veho-api-openapi-original.yml#getWebhookEvents
+- name: getWebhookEventsById
+  description: Get a webhook event by ID
+  source_operation: openapi/veho-api-openapi-original.yml#getWebhookEventsById
+- name: replayWebhookEvents
+  description: Replay webhook events
+  source_operation: openapi/veho-api-openapi-original.yml#replayWebhookEvents
+- name: getPackageLabel
+  description: Get a package label (pdf, png, or zpl)
+  source_operation: openapi/veho-api-openapi-original.yml#getPackageLabel
+- name: createSimpleQuote
+  description: Create a simple quote for a provisional order
+  source_operation: openapi/veho-api-openapi-original.yml#createSimpleQuote
+- name: postManifestsAsync
+  description: Asynchronously submit packages set to be injected on a specific date
+  source_operation: openapi/veho-api-openapi-original.yml#postManifestsAsync
+- name: postManifestsSync
+  description: Synchronously post a list of packages to set their dispatch date
+  source_operation: openapi/veho-api-openapi-original.yml#postManifestsSync
+deployment:
+  mode: none
+  verified: derived
+  tools: 26
+  checked: '2026-08-12'
+  source: catalog MCP census

@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "labels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a package label",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/labels/:packageId.:format",
+            "params": [
+              {
+                "name": "packageId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the package object (the _id field on the Package Response object)"
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "path",
+                "description": "The format you would like the label in"
+              }
+            ]
+          },
+          "docs": "Veho strongly recommends that clients use the Veho generated labels on their packages. The label for any package can be retrived through our labels endpoint.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

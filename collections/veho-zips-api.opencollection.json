@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Veho labels zips API",
+    "version": "2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "apikey",
+      "value": "{{apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "zips",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List serviceable ZIP codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.shipveho.com/v2/serviceable-zips",
+            "params": [
+              {
+                "name": "serviceType",
+                "value": "",
+                "type": "query",
+                "description": "Service type for which to retrieve serviceable ZIP codes (will use `delivery` if not provided)"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the full list of ZIP codes currently serviced by Veho.\n>  The sandbox environment contains a subset of ZIP codes within our serviceable areas so when creating an order in the sandbox environment, make sure to use a destination ZIP code included in the sandbox serviceable ZIP list.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
