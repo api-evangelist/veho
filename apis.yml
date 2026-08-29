@@ -9,6 +9,18 @@ description: >-
   account, and subscribe to 22 package milestone webhook event types, with a
   full sandbox environment and bulk manifest uploads over S3 or SFTP.
 url: https://raw.githubusercontent.com/api-evangelist/veho/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
