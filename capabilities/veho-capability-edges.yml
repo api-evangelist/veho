@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 1
+edge_count: 4
 edges:
 - tag: packages
   spec_file: veho-packages-api-openapi.yml
@@ -22,3 +22,37 @@ edges:
   evidence: GET /packages/tracking  getPackageTrackingInformation  Get package tracking information
   reason: Read-only retrieval of package status and events (Event schema) by id or barcode — shipment
     tracking status resolution exposed to shippers.
+- tag: manifests
+  spec_file: veho-manifests-api-openapi.yml
+  capability_id: BC-520.50
+  capability_id_l1: BC-520
+  capability_name: Logistics Operations Management
+  confidence: 0.8
+  evidence: POST /manifests  postManifestsSync  Synchronously post a list of packages to set their dispatch
+    date; ManifestRequestWithBarcodes, FacilityId
+  reason: Operations manifest packages and set dispatch dates against a facility — parcel dispatch and
+    transport execution, i.e. logistics operations management for a last-mile carrier.
+  recovered_from: vertical-automotive-mobility-edges.json
+- tag: labels
+  spec_file: veho-labels-api-openapi.yml
+  capability_id: BC-520.50
+  capability_id_l1: BC-520
+  capability_name: Logistics Operations Management
+  confidence: 0.7
+  evidence: GET /labels/{packageId}.{format}  getPackageLabel  Get a package label
+  reason: Retrieval of shipping labels for packages carried by a last-mile delivery carrier — an execution
+    step of transport/parcel logistics operations. Confidence tempered because the tag exposes a single
+    document-retrieval operation.
+  recovered_from: vertical-automotive-mobility-edges.json
+- tag: orders
+  spec_file: veho-orders-api-openapi.yml
+  capability_id: BC-520.50
+  capability_id_l1: BC-520
+  capability_name: Logistics Operations Management
+  confidence: 0.7
+  evidence: POST /orders createOrder Create an order; schemas OrderRequestPackage, FromAddress, AttendedDelivery,
+    Hazmat
+  reason: Operations create, amend and cancel last-mile delivery orders with addresses, packages, hazmat
+    and special handling — carrier transport/shipment execution, i.e. logistics operations within the
+    supply chain. Some ambiguity with Order Fulfilment Management, hence not higher.
+  recovered_from: vertical-automotive-mobility-edges.json
