@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Veho labels API
+  title: Veho Labels API
   version: '2.2'
   contact:
     email: info@shipveho.com
@@ -18,18 +18,16 @@ servers:
 security:
 - apiKey: []
 tags:
-- name: labels
+- name: Labels
   description: Labels
 paths:
   /labels/{packageId}.{format}:
     get:
       operationId: getPackageLabel
       summary: Get a package label
-      description: 'Veho strongly recommends that clients use the Veho generated labels on their packages. The label for any package can be retrived through our labels endpoint.
-
-        '
+      description: Veho strongly recommends that clients use the Veho generated labels on their packages. The label for any package can be retrived through our labels endpoint.
       tags:
-      - labels
+      - Labels
       parameters:
       - name: packageId
         description: The id of the package object (the _id field on the Package Response object)
@@ -64,18 +62,18 @@ paths:
           $ref: '#/components/responses/503'
 components:
   responses:
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '404':
-      description: Not Found -- The requested resource could not be found.
-    '429':
-      description: Too Many Requests
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
     '403':
       description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '429':
+      description: Too Many Requests
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '404':
+      description: Not Found -- The requested resource could not be found.
   securitySchemes:
     apiKey:
       name: apikey

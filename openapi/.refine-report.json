@@ -1,14 +1,7 @@
 {
   "provider": "veho",
   "sources": [
-    "veho-labels-api-openapi.yml",
-    "veho-manifests-api-openapi.yml",
-    "veho-merchants-api-openapi.yml",
-    "veho-orders-api-openapi.yml",
-    "veho-packages-api-openapi.yml",
-    "veho-quotes-api-openapi.yml",
-    "veho-webhooks-api-openapi.yml",
-    "veho-zips-api-openapi.yml"
+    "_original/veho-api-openapi-original.yml"
   ],
   "outputs": [
     "veho-labels-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "veho-api-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "veho-labels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-manifests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-merchants-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-packages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-quotes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "veho-zips-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Veho labels quotes API
+  title: Veho Quotes API
   version: '2.2'
   contact:
     email: info@shipveho.com
@@ -18,7 +18,7 @@ servers:
 security:
 - apiKey: []
 tags:
-- name: quotes
+- name: Quotes
   description: Quotes
 paths:
   /quote/rate:
@@ -32,9 +32,7 @@ paths:
 
         This endpoint should be used to retrieve the rate and transit time for a package that travels through the zips provided.
 
-        > BY ACCESSING AND USING THE QUOTES API ENDPOINT, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT ("CONTRACT"), VEHO MAKES NO TIME COMMITMENTS FOR PACKAGE TRANSIT. QUOTED RATES MAY VARY FROM FINAL ACTUAL AMOUNT(S) INVOICED DEPENDING ON VARIABLES INCLUDING BUT NOT LIMITED TO SERVICE DATE AND TIME, ROUTE, CHANGES IN PARCEL OR SHIPPING CHARACTERISTICS, APPLICABLE SURCHARGES, AGREED UPON ADDITIONAL FEES, AND/OR SERVICE AVAILABILITY. IN THE EVENT OF ANY CONFLICT BETWEEN THE QUOTED RATES RETURNED VIA THE QUOTES API ENDPOINT AND THE RATES SET FORTH IN VEHO''S CONTRACT WITH YOU/COMPANY, THE RATES SET FORTH IN SUCH CONTRACT SHALL PREVAIL, GOVERN, AND APPLY.
-
-        '
+        > BY ACCESSING AND USING THE QUOTES API ENDPOINT, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT ("CONTRACT"), VEHO MAKES NO TIME COMMITMENTS FOR PACKAGE TRANSIT. QUOTED RATES MAY VARY FROM FINAL ACTUAL AMOUNT(S) INVOICED DEPENDING ON VARIABLES INCLUDING BUT NOT LIMITED TO SERVICE DATE AND TIME, ROUTE, CHANGES IN PARCEL OR SHIPPING CHARACTERISTICS, APPLICABLE SURCHARGES, AGREED UPON ADDITIONAL FEES, AND/OR SERVICE AVAILABILITY. IN THE EVENT OF ANY CONFLICT BETWEEN THE QUOTED RATES RETURNED VIA THE QUOTES API ENDPOINT AND THE RATES SET FORTH IN VEHO''S CONTRACT WITH YOU/COMPANY, THE RATES SET FORTH IN SUCH CONTRACT SHALL PREVAIL, GOVERN, AND APPLY.'
       responses:
         '200':
           description: OK
@@ -72,31 +70,8 @@ paths:
                   weight: 10
       parameters: []
       tags:
-      - quotes
+      - Quotes
 components:
-  responses:
-    '422':
-      description: Unprocessable Entity -- The request was well formatted, but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '400':
-      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '429':
-      description: Too Many Requests
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
   schemas:
     ErrorResponse:
       description: Error response object
@@ -177,6 +152,11 @@ components:
               error:
                 type: string
           - type: string
+    SimpleQuoteResponse:
+      type: array
+      description: An array of quoted packages, including rates and assumed dates
+      items:
+        $ref: '#/components/schemas/SimpleQuoteItem'
     SimpleQuoteRequest:
       type: object
       description: Required fields for a simple quote generation request
@@ -258,11 +238,6 @@ components:
           - groundPlusTwo
           - groundPlusThree
           - groundPlusFour
-    SimpleQuoteResponse:
-      type: array
-      description: An array of quoted packages, including rates and assumed dates
-      items:
-        $ref: '#/components/schemas/SimpleQuoteItem'
     SimpleQuoteItem:
       type: object
       properties:
@@ -327,6 +302,29 @@ components:
         zone:
           type: string
           description: Zone of the package
+  responses:
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '429':
+      description: Too Many Requests
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     apiKey:
       name: apikey

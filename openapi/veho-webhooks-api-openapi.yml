@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Veho labels webhooks API
+  title: Veho Webhooks API
   version: '2.2'
   contact:
     email: info@shipveho.com
@@ -18,7 +18,7 @@ servers:
 security:
 - apiKey: []
 tags:
-- name: webhooks
+- name: Webhooks
   description: Webhooks
 paths:
   /webhooks/webhookConfigurations:
@@ -26,7 +26,7 @@ paths:
       summary: Get current webhook configurations
       description: This endpoint returns a list of all webhook configurations for the client associated with the API key used in the request header.
       tags:
-      - webhooks
+      - Webhooks
       operationId: getWebhookConfigurations
       responses:
         '200':
@@ -45,7 +45,7 @@ paths:
       summary: Add a new webhook configuration
       description: This endpoint creates a new webhook configuration for the client associated with the API key used in the request header.
       tags:
-      - webhooks
+      - Webhooks
       operationId: addWebhookConfiguration
       requestBody:
         description: Webhook Configuration Object
@@ -66,7 +66,7 @@ paths:
       summary: Get a webhook configuration by ID
       description: This endpoint returns a single webhook configuration by its ID.
       tags:
-      - webhooks
+      - Webhooks
       operationId: findWebhookConfigurationById
       parameters:
       - name: id
@@ -95,7 +95,7 @@ paths:
       description: This endpoint updates a single webhook configuration by ID.
       operationId: updateWebhookConfigurationById
       tags:
-      - webhooks
+      - Webhooks
       parameters:
       - name: id
         in: path
@@ -128,7 +128,7 @@ paths:
       description: This endpoint deletes a single webhook configuration by ID.
       operationId: deleteWebhookConfigurationById
       tags:
-      - webhooks
+      - Webhooks
       parameters:
       - name: id
         in: path
@@ -149,7 +149,7 @@ paths:
       description: This endpoint returns a list of all webhook events that fit the given search criteria, for the client associated with the API key used in the request header.
       operationId: getWebhookEvents
       tags:
-      - webhooks
+      - Webhooks
       parameters:
       - name: occurredAtMin
         description: Defines the earliest time to search - the query will return webhook events occurring AFTER this time
@@ -226,7 +226,7 @@ paths:
       operationId: getWebhookEventsById
       description: This endpoint returns a single webhook event by ID
       tags:
-      - webhooks
+      - Webhooks
       parameters:
       - name: id
         description: ID of the individual event
@@ -252,7 +252,7 @@ paths:
       summary: Replay webhook events
       description: This endpoint will take a list of webhook event IDs and re-attempt to send the payload from each event to the configured endpoint. This endpoint is best used in conjunction with the `getWebhookEvents` endpoint - you can use that endpoint to find the IDs of events that failed, using the necessary search criteria, then replay them using this endpoint.
       tags:
-      - webhooks
+      - Webhooks
       requestBody:
         content:
           application/json:
@@ -285,6 +285,13 @@ paths:
       operationId: replayWebhookEvents
 components:
   schemas:
+    WebhookConfigurationListResponse:
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookConfigurationResponse'
     EventType:
       description: Type of package milestone event associated with the webhook
       type: string
@@ -311,6 +318,31 @@ components:
       - package.pickupDroppedOffAtVeho
       - package.pickupFailed
       - package.pickupTransferredToExternalCarrier
+    WebhookConfigurationRequest:
+      description: Defines a webhook configuration
+      type: object
+      properties:
+        endpoint:
+          type: string
+          description: The endpoint that webhook events will be sent to for this configuration
+          format: url
+          example: https://www.example.com
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
+        customHeaders:
+          description: Headers needed to call the endpoint correctly, ex. an API key
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            KEY-1: SOMETHING-1
+            KEY-2: SOMETHING-2
+      required:
+      - endpoint
+      - serviceType
+      - eventType
     WebhookConfigurationResponse:
       description: Webhook Configurations define what endpoint Veho will send webhook events to, and which package milestone events it will send them for.
       type: object
@@ -343,44 +375,6 @@ components:
           example:
             KEY-1: SOMETHING-1
             KEY-2: SOMETHING-2
-    WebhookConfigurationListResponse:
-      type: object
-      properties:
-        configurations:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookConfigurationResponse'
-    WebhookConfigurationRequest:
-      description: Defines a webhook configuration
-      type: object
-      properties:
-        endpoint:
-          type: string
-          description: The endpoint that webhook events will be sent to for this configuration
-          format: url
-          example: https://www.example.com
-        eventType:
-          $ref: '#/components/schemas/EventType'
-        serviceType:
-          $ref: '#/components/schemas/ServiceType'
-        customHeaders:
-          description: Headers needed to call the endpoint correctly, ex. an API key
-          type: object
-          additionalProperties:
-            type: string
-          example:
-            KEY-1: SOMETHING-1
-            KEY-2: SOMETHING-2
-      required:
-      - endpoint
-      - serviceType
-      - eventType
-    ServiceType:
-      description: Type of service associated, delivery or pickup
-      type: string
-      enum:
-      - delivery
-      - pickup
     WebhookEvent:
       description: A webhook event represents a single event that Veho attempted to send to a webhook endpoint. Each webhook event contains information about the attempted send, as well as a `payload` field to represent the webhook event object that was sent.
       type: object
@@ -436,15 +430,21 @@ components:
           enum:
           - success
           - failure
+    ServiceType:
+      description: Type of service associated, delivery or pickup
+      type: string
+      enum:
+      - delivery
+      - pickup
   responses:
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
     '404':
       description: Not Found -- The requested resource could not be found.
     '200':
       description: successful operation with no body returned
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
   securitySchemes:
     apiKey:
       name: apikey

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Veho labels orders API
+  title: Veho Orders API
   version: '2.2'
   contact:
     email: info@shipveho.com
@@ -18,7 +18,7 @@ servers:
 security:
 - apiKey: []
 tags:
-- name: orders
+- name: Orders
   description: Orders
 paths:
   /orders:
@@ -50,9 +50,7 @@ paths:
       operationId: createOrder
       description: 'Creates a new order.
 
-        This endpoint should be used by a client upon order completion or fulfillment of an item in order to notify Veho that there are packages to be shipped, and to obtain a barcode and/or shipping label from Veho.
-
-        '
+        This endpoint should be used by a client upon order completion or fulfillment of an item in order to notify Veho that there are packages to be shipped, and to obtain a barcode and/or shipping label from Veho.'
       requestBody:
         content:
           application/json:
@@ -92,7 +90,7 @@ paths:
 
           > BY ACCESSING AND USING THE INCLUDE QUOTE QUERY PARAMETER, YOU/COMPANY ACKNOWLEDGE AND AGREE THIS IS A PILOT AND ANY QUOTED RATE(S) OR TRANSIT TIME(S) RETURNED BY THIS QUOTES API ENDPOINT ARE ESTIMATES ONLY AND PROVIDED SOLELY FOR INFORMATIONAL PURPOSES. EXCEPT AS AGREED TO BY VEHO IN A FULLY EXECUTED WRITTEN CONTRACT ("CONTRACT"), VEHO MAKES NO TIME COMMITMENTS FOR PACKAGE TRANSIT. QUOTED RATES MAY VARY FROM FINAL ACTUAL AMOUNT(S) INVOICED DEPENDING ON VARIABLES INCLUDING BUT NOT LIMITED TO SERVICE DATE AND TIME, ROUTE, CHANGES IN PARCEL OR SHIPPING CHARACTERISTICS, APPLICABLE SURCHARGES, AGREED UPON ADDITIONAL FEES, AND/OR SERVICE AVAILABILITY. IN THE EVENT OF ANY CONFLICT BETWEEN THE QUOTED RATES RETURNED VIA THE QUOTES API ENDPOINT AND THE RATES SET FORTH IN VEHO''S CONTRACT WITH YOU/COMPANY, THE RATES SET FORTH IN SUCH CONTRACT SHALL PREVAIL, GOVERN, AND APPLY.'
       tags:
-      - orders
+      - Orders
     get:
       summary: Find orders
       parameters:
@@ -128,11 +126,9 @@ paths:
       operationId: findOrders
       description: 'Finds orders that match query parameters.
 
-        Currently only supports lookup by externalId
-
-        '
+        Currently only supports lookup by externalId'
       tags:
-      - orders
+      - Orders
   /orders/{_id}:
     get:
       parameters:
@@ -144,7 +140,7 @@ paths:
         description: Order ID
       summary: Get an order
       tags:
-      - orders
+      - Orders
       responses:
         '200':
           description: OK
@@ -235,9 +231,7 @@ paths:
         '503':
           $ref: '#/components/responses/503'
       operationId: getOrderById
-      description: 'Retrieves and order and its packages.
-
-        '
+      description: Retrieves and order and its packages.
     patch:
       summary: Update an order
       description: Update specific fields on an existing order. Currently supports updating delivery instructions. Some updates may not be -immediately- reflected subsequent get requests.
@@ -249,7 +243,7 @@ paths:
         required: true
         description: Order ID
       tags:
-      - orders
+      - Orders
       requestBody:
         required: true
         content:
@@ -287,7 +281,7 @@ paths:
         required: true
         description: Order ID
       tags:
-      - orders
+      - Orders
       responses:
         '200':
           description: OK
@@ -338,78 +332,103 @@ paths:
       operationId: cancelOrderById
       description: 'Cancels an order that matches the given query parameter.
 
-        Currently only supports canceling by barcode.
-
-        '
+        Currently only supports canceling by barcode.'
       tags:
-      - orders
+      - Orders
 components:
-  responses:
-    '422':
-      description: Unprocessable Entity -- The request was well formatted, but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
-    '404':
-      description: Not Found -- The requested resource could not be found.
-    '429':
-      description: Too Many Requests
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '400':
-      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '200':
-      description: successful operation with no body returned
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
   schemas:
-    AttendedDelivery:
-      title: Attended Delivery
+    OrderRequestPackage:
+      type: object
+      title: Order Request Package
       additionalProperties: false
-      type: object
-      description: Configuration for attended delivery on this package. Attended delivery requires interaction between the driver and the recipient to confirm delivery. Currently only PIN verification is supported. Required fields within this object  may vary based on your account configuration.
-      required:
-      - verificationType
+      x-examples:
+        example-1:
+          externalId: myPackageId1
+          length: 12
+          width: 10
+          height: 9
+          weight: 25
+          declaredValue: 7500
+          barCode: GqN8v5wvGNxmnFu4Y
+          quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
+      examples:
+      - externalId: myPackageId1
+        length: 12
+        width: 10
+        height: 9
+        weight: 25
+        declaredValue: 7500
+        barCode: GqN8v5wvGNxmnFu4Y
+        quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
       properties:
-        verificationType:
+        externalId:
           type: string
-          enum:
-          - pinVerification
-          description: 'The type of delivery verification required for this package.
+          description: Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object.
+        length:
+          type: number
+          maximum: 48
+          description: 'Length (inches) of the package. Required if requesting a quote with a
 
-            pinVerification — A unique PIN is sent to the recipient and must be provided to the driver to release the package.'
-    QuotedPackageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PackageResponse'
-      - type: object
-        properties:
-          quote:
-            $ref: '#/components/schemas/SimpleQuoteItem'
-    OrderEvent:
-      type: object
-      description: The eventLog object represents an event in the lifecycle of the order
-      properties:
-        eventType:
+            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
+        lengthDim:
+          type: integer
+          maximum: 48
+          description: Alias for length. Do not use as future support is not guaranteed
+          deprecated: true
+        width:
+          type: number
+          maximum: 48
+          description: 'Width (inches) of the package. Required if requesting a quote with a
+
+            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
+        height:
+          type: number
+          maximum: 48
+          description: 'Height (inches) of the package. Required if requesting a quote with a
+
+            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
+        weight:
+          type: number
+          maximum: 50
+          description: 'Weight (pounds) of the package. Required if requesting a quote with a
+
+            new order'
+        declaredValue:
+          type: number
+          description: Declared value of package, in USD pennies (5000 is $50 USD).
+        signatureRequired:
+          description: Specify whether recipient has to sign for this package. Not currently supported by operations and will always be set to false.
+          default: false
+          deprecated: true
+        barCode:
           type: string
-          enum:
-          - created
-          - cancelled
-          description: enum representing the event that occurred
-          readOnly: true
-        timestamp:
+          description: The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.
+          minLength: 14
+          maxLength: 20
+          pattern: ^[a-zA-Z0-9]+$
+        description:
           type: string
-          format: date-time
-          description: time at which the event occurred
-          readOnly: true
+          description: Description of the package. Note that this description will appear on the label.
+        specialHandling:
+          $ref: '#/components/schemas/SpecialHandling'
+        attendedDelivery:
+          $ref: '#/components/schemas/AttendedDelivery'
+        quoteId:
+          type: string
+          description: The ID of the quote that was used to rate this package. Represented as a UUID.
+          format: uuid
+        dispatchDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
     PackageResponse:
       additionalProperties: true
       title: Package Response
@@ -595,160 +614,6 @@ components:
           type: string
           description: The lastEvent on the package as a more detailed string. For example, "Package out for delivery" instead of "pickedUpFromVeho"
           readOnly: true
-    Event:
-      type: object
-      description: 'The eventLog object represents an event in the lifecycle of the package:'
-      properties:
-        eventType:
-          type: string
-          description: enum representing the event that occurred
-          enum:
-          - created
-          - pending
-          - notFound
-          - pickedUpFromClient
-          - droppedOffAtVeho
-          - pickedUpFromVeho
-          - delivered
-          - returned
-          - cancelled
-          - misdelivered
-          - discarded
-          - PackageArrivedAtFacility
-          - PackageDepartedFromFacility
-          - PackageHadDeliveryIssue
-          - PackageLoadedOntoFirstMileTransit
-          - pendingReturnToClient
-          - returnedToClient
-          - returnedToVeho
-          - notReceivedFromClient
-          - removedForRescue
-          - removedForRollover
-          - outForPickup
-          - pickedUpFromConsumer
-          - pickupSkipped
-          - pickupFailed
-          - pickupDroppedOffAtVeho
-          - pickupTransferredToExternalCarrier
-          readOnly: true
-        timestamp:
-          type: string
-          format: date-time
-          description: time at which the event occurred
-          readOnly: true
-        message:
-          type: string
-          description: message associated with the event
-          readOnly: true
-        city:
-          type: string
-          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
-          readOnly: true
-        state:
-          type: string
-          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
-          readOnly: true
-        meta:
-          type: object
-          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
-          readOnly: true
-      readOnly: true
-    PatchOrderRequest:
-      type: object
-      properties:
-        instructions:
-          type: string
-          description: Delivery instructions for the order
-    Hazmat:
-      title: Hazmat (Hazardous Materials)
-      additionalProperties: false
-      type: object
-      description: Indicates that this package contains hazardous materials. If you intend to ship hazardous materials, please get in contact with a Veho representative.
-      required:
-      - limitedQuantity
-      properties:
-        limitedQuantity:
-          type: boolean
-          description: Indicates whether this package contains limited quantity (LQ) hazardous materials or not.
-    QuotedOrderResponse:
-      additionalProperties: true
-      title: Order Response with Quoted Packages
-      allOf:
-      - $ref: '#/components/schemas/OrderResponse'
-      - type: object
-        properties:
-          packages:
-            type: array
-            items:
-              $ref: '#/components/schemas/QuotedPackageResponse'
-    FacilityId:
-      type: string
-      minLength: 17
-      maxLength: 26
-      description: "ID of the facility where the package will be first tendered to Veho. Primarily used for the [manifest API](#section/Manifest-API), but\nmay be provided in the [create order API](#operation/createOrder) with shipDate to improve package scheduling accuracy.\n\nAvailable facilities and their markets are shown below. Note that we're expanding rapidly, so this list may not be up to date. \nPlease reach out to api@shipveho.com if you don't see the location you're looking for in the list.\n\n- Atlanta - Flowery Branch: dCXhH5MUgazmhGfKeJE9B4\n- Atlanta - Fulton Industrial: GRhhgCv5gDgLS6Qka\n- Austin - North Burnet: 3iov7ubHhs94aEPBL\n- Baltimore - Elkridge: dMXtHiHjrYoh4i3De\n- Birmingham - Bessemer: gfq9t2DxppGyCXJ34RGqEY\n- Boston - Framingham: woYEFuLfPRUzrkVU3JawVg\n- Boston - Walpole: ux91QaswnPYeVaUE81eKFx\n- Brooklyn - East Williamsburg: w83soVN16cPgGz3Ctivgdp\n- Buffalo - Park Meadow: 01KTY6EAAF2CTJPGEAQ6GDAYD8\n- Charlotte - Davis Lake-Eastfield: qAtfork2ynpbgiw4H\n- Chicago - Franklin Park: dEoWcaMvuHaraXQDUVRFKX\n- Cincinnati - West Chester Twp: wMT2Qvnp2BakKxY1AQGkMB\n- Cleveland - North Randall: bVpL7Lc44QZcpWumEYhqxn\n- Colorado Springs - Northeast Colorado Springs: ta54XMNfRwq9zL5qA\n- Columbus - Parsons Industrial: WKeYjAqygeKAgmqck\n- Dallas - Flower Mound: 6Ao5iHPxXztinf5iK\n- Dallas - Grand Prairie: 6avT1L2rnhHRCEt9C2jcWJ\n- Denver - Northeast Park Hill: ddrDmNaR9rEp5vjCk\n- Detroit - Highland Park: qVn1ReCYZR5aKwVA1DR7Zb\n- Fort Collins: tK9ZEsADJbZP48PEk\n- Fort Myers - Three Oaks: a5o8VHxsLgvU7hktgrW17X\n- Greensboro - Winston Salem: 3ngUhZdL2Hngq9bqkwK7gN\n- Harrisburg: 01KTY6YYT73MFS7BDVH7QFEM74\n- Hartford - Newington: hk6YYM1Bz4HkVnPLLNzveg\n- Houston - Carverdale: 3MbxHDDS364R4TXDK\n- Indianapolis - Park 100: HoCzKZdLkqecd8JhG\n- Inland Empire - Ontario: 9a8BfAzsWS35pw6ME2tQwv\n- Jacksonville - Pine Forest: jvsKgT3GqRdXWr8Ee\n- Kansas City - Lee's Summit: 01KP8R2VMCSWG4WX9XV30Z8TF1\n- Las Vegas - North Las Vegas: 19P5QQXpsT3pXcLwfdW5ZS\n- Long Island - Plainview: jbDcupiysexpFfWHQFRvbG\n- Los Angeles - Santa Fe Springs: 31FBXPhg5yGg41DXHpCyGX\n- Louisville - Greenwood: qEYMv6yBFr63He5s3UmZ4u\n- Memphis - Whitehaven: 8PtYA5VzSXAD4dK6yvrwgf\n- Milwaukee - Mitchell West: ZHsMxYNvS2oYWsXDJ\n- Minneapolis - Eagan: vQTApMmprwW5A6NbEQUS3B\n- Nashville - Airport South: tW6dmmFfjbzUUFzN1CqUae\n- Newark - Avenel: qABpPZ6gVsACXNkmyMEuLA\n- Norfolk - Fairmont Park: kMwuuGVtEkkFMuvP28g6ih\n- Northern Virginia - Alexandria: EMAy3J3o7vs9XEkXd\n- Oklahoma City - Capitol View: 57AC8VFocVtqyMU3FJaJRN\n- Orlando - Southchase: yECerwQzfpqNTwXXq\n- Philadelphia - Bridesburg: fT3MwATFjkCwGQ6W9\n- Phoenix - West Gate: gy42rdnmYv6n7tLroLh7Qv\n- Pittsburgh - Fairywood: cUDHZY9YoQT15XJ1USK7GW\n- Raleigh - Garner: ECqn5c9CtPCcNyiHf\n- Richmond - Sandston: 88RZK4vnVXsEkP9trPoMUx\n- Rochester - Brighton: 01KTY6KMQY0VACBEB0DMKNMRHB\n- Sacramento - Dos Rios: 01KR3X20A9AP27PMM0GDWWMP4H\n- San Antonio - Blossoms Park: MqGres8scbvRp6jT8\n- San Diego - Morena: ciSJ5yQGofLyWGCWtRduPQ\n- San Francisco - Union City: 01KR3W879M7ZZT2KNEWRYES77R\n- South Florida - Hialeah: e1WrdksedyHiGuneQtUFPK\n- South Florida - Pompano Beach: i7bWs6aMTnGP76Eab\n- St. Louis - Marine Villa: fjyrh4T5C8ZcKLubxVPcX6\n- Tampa - Riverview: kgR6wzjoLoHKKkutypDXTJ\n- Tampa - Tampa Bay: emLLeyNvZbZxF3wBc\n- Tucson - Milton Manor: 01KTY6SN8705Z22FVK661E3C8T\n- Tulsa - Rosewood: vJ5DrzqgRcRPD3UGZzdYZ2\n- Valdosta (trailer swap): hi8okn7qC65DvmJ5rPPbrw\n- Westchester - Mount Vernon: b1dApFZdTnvirmWMCvFxJp\n- Westchester - Yonkers: iz15JEArSje2K2by8NHaCM\n"
-      enum:
-      - dCXhH5MUgazmhGfKeJE9B4
-      - GRhhgCv5gDgLS6Qka
-      - 3iov7ubHhs94aEPBL
-      - dMXtHiHjrYoh4i3De
-      - gfq9t2DxppGyCXJ34RGqEY
-      - woYEFuLfPRUzrkVU3JawVg
-      - ux91QaswnPYeVaUE81eKFx
-      - w83soVN16cPgGz3Ctivgdp
-      - 01KTY6EAAF2CTJPGEAQ6GDAYD8
-      - qAtfork2ynpbgiw4H
-      - dEoWcaMvuHaraXQDUVRFKX
-      - wMT2Qvnp2BakKxY1AQGkMB
-      - bVpL7Lc44QZcpWumEYhqxn
-      - ta54XMNfRwq9zL5qA
-      - WKeYjAqygeKAgmqck
-      - 6Ao5iHPxXztinf5iK
-      - 6avT1L2rnhHRCEt9C2jcWJ
-      - ddrDmNaR9rEp5vjCk
-      - qVn1ReCYZR5aKwVA1DR7Zb
-      - tK9ZEsADJbZP48PEk
-      - a5o8VHxsLgvU7hktgrW17X
-      - 3ngUhZdL2Hngq9bqkwK7gN
-      - 01KTY6YYT73MFS7BDVH7QFEM74
-      - hk6YYM1Bz4HkVnPLLNzveg
-      - 3MbxHDDS364R4TXDK
-      - HoCzKZdLkqecd8JhG
-      - 9a8BfAzsWS35pw6ME2tQwv
-      - jvsKgT3GqRdXWr8Ee
-      - 01KP8R2VMCSWG4WX9XV30Z8TF1
-      - 19P5QQXpsT3pXcLwfdW5ZS
-      - jbDcupiysexpFfWHQFRvbG
-      - 31FBXPhg5yGg41DXHpCyGX
-      - qEYMv6yBFr63He5s3UmZ4u
-      - 8PtYA5VzSXAD4dK6yvrwgf
-      - ZHsMxYNvS2oYWsXDJ
-      - vQTApMmprwW5A6NbEQUS3B
-      - tW6dmmFfjbzUUFzN1CqUae
-      - qABpPZ6gVsACXNkmyMEuLA
-      - kMwuuGVtEkkFMuvP28g6ih
-      - EMAy3J3o7vs9XEkXd
-      - 57AC8VFocVtqyMU3FJaJRN
-      - yECerwQzfpqNTwXXq
-      - fT3MwATFjkCwGQ6W9
-      - gy42rdnmYv6n7tLroLh7Qv
-      - cUDHZY9YoQT15XJ1USK7GW
-      - ECqn5c9CtPCcNyiHf
-      - 88RZK4vnVXsEkP9trPoMUx
-      - 01KTY6KMQY0VACBEB0DMKNMRHB
-      - 01KR3X20A9AP27PMM0GDWWMP4H
-      - MqGres8scbvRp6jT8
-      - ciSJ5yQGofLyWGCWtRduPQ
-      - 01KR3W879M7ZZT2KNEWRYES77R
-      - e1WrdksedyHiGuneQtUFPK
-      - i7bWs6aMTnGP76Eab
-      - fjyrh4T5C8ZcKLubxVPcX6
-      - kgR6wzjoLoHKKkutypDXTJ
-      - emLLeyNvZbZxF3wBc
-      - 01KTY6SN8705Z22FVK661E3C8T
-      - vJ5DrzqgRcRPD3UGZzdYZ2
-      - hi8okn7qC65DvmJ5rPPbrw
-      - b1dApFZdTnvirmWMCvFxJp
-      - iz15JEArSje2K2by8NHaCM
     OrderAddress:
       title: Order Address
       type: object
@@ -779,111 +644,44 @@ components:
         country:
           type: string
           description: 2 letter ISO country code
-    DryIce:
-      title: Dry Ice
-      additionalProperties: false
-      deprecated: true
+    OrderEvent:
       type: object
-      description: Note that Veho no longer supports shipping dry ice, and will reject packages containing dry ice. Indicates that this package contains dry ice (carbon dioxide, solid).
+      description: The eventLog object represents an event in the lifecycle of the order
+      properties:
+        eventType:
+          type: string
+          enum:
+          - created
+          - cancelled
+          description: enum representing the event that occurred
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: time at which the event occurred
+          readOnly: true
+    Hazmat:
+      title: Hazmat (Hazardous Materials)
+      additionalProperties: false
+      type: object
+      description: Indicates that this package contains hazardous materials. If you intend to ship hazardous materials, please get in contact with a Veho representative.
       required:
-      - weight
+      - limitedQuantity
       properties:
-        weight:
-          type: number
-          description: Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.
-          minimum: 0
-    OrderRequestPackage:
-      type: object
-      title: Order Request Package
-      additionalProperties: false
-      x-examples:
-        example-1:
-          externalId: myPackageId1
-          length: 12
-          width: 10
-          height: 9
-          weight: 25
-          declaredValue: 7500
-          barCode: GqN8v5wvGNxmnFu4Y
-          quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
-      examples:
-      - externalId: myPackageId1
-        length: 12
-        width: 10
-        height: 9
-        weight: 25
-        declaredValue: 7500
-        barCode: GqN8v5wvGNxmnFu4Y
-        quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
-      properties:
-        externalId:
-          type: string
-          description: Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object.
-        length:
-          type: number
-          maximum: 48
-          description: 'Length (inches) of the package. Required if requesting a quote with a
-
-            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
-        lengthDim:
-          type: integer
-          maximum: 48
-          description: Alias for length. Do not use as future support is not guaranteed
-          deprecated: true
-        width:
-          type: number
-          maximum: 48
-          description: 'Width (inches) of the package. Required if requesting a quote with a
-
-            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
-        height:
-          type: number
-          maximum: 48
-          description: 'Height (inches) of the package. Required if requesting a quote with a
-
-            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
-        weight:
-          type: number
-          maximum: 50
-          description: 'Weight (pounds) of the package. Required if requesting a quote with a
-
-            new order'
-        declaredValue:
-          type: number
-          description: Declared value of package, in USD pennies (5000 is $50 USD).
-        signatureRequired:
-          description: Specify whether recipient has to sign for this package. Not currently supported by operations and will always be set to false.
-          default: false
-          deprecated: true
-        barCode:
-          type: string
-          description: The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.
-          minLength: 14
-          maxLength: 20
-          pattern: ^[a-zA-Z0-9]+$
-        description:
-          type: string
-          description: Description of the package. Note that this description will appear on the label.
-        specialHandling:
-          $ref: '#/components/schemas/SpecialHandling'
-        attendedDelivery:
-          $ref: '#/components/schemas/AttendedDelivery'
-        quoteId:
-          type: string
-          description: The ID of the quote that was used to rate this package. Represented as a UUID.
-          format: uuid
-        dispatchDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
-        shipDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-        tenderFacilityId:
-          $ref: '#/components/schemas/FacilityId'
+        limitedQuantity:
+          type: boolean
+          description: Indicates whether this package contains limited quantity (LQ) hazardous materials or not.
+    QuotedOrderResponse:
+      additionalProperties: true
+      title: Order Response with Quoted Packages
+      allOf:
+      - $ref: '#/components/schemas/OrderResponse'
+      - type: object
+        properties:
+          packages:
+            type: array
+            items:
+              $ref: '#/components/schemas/QuotedPackageResponse'
     OrderRequest:
       type: object
       properties:
@@ -966,6 +764,134 @@ components:
       - fromAddress
       title: Order Request
       additionalProperties: false
+    SimpleQuoteItem:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          description: ID of the generated quote associated to the rated package
+        transitTime:
+          type: number
+          description: Days package will be in transit
+        serviceClass:
+          type: string
+          default: groundPlus
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+        currency:
+          type: string
+          default: USD
+          description: Currency for rate, currently only `USD` is available
+          enum:
+          - USD
+        rate:
+          type: number
+          description: All-in rate for quoted order
+          minimum: 0
+        assumedInjectionZip:
+          type: string
+          description: The injection ZIP code assumed for the quote calculation
+        createdAt:
+          type: string
+          description: Time at which the quote was created
+          format: date-time
+        shipDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+          format: date
+        weight:
+          type: number
+          description: Weight (pounds) of the package
+        billableWeight:
+          type: number
+          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
+        length:
+          type: number
+          description: Length (inches) of the package
+        width:
+          type: number
+          description: Width (inches) of the package
+        height:
+          type: number
+          description: Height (inches) of the package
+        zone:
+          type: string
+          description: Zone of the package
+    PatchOrderRequest:
+      type: object
+      properties:
+        instructions:
+          type: string
+          description: Delivery instructions for the order
+    Event:
+      type: object
+      description: 'The eventLog object represents an event in the lifecycle of the package:'
+      properties:
+        eventType:
+          type: string
+          description: enum representing the event that occurred
+          enum:
+          - created
+          - pending
+          - notFound
+          - pickedUpFromClient
+          - droppedOffAtVeho
+          - pickedUpFromVeho
+          - delivered
+          - returned
+          - cancelled
+          - misdelivered
+          - discarded
+          - PackageArrivedAtFacility
+          - PackageDepartedFromFacility
+          - PackageHadDeliveryIssue
+          - PackageLoadedOntoFirstMileTransit
+          - pendingReturnToClient
+          - returnedToClient
+          - returnedToVeho
+          - notReceivedFromClient
+          - removedForRescue
+          - removedForRollover
+          - outForPickup
+          - pickedUpFromConsumer
+          - pickupSkipped
+          - pickupFailed
+          - pickupDroppedOffAtVeho
+          - pickupTransferredToExternalCarrier
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: time at which the event occurred
+          readOnly: true
+        message:
+          type: string
+          description: message associated with the event
+          readOnly: true
+        city:
+          type: string
+          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        state:
+          type: string
+          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        meta:
+          type: object
+          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
+          readOnly: true
+      readOnly: true
     SpecialHandling:
       title: Special Handling
       additionalProperties: false
@@ -1074,70 +1000,81 @@ components:
           deprecated: true
           x-internal: true
       description: The Order is the container for any number of Packages going to the same recipient and address. An Order can have a single Package, or you can add as my packages to an order as you like.
-    SimpleQuoteItem:
-      type: object
-      properties:
-        quoteId:
-          type: string
-          description: ID of the generated quote associated to the rated package
-        transitTime:
-          type: number
-          description: Days package will be in transit
-        serviceClass:
-          type: string
-          default: groundPlus
-          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
-          enum:
-          - nextDay
-          - sameDay
-          - twoDay
-          - vehoValue
-          - groundPlus
-          - premiumEconomy
-          - expressAir
-          - groundPlusOne
-          - groundPlusTwo
-          - groundPlusThree
-          - groundPlusFour
-        currency:
-          type: string
-          default: USD
-          description: Currency for rate, currently only `USD` is available
-          enum:
-          - USD
-        rate:
-          type: number
-          description: All-in rate for quoted order
-          minimum: 0
-        assumedInjectionZip:
-          type: string
-          description: The injection ZIP code assumed for the quote calculation
-        createdAt:
-          type: string
-          description: Time at which the quote was created
-          format: date-time
-        shipDate:
-          type: string
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-          format: date
-        weight:
-          type: number
-          description: Weight (pounds) of the package
-        billableWeight:
-          type: number
-          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
-        length:
-          type: number
-          description: Length (inches) of the package
-        width:
-          type: number
-          description: Width (inches) of the package
-        height:
-          type: number
-          description: Height (inches) of the package
-        zone:
-          type: string
-          description: Zone of the package
+    FacilityId:
+      type: string
+      minLength: 17
+      maxLength: 26
+      description: "ID of the facility where the package will be first tendered to Veho. Primarily used for the [manifest API](#section/Manifest-API), but\nmay be provided in the [create order API](#operation/createOrder) with shipDate to improve package scheduling accuracy.\n\nAvailable facilities and their markets are shown below. Note that we're expanding rapidly, so this list may not be up to date. \nPlease reach out to api@shipveho.com if you don't see the location you're looking for in the list.\n\n- Atlanta - Flowery Branch: dCXhH5MUgazmhGfKeJE9B4\n- Atlanta - Fulton Industrial: GRhhgCv5gDgLS6Qka\n- Austin - North Burnet: 3iov7ubHhs94aEPBL\n- Baltimore - Elkridge: dMXtHiHjrYoh4i3De\n- Birmingham - Bessemer: gfq9t2DxppGyCXJ34RGqEY\n- Boston - Framingham: woYEFuLfPRUzrkVU3JawVg\n- Boston - Walpole: ux91QaswnPYeVaUE81eKFx\n- Brooklyn - East Williamsburg: w83soVN16cPgGz3Ctivgdp\n- Buffalo - Park Meadow: 01KTY6EAAF2CTJPGEAQ6GDAYD8\n- Charlotte - Davis Lake-Eastfield: qAtfork2ynpbgiw4H\n- Chicago - Franklin Park: dEoWcaMvuHaraXQDUVRFKX\n- Cincinnati - West Chester Twp: wMT2Qvnp2BakKxY1AQGkMB\n- Cleveland - North Randall: bVpL7Lc44QZcpWumEYhqxn\n- Colorado Springs - Northeast Colorado Springs: ta54XMNfRwq9zL5qA\n- Columbus - Parsons Industrial: WKeYjAqygeKAgmqck\n- Dallas - Flower Mound: 6Ao5iHPxXztinf5iK\n- Dallas - Grand Prairie: 6avT1L2rnhHRCEt9C2jcWJ\n- Denver - Northeast Park Hill: ddrDmNaR9rEp5vjCk\n- Detroit - Highland Park: qVn1ReCYZR5aKwVA1DR7Zb\n- Fort Collins: tK9ZEsADJbZP48PEk\n- Fort Myers - Three Oaks: a5o8VHxsLgvU7hktgrW17X\n- Greensboro - Winston Salem: 3ngUhZdL2Hngq9bqkwK7gN\n- Harrisburg: 01KTY6YYT73MFS7BDVH7QFEM74\n- Hartford - Newington: hk6YYM1Bz4HkVnPLLNzveg\n- Houston - Carverdale: 3MbxHDDS364R4TXDK\n- Indianapolis - Park 100: HoCzKZdLkqecd8JhG\n- Inland Empire - Ontario: 9a8BfAzsWS35pw6ME2tQwv\n- Jacksonville - Pine Forest: jvsKgT3GqRdXWr8Ee\n- Kansas City - Lee's Summit: 01KP8R2VMCSWG4WX9XV30Z8TF1\n- Las Vegas - North Las Vegas: 19P5QQXpsT3pXcLwfdW5ZS\n- Long Island - Plainview: jbDcupiysexpFfWHQFRvbG\n- Los Angeles - Santa Fe Springs: 31FBXPhg5yGg41DXHpCyGX\n- Louisville - Greenwood: qEYMv6yBFr63He5s3UmZ4u\n- Memphis - Whitehaven: 8PtYA5VzSXAD4dK6yvrwgf\n- Milwaukee - Mitchell West: ZHsMxYNvS2oYWsXDJ\n- Minneapolis - Eagan: vQTApMmprwW5A6NbEQUS3B\n- Nashville - Airport South: tW6dmmFfjbzUUFzN1CqUae\n- Newark - Avenel: qABpPZ6gVsACXNkmyMEuLA\n- Norfolk - Fairmont Park: kMwuuGVtEkkFMuvP28g6ih\n- Northern Virginia - Alexandria: EMAy3J3o7vs9XEkXd\n- Oklahoma City - Capitol View: 57AC8VFocVtqyMU3FJaJRN\n- Orlando - Southchase: yECerwQzfpqNTwXXq\n- Philadelphia - Bridesburg: fT3MwATFjkCwGQ6W9\n- Phoenix - West Gate: gy42rdnmYv6n7tLroLh7Qv\n- Pittsburgh - Fairywood: cUDHZY9YoQT15XJ1USK7GW\n- Raleigh - Garner: ECqn5c9CtPCcNyiHf\n- Richmond - Sandston: 88RZK4vnVXsEkP9trPoMUx\n- Rochester - Brighton: 01KTY6KMQY0VACBEB0DMKNMRHB\n- Sacramento - Dos Rios: 01KR3X20A9AP27PMM0GDWWMP4H\n- San Antonio - Blossoms Park: MqGres8scbvRp6jT8\n- San Diego - Morena: ciSJ5yQGofLyWGCWtRduPQ\n- San Francisco - Union City: 01KR3W879M7ZZT2KNEWRYES77R\n- South Florida - Hialeah: e1WrdksedyHiGuneQtUFPK\n- South Florida - Pompano Beach: i7bWs6aMTnGP76Eab\n- St. Louis - Marine Villa: fjyrh4T5C8ZcKLubxVPcX6\n- Tampa - Riverview: kgR6wzjoLoHKKkutypDXTJ\n- Tampa - Tampa Bay: emLLeyNvZbZxF3wBc\n- Tucson - Milton Manor: 01KTY6SN8705Z22FVK661E3C8T\n- Tulsa - Rosewood: vJ5DrzqgRcRPD3UGZzdYZ2\n- Valdosta (trailer swap): hi8okn7qC65DvmJ5rPPbrw\n- Westchester - Mount Vernon: b1dApFZdTnvirmWMCvFxJp\n- Westchester - Yonkers: iz15JEArSje2K2by8NHaCM\n"
+      enum:
+      - dCXhH5MUgazmhGfKeJE9B4
+      - GRhhgCv5gDgLS6Qka
+      - 3iov7ubHhs94aEPBL
+      - dMXtHiHjrYoh4i3De
+      - gfq9t2DxppGyCXJ34RGqEY
+      - woYEFuLfPRUzrkVU3JawVg
+      - ux91QaswnPYeVaUE81eKFx
+      - w83soVN16cPgGz3Ctivgdp
+      - 01KTY6EAAF2CTJPGEAQ6GDAYD8
+      - qAtfork2ynpbgiw4H
+      - dEoWcaMvuHaraXQDUVRFKX
+      - wMT2Qvnp2BakKxY1AQGkMB
+      - bVpL7Lc44QZcpWumEYhqxn
+      - ta54XMNfRwq9zL5qA
+      - WKeYjAqygeKAgmqck
+      - 6Ao5iHPxXztinf5iK
+      - 6avT1L2rnhHRCEt9C2jcWJ
+      - ddrDmNaR9rEp5vjCk
+      - qVn1ReCYZR5aKwVA1DR7Zb
+      - tK9ZEsADJbZP48PEk
+      - a5o8VHxsLgvU7hktgrW17X
+      - 3ngUhZdL2Hngq9bqkwK7gN
+      - 01KTY6YYT73MFS7BDVH7QFEM74
+      - hk6YYM1Bz4HkVnPLLNzveg
+      - 3MbxHDDS364R4TXDK
+      - HoCzKZdLkqecd8JhG
+      - 9a8BfAzsWS35pw6ME2tQwv
+      - jvsKgT3GqRdXWr8Ee
+      - 01KP8R2VMCSWG4WX9XV30Z8TF1
+      - 19P5QQXpsT3pXcLwfdW5ZS
+      - jbDcupiysexpFfWHQFRvbG
+      - 31FBXPhg5yGg41DXHpCyGX
+      - qEYMv6yBFr63He5s3UmZ4u
+      - 8PtYA5VzSXAD4dK6yvrwgf
+      - ZHsMxYNvS2oYWsXDJ
+      - vQTApMmprwW5A6NbEQUS3B
+      - tW6dmmFfjbzUUFzN1CqUae
+      - qABpPZ6gVsACXNkmyMEuLA
+      - kMwuuGVtEkkFMuvP28g6ih
+      - EMAy3J3o7vs9XEkXd
+      - 57AC8VFocVtqyMU3FJaJRN
+      - yECerwQzfpqNTwXXq
+      - fT3MwATFjkCwGQ6W9
+      - gy42rdnmYv6n7tLroLh7Qv
+      - cUDHZY9YoQT15XJ1USK7GW
+      - ECqn5c9CtPCcNyiHf
+      - 88RZK4vnVXsEkP9trPoMUx
+      - 01KTY6KMQY0VACBEB0DMKNMRHB
+      - 01KR3X20A9AP27PMM0GDWWMP4H
+      - MqGres8scbvRp6jT8
+      - ciSJ5yQGofLyWGCWtRduPQ
+      - 01KR3W879M7ZZT2KNEWRYES77R
+      - e1WrdksedyHiGuneQtUFPK
+      - i7bWs6aMTnGP76Eab
+      - fjyrh4T5C8ZcKLubxVPcX6
+      - kgR6wzjoLoHKKkutypDXTJ
+      - emLLeyNvZbZxF3wBc
+      - 01KTY6SN8705Z22FVK661E3C8T
+      - vJ5DrzqgRcRPD3UGZzdYZ2
+      - hi8okn7qC65DvmJ5rPPbrw
+      - b1dApFZdTnvirmWMCvFxJp
+      - iz15JEArSje2K2by8NHaCM
+    QuotedPackageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PackageResponse'
+      - type: object
+        properties:
+          quote:
+            $ref: '#/components/schemas/SimpleQuoteItem'
     ErrorResponse:
       description: Error response object
       type: object
@@ -1247,6 +1184,61 @@ components:
         country:
           type: string
           description: 2 letter ISO country code
+    AttendedDelivery:
+      title: Attended Delivery
+      additionalProperties: false
+      type: object
+      description: Configuration for attended delivery on this package. Attended delivery requires interaction between the driver and the recipient to confirm delivery. Currently only PIN verification is supported. Required fields within this object  may vary based on your account configuration.
+      required:
+      - verificationType
+      properties:
+        verificationType:
+          type: string
+          enum:
+          - pinVerification
+          description: 'The type of delivery verification required for this package.
+
+            pinVerification — A unique PIN is sent to the recipient and must be provided to the driver to release the package.'
+    DryIce:
+      title: Dry Ice
+      additionalProperties: false
+      deprecated: true
+      type: object
+      description: Note that Veho no longer supports shipping dry ice, and will reject packages containing dry ice. Indicates that this package contains dry ice (carbon dioxide, solid).
+      required:
+      - weight
+      properties:
+        weight:
+          type: number
+          description: Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.
+          minimum: 0
+  responses:
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '200':
+      description: successful operation with no body returned
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '404':
+      description: Not Found -- The requested resource could not be found.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '429':
+      description: Too Many Requests
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     apiKey:
       name: apikey

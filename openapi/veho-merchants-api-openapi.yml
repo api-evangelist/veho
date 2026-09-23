@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Veho labels merchants API
+  title: Veho Merchants API
   version: '2.2'
   contact:
     email: info@shipveho.com
@@ -18,7 +18,7 @@ servers:
 security:
 - apiKey: []
 tags:
-- name: merchants
+- name: Merchants
   description: Merchants
 paths:
   /merchants:
@@ -26,7 +26,7 @@ paths:
     post:
       summary: Create a merchant for client
       tags:
-      - merchants
+      - Merchants
       responses:
         '201':
           description: Created
@@ -62,7 +62,7 @@ paths:
     get:
       summary: Get all merchants for client
       tags:
-      - merchants
+      - Merchants
       responses:
         '200':
           description: OK
@@ -106,7 +106,7 @@ paths:
     put:
       summary: Update a merchant for client
       tags:
-      - merchants
+      - Merchants
       responses:
         '200':
           description: OK
@@ -135,7 +135,7 @@ paths:
     delete:
       summary: Delete a merchant for client
       tags:
-      - merchants
+      - Merchants
       responses:
         '204':
           description: No Content
@@ -158,32 +158,20 @@ paths:
       operationId: deleteMerchant
       description: This endpoint deletes an existing merchant for client based on the client's apiKey in headers.
 components:
-  responses:
-    '422':
-      description: Unprocessable Entity -- The request was well formatted, but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '404':
-      description: Not Found -- The requested resource could not be found.
-    '400':
-      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '429':
-      description: Too Many Requests
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
   schemas:
+    MerchantRequest:
+      type: object
+      x-examples:
+        example-1:
+          name: Flintstone's Wheels
+      description: Merchants. For 3PL clients who ship on behalf of merchants
+      title: Merchant Request
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Merchant Name
     ErrorResponse:
       description: Error response object
       type: object
@@ -282,19 +270,31 @@ components:
           type: string
           description: Client ID
           readOnly: true
-    MerchantRequest:
-      type: object
-      x-examples:
-        example-1:
-          name: Flintstone's Wheels
-      description: Merchants. For 3PL clients who ship on behalf of merchants
-      title: Merchant Request
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Merchant Name
+  responses:
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '429':
+      description: Too Many Requests
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '404':
+      description: Not Found -- The requested resource could not be found.
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     apiKey:
       name: apikey
