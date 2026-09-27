@@ -71,7 +71,7 @@ tags_raw:
 - Delivery
 apis:
 - aid: veho:veho-labels-api
-  name: Veho labels API
+  name: Veho Labels API
   description: Labels
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -87,7 +87,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-manifests-api
-  name: Veho manifests API
+  name: Veho Manifests API
   description: Manifests
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -103,7 +103,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-merchants-api
-  name: Veho merchants API
+  name: Veho Merchants API
   description: Merchants
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -119,7 +119,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-orders-api
-  name: Veho orders API
+  name: Veho Orders API
   description: Orders
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -135,7 +135,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-packages-api
-  name: Veho packages API
+  name: Veho Packages API
   description: Packages
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -151,7 +151,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-quotes-api
-  name: Veho quotes API
+  name: Veho Quotes API
   description: Quotes
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -167,7 +167,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-webhooks-api
-  name: Veho webhooks API
+  name: Veho Webhooks API
   description: Webhooks
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2
@@ -183,7 +183,7 @@ apis:
   - type: Sandbox
     url: sandbox/veho-sandbox.yml
 - aid: veho:veho-zips-api
-  name: Veho zips API
+  name: Veho Zips API
   description: Serviceable Zips
   humanURL: https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api
   baseURL: https://api.shipveho.com/v2

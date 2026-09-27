@@ -157,6 +157,70 @@ components:
       description: An array of quoted packages, including rates and assumed dates
       items:
         $ref: '#/components/schemas/SimpleQuoteItem'
+    SimpleQuoteItem:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          description: ID of the generated quote associated to the rated package
+        transitTime:
+          type: number
+          description: Days package will be in transit
+        serviceClass:
+          type: string
+          default: groundPlus
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+        currency:
+          type: string
+          default: USD
+          description: Currency for rate, currently only `USD` is available
+          enum:
+          - USD
+        rate:
+          type: number
+          description: All-in rate for quoted order
+          minimum: 0
+        assumedInjectionZip:
+          type: string
+          description: The injection ZIP code assumed for the quote calculation
+        createdAt:
+          type: string
+          description: Time at which the quote was created
+          format: date-time
+        shipDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+          format: date
+        weight:
+          type: number
+          description: Weight (pounds) of the package
+        billableWeight:
+          type: number
+          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
+        length:
+          type: number
+          description: Length (inches) of the package
+        width:
+          type: number
+          description: Width (inches) of the package
+        height:
+          type: number
+          description: Height (inches) of the package
+        zone:
+          type: string
+          description: Zone of the package
     SimpleQuoteRequest:
       type: object
       description: Required fields for a simple quote generation request
@@ -238,93 +302,29 @@ components:
           - groundPlusTwo
           - groundPlusThree
           - groundPlusFour
-    SimpleQuoteItem:
-      type: object
-      properties:
-        quoteId:
-          type: string
-          description: ID of the generated quote associated to the rated package
-        transitTime:
-          type: number
-          description: Days package will be in transit
-        serviceClass:
-          type: string
-          default: groundPlus
-          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
-          enum:
-          - nextDay
-          - sameDay
-          - twoDay
-          - vehoValue
-          - groundPlus
-          - premiumEconomy
-          - expressAir
-          - groundPlusOne
-          - groundPlusTwo
-          - groundPlusThree
-          - groundPlusFour
-        currency:
-          type: string
-          default: USD
-          description: Currency for rate, currently only `USD` is available
-          enum:
-          - USD
-        rate:
-          type: number
-          description: All-in rate for quoted order
-          minimum: 0
-        assumedInjectionZip:
-          type: string
-          description: The injection ZIP code assumed for the quote calculation
-        createdAt:
-          type: string
-          description: Time at which the quote was created
-          format: date-time
-        shipDate:
-          type: string
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-          format: date
-        weight:
-          type: number
-          description: Weight (pounds) of the package
-        billableWeight:
-          type: number
-          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
-        length:
-          type: number
-          description: Length (inches) of the package
-        width:
-          type: number
-          description: Width (inches) of the package
-        height:
-          type: number
-          description: Height (inches) of the package
-        zone:
-          type: string
-          description: Zone of the package
   responses:
     '403':
       description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '422':
-      description: Unprocessable Entity -- The request was well formatted, but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '429':
-      description: Too Many Requests
     '401':
       description: Unauthorized -- The header did not include a valid apiKey header.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
     '400':
       description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '429':
+      description: Too Many Requests
   securitySchemes:
     apiKey:
       name: apikey
