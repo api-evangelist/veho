@@ -162,93 +162,6 @@ paths:
         Note that this endpoint returns an array of packages, though there is usually only a single package matching the provided barcode.'
 components:
   schemas:
-    ErrorResponse:
-      description: Error response object
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          description: Error description
-          type: string
-        errors:
-          description: List of validation errors
-          type: array
-          items:
-            type: object
-            required:
-            - code
-            - message
-            - path
-            properties:
-              code:
-                description: Error code
-                type: string
-                enum:
-                - invalid_type
-                - unrecognized_keys
-                - invalid_string
-                - invalid_enum_value
-                - invalid_date
-                - too_small
-                - too_big
-                - invalid_packages
-                - invalid_address_field
-                - unserviceable_zip_code
-                - invalid_merchant
-                - invalid_external_client
-                - missing_package_description
-              message:
-                type: string
-                description: Error description
-              path:
-                description: Path to the invalid field in your input
-                type: array
-                items:
-                  type:
-                  - string
-                  - number
-              expected:
-                type: string
-                description: Expected type
-              received:
-                type: string
-                description: Received type
-              keys:
-                description: List of unrecognized keys
-                type: array
-                items:
-                  type: string
-              options:
-                description: Valid string values for the enum
-                type: array
-                items:
-                  type: string
-              minimum:
-                type: number
-                description: Minimum expected length/value
-              maximum:
-                type: number
-                description: Maximum expected length/value
-        error:
-          description: Legacy error description (deprecated)
-          deprecated: true
-          oneOf:
-          - type: object
-            properties:
-              code:
-                type: integer
-              error:
-                type: string
-          - type: string
-    GetPackageByIdResponse:
-      allOf:
-      - $ref: '#/components/schemas/PackageResponse'
-      - type: object
-        properties:
-          deliveryImage:
-            type: string
-            description: URL to access the delivery image for package, on request, if available. This field can be requested by setting the "includeDeliveryImage" query parameter to true
     DryIce:
       title: Dry Ice
       additionalProperties: false
@@ -262,6 +175,16 @@ components:
           type: number
           description: Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.
           minimum: 0
+    SpecialHandling:
+      title: Special Handling
+      additionalProperties: false
+      type: object
+      description: Special handling modifiers.
+      properties:
+        dryIce:
+          $ref: '#/components/schemas/DryIce'
+        hazmat:
+          $ref: '#/components/schemas/Hazmat'
     AttendedDelivery:
       title: Attended Delivery
       additionalProperties: false
@@ -277,17 +200,14 @@ components:
           description: 'The type of delivery verification required for this package.
 
             pinVerification — A unique PIN is sent to the recipient and must be provided to the driver to release the package.'
-    Hazmat:
-      title: Hazmat (Hazardous Materials)
-      additionalProperties: false
-      type: object
-      description: Indicates that this package contains hazardous materials. If you intend to ship hazardous materials, please get in contact with a Veho representative.
-      required:
-      - limitedQuantity
-      properties:
-        limitedQuantity:
-          type: boolean
-          description: Indicates whether this package contains limited quantity (LQ) hazardous materials or not.
+    GetPackageByIdResponse:
+      allOf:
+      - $ref: '#/components/schemas/PackageResponse'
+      - type: object
+        properties:
+          deliveryImage:
+            type: string
+            description: URL to access the delivery image for package, on request, if available. This field can be requested by setting the "includeDeliveryImage" query parameter to true
     FacilityId:
       type: string
       minLength: 17
@@ -356,64 +276,6 @@ components:
       - hi8okn7qC65DvmJ5rPPbrw
       - b1dApFZdTnvirmWMCvFxJp
       - iz15JEArSje2K2by8NHaCM
-    Event:
-      type: object
-      description: 'The eventLog object represents an event in the lifecycle of the package:'
-      properties:
-        eventType:
-          type: string
-          description: enum representing the event that occurred
-          enum:
-          - created
-          - pending
-          - notFound
-          - pickedUpFromClient
-          - droppedOffAtVeho
-          - pickedUpFromVeho
-          - delivered
-          - returned
-          - cancelled
-          - misdelivered
-          - discarded
-          - PackageArrivedAtFacility
-          - PackageDepartedFromFacility
-          - PackageHadDeliveryIssue
-          - PackageLoadedOntoFirstMileTransit
-          - pendingReturnToClient
-          - returnedToClient
-          - returnedToVeho
-          - notReceivedFromClient
-          - removedForRescue
-          - removedForRollover
-          - outForPickup
-          - pickedUpFromConsumer
-          - pickupSkipped
-          - pickupFailed
-          - pickupDroppedOffAtVeho
-          - pickupTransferredToExternalCarrier
-          readOnly: true
-        timestamp:
-          type: string
-          format: date-time
-          description: time at which the event occurred
-          readOnly: true
-        message:
-          type: string
-          description: message associated with the event
-          readOnly: true
-        city:
-          type: string
-          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
-          readOnly: true
-        state:
-          type: string
-          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
-          readOnly: true
-        meta:
-          type: object
-          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
-          readOnly: true
-      readOnly: true
     PackageResponse:
       additionalProperties: true
       title: Package Response
@@ -599,35 +461,173 @@ components:
           type: string
           description: The lastEvent on the package as a more detailed string. For example, "Package out for delivery" instead of "pickedUpFromVeho"
           readOnly: true
-    SpecialHandling:
-      title: Special Handling
+    Hazmat:
+      title: Hazmat (Hazardous Materials)
       additionalProperties: false
       type: object
-      description: Special handling modifiers.
+      description: Indicates that this package contains hazardous materials. If you intend to ship hazardous materials, please get in contact with a Veho representative.
+      required:
+      - limitedQuantity
       properties:
-        dryIce:
-          $ref: '#/components/schemas/DryIce'
-        hazmat:
-          $ref: '#/components/schemas/Hazmat'
+        limitedQuantity:
+          type: boolean
+          description: Indicates whether this package contains limited quantity (LQ) hazardous materials or not.
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
+            type: object
+            required:
+            - code
+            - message
+            - path
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
+              message:
+                type: string
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
+    Event:
+      type: object
+      description: 'The eventLog object represents an event in the lifecycle of the package:'
+      properties:
+        eventType:
+          type: string
+          description: enum representing the event that occurred
+          enum:
+          - created
+          - pending
+          - notFound
+          - pickedUpFromClient
+          - droppedOffAtVeho
+          - pickedUpFromVeho
+          - delivered
+          - returned
+          - cancelled
+          - misdelivered
+          - discarded
+          - PackageArrivedAtFacility
+          - PackageDepartedFromFacility
+          - PackageHadDeliveryIssue
+          - PackageLoadedOntoFirstMileTransit
+          - pendingReturnToClient
+          - returnedToClient
+          - returnedToVeho
+          - notReceivedFromClient
+          - removedForRescue
+          - removedForRollover
+          - outForPickup
+          - pickedUpFromConsumer
+          - pickupSkipped
+          - pickupFailed
+          - pickupDroppedOffAtVeho
+          - pickupTransferredToExternalCarrier
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: time at which the event occurred
+          readOnly: true
+        message:
+          type: string
+          description: message associated with the event
+          readOnly: true
+        city:
+          type: string
+          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        state:
+          type: string
+          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        meta:
+          type: object
+          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
+          readOnly: true
+      readOnly: true
   responses:
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
     '404':
       description: Not Found -- The requested resource could not be found.
+    '429':
+      description: Too Many Requests
     '400':
       description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
     '503':
       description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '429':
-      description: Too Many Requests
   securitySchemes:
     apiKey:
       name: apikey

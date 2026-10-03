@@ -64,18 +64,18 @@ paths:
         > The sandbox environment contains a subset of ZIP codes within our serviceable areas so when creating an order in the sandbox environment, make sure to use a destination ZIP code included in the sandbox serviceable ZIP list.'
 components:
   responses:
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
     '404':
       description: Not Found -- The requested resource could not be found.
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
     '429':
       description: Too Many Requests
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
   schemas:
     ServiceableZipsResponse:
       type: object

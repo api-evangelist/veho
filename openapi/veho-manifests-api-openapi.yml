@@ -152,120 +152,40 @@ paths:
         '503':
           $ref: '#/components/responses/503'
 components:
-  schemas:
-    ErrorResponse:
-      description: Error response object
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          description: Error description
-          type: string
-        errors:
-          description: List of validation errors
-          type: array
-          items:
+  responses:
+    '429':
+      description: Too Many Requests
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '201':
+      description: OK
+      content:
+        application/json:
+          schema:
             type: object
-            required:
-            - code
-            - message
-            - path
             properties:
-              code:
-                description: Error code
-                type: string
-                enum:
-                - invalid_type
-                - unrecognized_keys
-                - invalid_string
-                - invalid_enum_value
-                - invalid_date
-                - too_small
-                - too_big
-                - invalid_packages
-                - invalid_address_field
-                - unserviceable_zip_code
-                - invalid_merchant
-                - invalid_external_client
-                - missing_package_description
               message:
                 type: string
-                description: Error description
-              path:
-                description: Path to the invalid field in your input
-                type: array
-                items:
-                  type:
-                  - string
-                  - number
-              expected:
-                type: string
-                description: Expected type
-              received:
-                type: string
-                description: Received type
-              keys:
-                description: List of unrecognized keys
-                type: array
-                items:
-                  type: string
-              options:
-                description: Valid string values for the enum
-                type: array
-                items:
-                  type: string
-              minimum:
-                type: number
-                description: Minimum expected length/value
-              maximum:
-                type: number
-                description: Maximum expected length/value
-        error:
-          description: Legacy error description (deprecated)
-          deprecated: true
-          oneOf:
-          - type: object
-            properties:
-              code:
-                type: integer
-              error:
-                type: string
-          - type: string
-    ManifestRequestWithBarcodes:
-      type: object
-      required:
-      - barcodes
-      properties:
-        transitType:
-          type: string
-          default: truck
-          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
-          enum:
-          - truck
-          - plane
-        dispatchDate:
-          type: string
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-        barcodes:
-          type: array
-          description: An array of packages to be updated with new dispatchDates
-          minItems: 1
-          maxItems: 100
-          items:
-            type: string
-        shipDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-        tenderFacilityId:
-          $ref: '#/components/schemas/FacilityId'
-        loadId:
-          type: string
-          description: Client-provided load identifier for the manifest
+                description: A message indicating the request was successful
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '422':
+      description: Unprocessable Entity -- The request was well formatted, but failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
     ManifestRequestWithPackageIds:
       type: object
       required:
@@ -300,10 +220,10 @@ components:
         loadId:
           type: string
           description: Client-provided load identifier for the manifest
-    ManifestRequestWithTrackingIds:
+    ManifestRequestWithExternalIds:
       type: object
       required:
-      - trackingIds
+      - externalIds
       properties:
         transitType:
           type: string
@@ -317,7 +237,41 @@ components:
           description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
           format: date
           pattern: ^\d{4}-\d{2}-\d{2}$
-        trackingIds:
+        externalIds:
+          type: array
+          description: An array of packages to be updated with new dispatchDates
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+        loadId:
+          type: string
+          description: Client-provided load identifier for the manifest
+    ManifestRequestWithBarcodes:
+      type: object
+      required:
+      - barcodes
+      properties:
+        transitType:
+          type: string
+          default: truck
+          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
+          enum:
+          - truck
+          - plane
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        barcodes:
           type: array
           description: An array of packages to be updated with new dispatchDates
           minItems: 1
@@ -402,40 +356,6 @@ components:
       - hi8okn7qC65DvmJ5rPPbrw
       - b1dApFZdTnvirmWMCvFxJp
       - iz15JEArSje2K2by8NHaCM
-    ManifestRequestWithExternalIds:
-      type: object
-      required:
-      - externalIds
-      properties:
-        transitType:
-          type: string
-          default: truck
-          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
-          enum:
-          - truck
-          - plane
-        dispatchDate:
-          type: string
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-        externalIds:
-          type: array
-          description: An array of packages to be updated with new dispatchDates
-          minItems: 1
-          maxItems: 100
-          items:
-            type: string
-        shipDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-        tenderFacilityId:
-          $ref: '#/components/schemas/FacilityId'
-        loadId:
-          type: string
-          description: Client-provided load identifier for the manifest
     ManifestResponse:
       type: object
       description: Manifest response structure
@@ -501,39 +421,119 @@ components:
             type: string
           description: An array of external IDs for packages that were not found within the system
           optional: true
-  responses:
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '400':
-      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '422':
-      description: Unprocessable Entity -- The request was well formatted, but failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '201':
-      description: OK
-      content:
-        application/json:
-          schema:
+    ManifestRequestWithTrackingIds:
+      type: object
+      required:
+      - trackingIds
+      properties:
+        transitType:
+          type: string
+          default: truck
+          description: The type of vehicle that the package has been loaded onto. Will default to 'truck'
+          enum:
+          - truck
+          - plane
+        dispatchDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        trackingIds:
+          type: array
+          description: An array of packages to be updated with new dispatchDates
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+        loadId:
+          type: string
+          description: Client-provided load identifier for the manifest
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
             type: object
+            required:
+            - code
+            - message
+            - path
             properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
               message:
                 type: string
-                description: A message indicating the request was successful
-    '429':
-      description: Too Many Requests
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
   securitySchemes:
     apiKey:
       name: apikey
