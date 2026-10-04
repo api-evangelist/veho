@@ -161,29 +161,48 @@ components:
   responses:
     '404':
       description: Not Found -- The requested resource could not be found.
-    '429':
-      description: Too Many Requests
-    '400':
-      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     '403':
       description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '401':
-      description: Unauthorized -- The header did not include a valid apiKey header.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '429':
+      description: Too Many Requests
     '422':
       description: Unprocessable Entity -- The request was well formatted, but failed validation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+    '400':
+      description: Bad Request -- The request wasn't valid JSON or had missing or invalid fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    '401':
+      description: Unauthorized -- The header did not include a valid apiKey header.
   schemas:
+    MerchantResponse:
+      type: object
+      x-examples:
+        example-1:
+          _id: TuN75hYYBicRsaLWo
+          name: Flintstone's Wheels
+      description: Merchants. For 3PL clients who ship on behalf of merchants
+      title: Merchant Response
+      properties:
+        _id:
+          type: string
+          description: Merchant ID
+        name:
+          type: string
+          description: Merchant Name
+        clientId:
+          type: string
+          description: Client ID
+          readOnly: true
     MerchantRequest:
       type: object
       x-examples:
@@ -276,25 +295,6 @@ components:
               error:
                 type: string
           - type: string
-    MerchantResponse:
-      type: object
-      x-examples:
-        example-1:
-          _id: TuN75hYYBicRsaLWo
-          name: Flintstone's Wheels
-      description: Merchants. For 3PL clients who ship on behalf of merchants
-      title: Merchant Response
-      properties:
-        _id:
-          type: string
-          description: Merchant ID
-        name:
-          type: string
-          description: Merchant Name
-        clientId:
-          type: string
-          description: Client ID
-          readOnly: true
   securitySchemes:
     apiKey:
       name: apikey

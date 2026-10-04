@@ -337,488 +337,6 @@ paths:
       - Orders
 components:
   schemas:
-    PatchOrderRequest:
-      type: object
-      properties:
-        instructions:
-          type: string
-          description: Delivery instructions for the order
-    Event:
-      type: object
-      description: 'The eventLog object represents an event in the lifecycle of the package:'
-      properties:
-        eventType:
-          type: string
-          description: enum representing the event that occurred
-          enum:
-          - created
-          - pending
-          - notFound
-          - pickedUpFromClient
-          - droppedOffAtVeho
-          - pickedUpFromVeho
-          - delivered
-          - returned
-          - cancelled
-          - misdelivered
-          - discarded
-          - PackageArrivedAtFacility
-          - PackageDepartedFromFacility
-          - PackageHadDeliveryIssue
-          - PackageLoadedOntoFirstMileTransit
-          - pendingReturnToClient
-          - returnedToClient
-          - returnedToVeho
-          - notReceivedFromClient
-          - removedForRescue
-          - removedForRollover
-          - outForPickup
-          - pickedUpFromConsumer
-          - pickupSkipped
-          - pickupFailed
-          - pickupDroppedOffAtVeho
-          - pickupTransferredToExternalCarrier
-          readOnly: true
-        timestamp:
-          type: string
-          format: date-time
-          description: time at which the event occurred
-          readOnly: true
-        message:
-          type: string
-          description: message associated with the event
-          readOnly: true
-        city:
-          type: string
-          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
-          readOnly: true
-        state:
-          type: string
-          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
-          readOnly: true
-        meta:
-          type: object
-          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
-          readOnly: true
-      readOnly: true
-    OrderRequest:
-      type: object
-      properties:
-        destination:
-          $ref: '#/components/schemas/OrderAddress'
-        fromAddress:
-          description: 'Address where this order is originating from. Required only if requesting a quote
-
-            with the order, as this is used to infer the nearest supported Veho injection facility'
-          $ref: '#/components/schemas/FromAddress'
-        fromName:
-          type: string
-          description: Any name you want to use to identify where the order is coming from
-        serviceClass:
-          type: string
-          default: groundPlus
-          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
-          enum:
-          - nextDay
-          - sameDay
-          - twoDay
-          - vehoValue
-          - groundPlus
-          - premiumEconomy
-          - expressAir
-          - groundPlusOne
-          - groundPlusTwo
-          - groundPlusThree
-          - groundPlusFour
-        recipient:
-          type: string
-          description: Full name of recipient.
-        externalId:
-          type: string
-          description: Any ID you want to associate with this order, e.g. your order ID.
-        merchantId:
-          type: string
-          description: If you are shipping on behalf of a merchant and have registered that merchant with us, supply that ID here.
-        packages:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderRequestPackage'
-        company:
-          type: string
-          description: Recipient's company, if applicable.
-        phone:
-          type: string
-          description: Recipient's phone number (used for SMS).
-        email:
-          type: string
-          format: email
-          description: Recipient's email address. Used for delivery notifications and verification communications. May be required depending on your account configuration and delivery verification settings.
-        instructions:
-          type: string
-          description: Any additional delivery instructions provided by recipient to assist driver with delivery.
-        slaDeliveryDate:
-          type: string
-          format: date
-          description: 'A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package must be delivered.  The date must be the next day or greater. If not included, Veho will generate one for you. By standard, that date will be the first scan in a Veho warehouse + days from service class.
-
-
-            Note: Veho will disregard any date provided in slaDeliveryDate for  any package marked as premiumEconomy in the serviceClass.'
-        consumerExpectedServiceDate:
-          type: string
-          format: date
-          description: A string in the ISO 8601 calendar date and time extended format, e.g. 2023-05-19T12:34:56.789Z, representing the date and time by which the customer is expecting the package to be delivered.
-        packageCount:
-          type: integer
-          description: Number of packages associated with this order. Use this field to create one or more packages without supplying additional information. To include package-specific information, use the packages field instead.
-          writeOnly: true
-          minimum: 1
-        rate:
-          type: number
-          description: Deprecated rate field
-          deprecated: true
-          x-internal: true
-      required:
-      - destination
-      - recipient
-      - fromAddress
-      title: Order Request
-      additionalProperties: false
-    OrderAddress:
-      title: Order Address
-      type: object
-      description: Delivery address
-      required:
-      - zipCode
-      - street
-      - city
-      - state
-      properties:
-        street:
-          type: string
-          description: Street address
-        city:
-          type: string
-          description: City
-        state:
-          type: string
-          description: State. 2 letter postal code or full state name
-          example: CO
-        zipCode:
-          type: string
-          description: ZIP code
-          pattern: ^\d{5}(-?\d{4})?$
-        apartment:
-          type: string
-          description: Apartment number, suite number or any info on the second line of an address
-        country:
-          type: string
-          description: 2 letter ISO country code
-    FromAddress:
-      title: From Address
-      type: object
-      description: Address where this order is originating from
-      required:
-      - addressLine1
-      - city
-      - state
-      - zipCode
-      properties:
-        addressLine1:
-          type: string
-          description: Address line 1
-        addressLine2:
-          type: string
-          description: Address line 2
-        city:
-          type: string
-          description: City
-        state:
-          type: string
-          description: State. 2 letter postal code or full state name
-          example: CO
-        zipCode:
-          type: string
-          description: ZIP code
-          pattern: ^\d{5}(-?\d{4})?$
-        country:
-          type: string
-          description: 2 letter ISO country code
-    ErrorResponse:
-      description: Error response object
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          description: Error description
-          type: string
-        errors:
-          description: List of validation errors
-          type: array
-          items:
-            type: object
-            required:
-            - code
-            - message
-            - path
-            properties:
-              code:
-                description: Error code
-                type: string
-                enum:
-                - invalid_type
-                - unrecognized_keys
-                - invalid_string
-                - invalid_enum_value
-                - invalid_date
-                - too_small
-                - too_big
-                - invalid_packages
-                - invalid_address_field
-                - unserviceable_zip_code
-                - invalid_merchant
-                - invalid_external_client
-                - missing_package_description
-              message:
-                type: string
-                description: Error description
-              path:
-                description: Path to the invalid field in your input
-                type: array
-                items:
-                  type:
-                  - string
-                  - number
-              expected:
-                type: string
-                description: Expected type
-              received:
-                type: string
-                description: Received type
-              keys:
-                description: List of unrecognized keys
-                type: array
-                items:
-                  type: string
-              options:
-                description: Valid string values for the enum
-                type: array
-                items:
-                  type: string
-              minimum:
-                type: number
-                description: Minimum expected length/value
-              maximum:
-                type: number
-                description: Maximum expected length/value
-        error:
-          description: Legacy error description (deprecated)
-          deprecated: true
-          oneOf:
-          - type: object
-            properties:
-              code:
-                type: integer
-              error:
-                type: string
-          - type: string
-    OrderRequestPackage:
-      type: object
-      title: Order Request Package
-      additionalProperties: false
-      x-examples:
-        example-1:
-          externalId: myPackageId1
-          length: 12
-          width: 10
-          height: 9
-          weight: 25
-          declaredValue: 7500
-          barCode: GqN8v5wvGNxmnFu4Y
-          quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
-      examples:
-      - externalId: myPackageId1
-        length: 12
-        width: 10
-        height: 9
-        weight: 25
-        declaredValue: 7500
-        barCode: GqN8v5wvGNxmnFu4Y
-        quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
-      properties:
-        externalId:
-          type: string
-          description: Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object.
-        length:
-          type: number
-          maximum: 48
-          description: 'Length (inches) of the package. Required if requesting a quote with a
-
-            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
-        lengthDim:
-          type: integer
-          maximum: 48
-          description: Alias for length. Do not use as future support is not guaranteed
-          deprecated: true
-        width:
-          type: number
-          maximum: 48
-          description: 'Width (inches) of the package. Required if requesting a quote with a
-
-            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
-        height:
-          type: number
-          maximum: 48
-          description: 'Height (inches) of the package. Required if requesting a quote with a
-
-            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
-        weight:
-          type: number
-          maximum: 50
-          description: 'Weight (pounds) of the package. Required if requesting a quote with a
-
-            new order'
-        declaredValue:
-          type: number
-          description: Declared value of package, in USD pennies (5000 is $50 USD).
-        signatureRequired:
-          description: Specify whether recipient has to sign for this package. Not currently supported by operations and will always be set to false.
-          default: false
-          deprecated: true
-        barCode:
-          type: string
-          description: The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.
-          minLength: 14
-          maxLength: 20
-          pattern: ^[a-zA-Z0-9]+$
-        description:
-          type: string
-          description: Description of the package. Note that this description will appear on the label.
-        specialHandling:
-          $ref: '#/components/schemas/SpecialHandling'
-        attendedDelivery:
-          $ref: '#/components/schemas/AttendedDelivery'
-        quoteId:
-          type: string
-          description: The ID of the quote that was used to rate this package. Represented as a UUID.
-          format: uuid
-        dispatchDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
-        shipDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-        tenderFacilityId:
-          $ref: '#/components/schemas/FacilityId'
-    OrderResponse:
-      title: Order Response
-      type: object
-      properties:
-        _id:
-          type: string
-          readOnly: true
-        createdAt:
-          type: string
-          format: date-time
-          readOnly: true
-        clientId:
-          type: string
-          description: Client ID
-          readOnly: true
-        lastEvent:
-          type: string
-          readOnly: true
-        eventLog:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/OrderEvent'
-        serviceType:
-          type: string
-          description: Requested type of service, currently delivery or pickup.
-          enum:
-          - delivery
-          - pickup
-          readOnly: true
-        destination:
-          $ref: '#/components/schemas/OrderAddress'
-        fromAddress:
-          $ref: '#/components/schemas/FromAddress'
-        fromName:
-          type: string
-          description: Any name you want to use to identify where the order is coming from
-        serviceClass:
-          type: string
-          default: groundPlus
-          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
-          enum:
-          - nextDay
-          - sameDay
-          - twoDay
-          - vehoValue
-          - groundPlus
-          - premiumEconomy
-          - expressAir
-          - groundPlusOne
-          - groundPlusTwo
-          - groundPlusThree
-          - groundPlusFour
-        recipient:
-          type: string
-          description: Full name of recipient.
-        externalId:
-          type: string
-          description: Any ID you want to associate with this order, e.g. your order ID.
-        merchantId:
-          type: string
-          description: If you are shipping on behalf of a merchant and have registered that merchant with us, supply that ID here.
-        company:
-          type: string
-          description: Recipient's company, if applicable.
-        phone:
-          type: string
-          description: Recipient's phone number (used for SMS).
-        email:
-          type: string
-          format: email
-          description: Recipient's email address. Used for delivery notifications and verification communications. May be required depending on your account configuration and delivery verification settings.
-        instructions:
-          type: string
-          description: Any additional delivery instructions provided by recipient to assist driver with delivery.
-        slaDeliveryDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          description: 'A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package must be delivered.  The date must be the next day or greater. If not included, Veho will generate one for you. By standard, that date will be the first scan in a Veho warehouse + days from service class.
-
-
-            Note: Veho will disregard any date provided in slaDeliveryDate for  any package marked as premiumEconomy in the serviceClass.'
-        consumerExpectedServiceDate:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$
-          description: A string in the ISO 8601 calendar date and time extended format, e.g. 2023-05-19T12:34:56.789Z, representing the date and time by which the customer is expecting the package to be delivered.
-        packages:
-          type: array
-          items:
-            $ref: '#/components/schemas/PackageResponse'
-        rate:
-          type: number
-          description: Deprecated rate field
-          deprecated: true
-          x-internal: true
-      description: The Order is the container for any number of Packages going to the same recipient and address. An Order can have a single Package, or you can add as my packages to an order as you like.
-    QuotedPackageResponse:
-      allOf:
-      - $ref: '#/components/schemas/PackageResponse'
-      - type: object
-        properties:
-          quote:
-            $ref: '#/components/schemas/SimpleQuoteItem'
     FacilityId:
       type: string
       minLength: 17
@@ -887,135 +405,6 @@ components:
       - hi8okn7qC65DvmJ5rPPbrw
       - b1dApFZdTnvirmWMCvFxJp
       - iz15JEArSje2K2by8NHaCM
-    QuotedOrderResponse:
-      additionalProperties: true
-      title: Order Response with Quoted Packages
-      allOf:
-      - $ref: '#/components/schemas/OrderResponse'
-      - type: object
-        properties:
-          packages:
-            type: array
-            items:
-              $ref: '#/components/schemas/QuotedPackageResponse'
-    OrderEvent:
-      type: object
-      description: The eventLog object represents an event in the lifecycle of the order
-      properties:
-        eventType:
-          type: string
-          enum:
-          - created
-          - cancelled
-          description: enum representing the event that occurred
-          readOnly: true
-        timestamp:
-          type: string
-          format: date-time
-          description: time at which the event occurred
-          readOnly: true
-    DryIce:
-      title: Dry Ice
-      additionalProperties: false
-      deprecated: true
-      type: object
-      description: Note that Veho no longer supports shipping dry ice, and will reject packages containing dry ice. Indicates that this package contains dry ice (carbon dioxide, solid).
-      required:
-      - weight
-      properties:
-        weight:
-          type: number
-          description: Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.
-          minimum: 0
-    SpecialHandling:
-      title: Special Handling
-      additionalProperties: false
-      type: object
-      description: Special handling modifiers.
-      properties:
-        dryIce:
-          $ref: '#/components/schemas/DryIce'
-        hazmat:
-          $ref: '#/components/schemas/Hazmat'
-    AttendedDelivery:
-      title: Attended Delivery
-      additionalProperties: false
-      type: object
-      description: Configuration for attended delivery on this package. Attended delivery requires interaction between the driver and the recipient to confirm delivery. Currently only PIN verification is supported. Required fields within this object  may vary based on your account configuration.
-      required:
-      - verificationType
-      properties:
-        verificationType:
-          type: string
-          enum:
-          - pinVerification
-          description: 'The type of delivery verification required for this package.
-
-            pinVerification — A unique PIN is sent to the recipient and must be provided to the driver to release the package.'
-    SimpleQuoteItem:
-      type: object
-      properties:
-        quoteId:
-          type: string
-          description: ID of the generated quote associated to the rated package
-        transitTime:
-          type: number
-          description: Days package will be in transit
-        serviceClass:
-          type: string
-          default: groundPlus
-          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
-          enum:
-          - nextDay
-          - sameDay
-          - twoDay
-          - vehoValue
-          - groundPlus
-          - premiumEconomy
-          - expressAir
-          - groundPlusOne
-          - groundPlusTwo
-          - groundPlusThree
-          - groundPlusFour
-        currency:
-          type: string
-          default: USD
-          description: Currency for rate, currently only `USD` is available
-          enum:
-          - USD
-        rate:
-          type: number
-          description: All-in rate for quoted order
-          minimum: 0
-        assumedInjectionZip:
-          type: string
-          description: The injection ZIP code assumed for the quote calculation
-        createdAt:
-          type: string
-          description: Time at which the quote was created
-          format: date-time
-        shipDate:
-          type: string
-          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
-          format: date
-        weight:
-          type: number
-          description: Weight (pounds) of the package
-        billableWeight:
-          type: number
-          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
-        length:
-          type: number
-          description: Length (inches) of the package
-        width:
-          type: number
-          description: Width (inches) of the package
-        height:
-          type: number
-          description: Height (inches) of the package
-        zone:
-          type: string
-          description: Zone of the package
     PackageResponse:
       additionalProperties: true
       title: Package Response
@@ -1201,6 +590,359 @@ components:
           type: string
           description: The lastEvent on the package as a more detailed string. For example, "Package out for delivery" instead of "pickedUpFromVeho"
           readOnly: true
+    Event:
+      type: object
+      description: 'The eventLog object represents an event in the lifecycle of the package:'
+      properties:
+        eventType:
+          type: string
+          description: enum representing the event that occurred
+          enum:
+          - created
+          - pending
+          - notFound
+          - pickedUpFromClient
+          - droppedOffAtVeho
+          - pickedUpFromVeho
+          - delivered
+          - returned
+          - cancelled
+          - misdelivered
+          - discarded
+          - PackageArrivedAtFacility
+          - PackageDepartedFromFacility
+          - PackageHadDeliveryIssue
+          - PackageLoadedOntoFirstMileTransit
+          - pendingReturnToClient
+          - returnedToClient
+          - returnedToVeho
+          - notReceivedFromClient
+          - removedForRescue
+          - removedForRollover
+          - outForPickup
+          - pickedUpFromConsumer
+          - pickupSkipped
+          - pickupFailed
+          - pickupDroppedOffAtVeho
+          - pickupTransferredToExternalCarrier
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: time at which the event occurred
+          readOnly: true
+        message:
+          type: string
+          description: message associated with the event
+          readOnly: true
+        city:
+          type: string
+          description: The city of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        state:
+          type: string
+          description: The state of either the facility or destination where the event occurred. Available for delivered, droppedOffAtVeho, pickedUpFromVeho, and arrivedAtFacility events.
+          readOnly: true
+        meta:
+          type: object
+          description: freeform JSON metadata associated with the event. The fields presented in this object are subject to change
+          readOnly: true
+      readOnly: true
+    QuotedPackageResponse:
+      allOf:
+      - $ref: '#/components/schemas/PackageResponse'
+      - type: object
+        properties:
+          quote:
+            $ref: '#/components/schemas/SimpleQuoteItem'
+    SimpleQuoteItem:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          description: ID of the generated quote associated to the rated package
+        transitTime:
+          type: number
+          description: Days package will be in transit
+        serviceClass:
+          type: string
+          default: groundPlus
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+        currency:
+          type: string
+          default: USD
+          description: Currency for rate, currently only `USD` is available
+          enum:
+          - USD
+        rate:
+          type: number
+          description: All-in rate for quoted order
+          minimum: 0
+        assumedInjectionZip:
+          type: string
+          description: The injection ZIP code assumed for the quote calculation
+        createdAt:
+          type: string
+          description: Time at which the quote was created
+          format: date-time
+        shipDate:
+          type: string
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+          format: date
+        weight:
+          type: number
+          description: Weight (pounds) of the package
+        billableWeight:
+          type: number
+          description: Weight of the package as used for rate calculations. This is derived from the greater of package weight rounded to the nearest pound, or the package volume divided by dim factor.
+        length:
+          type: number
+          description: Length (inches) of the package
+        width:
+          type: number
+          description: Width (inches) of the package
+        height:
+          type: number
+          description: Height (inches) of the package
+        zone:
+          type: string
+          description: Zone of the package
+    ErrorResponse:
+      description: Error response object
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          description: Error description
+          type: string
+        errors:
+          description: List of validation errors
+          type: array
+          items:
+            type: object
+            required:
+            - code
+            - message
+            - path
+            properties:
+              code:
+                description: Error code
+                type: string
+                enum:
+                - invalid_type
+                - unrecognized_keys
+                - invalid_string
+                - invalid_enum_value
+                - invalid_date
+                - too_small
+                - too_big
+                - invalid_packages
+                - invalid_address_field
+                - unserviceable_zip_code
+                - invalid_merchant
+                - invalid_external_client
+                - missing_package_description
+              message:
+                type: string
+                description: Error description
+              path:
+                description: Path to the invalid field in your input
+                type: array
+                items:
+                  type:
+                  - string
+                  - number
+              expected:
+                type: string
+                description: Expected type
+              received:
+                type: string
+                description: Received type
+              keys:
+                description: List of unrecognized keys
+                type: array
+                items:
+                  type: string
+              options:
+                description: Valid string values for the enum
+                type: array
+                items:
+                  type: string
+              minimum:
+                type: number
+                description: Minimum expected length/value
+              maximum:
+                type: number
+                description: Maximum expected length/value
+        error:
+          description: Legacy error description (deprecated)
+          deprecated: true
+          oneOf:
+          - type: object
+            properties:
+              code:
+                type: integer
+              error:
+                type: string
+          - type: string
+    OrderEvent:
+      type: object
+      description: The eventLog object represents an event in the lifecycle of the order
+      properties:
+        eventType:
+          type: string
+          enum:
+          - created
+          - cancelled
+          description: enum representing the event that occurred
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+          description: time at which the event occurred
+          readOnly: true
+    FromAddress:
+      title: From Address
+      type: object
+      description: Address where this order is originating from
+      required:
+      - addressLine1
+      - city
+      - state
+      - zipCode
+      properties:
+        addressLine1:
+          type: string
+          description: Address line 1
+        addressLine2:
+          type: string
+          description: Address line 2
+        city:
+          type: string
+          description: City
+        state:
+          type: string
+          description: State. 2 letter postal code or full state name
+          example: CO
+        zipCode:
+          type: string
+          description: ZIP code
+          pattern: ^\d{5}(-?\d{4})?$
+        country:
+          type: string
+          description: 2 letter ISO country code
+    QuotedOrderResponse:
+      additionalProperties: true
+      title: Order Response with Quoted Packages
+      allOf:
+      - $ref: '#/components/schemas/OrderResponse'
+      - type: object
+        properties:
+          packages:
+            type: array
+            items:
+              $ref: '#/components/schemas/QuotedPackageResponse'
+    OrderRequest:
+      type: object
+      properties:
+        destination:
+          $ref: '#/components/schemas/OrderAddress'
+        fromAddress:
+          description: 'Address where this order is originating from. Required only if requesting a quote
+
+            with the order, as this is used to infer the nearest supported Veho injection facility'
+          $ref: '#/components/schemas/FromAddress'
+        fromName:
+          type: string
+          description: Any name you want to use to identify where the order is coming from
+        serviceClass:
+          type: string
+          default: groundPlus
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+        recipient:
+          type: string
+          description: Full name of recipient.
+        externalId:
+          type: string
+          description: Any ID you want to associate with this order, e.g. your order ID.
+        merchantId:
+          type: string
+          description: If you are shipping on behalf of a merchant and have registered that merchant with us, supply that ID here.
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderRequestPackage'
+        company:
+          type: string
+          description: Recipient's company, if applicable.
+        phone:
+          type: string
+          description: Recipient's phone number (used for SMS).
+        email:
+          type: string
+          format: email
+          description: Recipient's email address. Used for delivery notifications and verification communications. May be required depending on your account configuration and delivery verification settings.
+        instructions:
+          type: string
+          description: Any additional delivery instructions provided by recipient to assist driver with delivery.
+        slaDeliveryDate:
+          type: string
+          format: date
+          description: 'A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package must be delivered.  The date must be the next day or greater. If not included, Veho will generate one for you. By standard, that date will be the first scan in a Veho warehouse + days from service class.
+
+
+            Note: Veho will disregard any date provided in slaDeliveryDate for  any package marked as premiumEconomy in the serviceClass.'
+        consumerExpectedServiceDate:
+          type: string
+          format: date
+          description: A string in the ISO 8601 calendar date and time extended format, e.g. 2023-05-19T12:34:56.789Z, representing the date and time by which the customer is expecting the package to be delivered.
+        packageCount:
+          type: integer
+          description: Number of packages associated with this order. Use this field to create one or more packages without supplying additional information. To include package-specific information, use the packages field instead.
+          writeOnly: true
+          minimum: 1
+        rate:
+          type: number
+          description: Deprecated rate field
+          deprecated: true
+          x-internal: true
+      required:
+      - destination
+      - recipient
+      - fromAddress
+      title: Order Request
+      additionalProperties: false
+    PatchOrderRequest:
+      type: object
+      properties:
+        instructions:
+          type: string
+          description: Delivery instructions for the order
     Hazmat:
       title: Hazmat (Hazardous Materials)
       additionalProperties: false
@@ -1212,19 +954,281 @@ components:
         limitedQuantity:
           type: boolean
           description: Indicates whether this package contains limited quantity (LQ) hazardous materials or not.
+    OrderResponse:
+      title: Order Response
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        clientId:
+          type: string
+          description: Client ID
+          readOnly: true
+        lastEvent:
+          type: string
+          readOnly: true
+        eventLog:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/OrderEvent'
+        serviceType:
+          type: string
+          description: Requested type of service, currently delivery or pickup.
+          enum:
+          - delivery
+          - pickup
+          readOnly: true
+        destination:
+          $ref: '#/components/schemas/OrderAddress'
+        fromAddress:
+          $ref: '#/components/schemas/FromAddress'
+        fromName:
+          type: string
+          description: Any name you want to use to identify where the order is coming from
+        serviceClass:
+          type: string
+          default: groundPlus
+          description: Requested class of service. The SLA for how long it will take a package to reach its destination, once it has been injected into a Veho facility
+          enum:
+          - nextDay
+          - sameDay
+          - twoDay
+          - vehoValue
+          - groundPlus
+          - premiumEconomy
+          - expressAir
+          - groundPlusOne
+          - groundPlusTwo
+          - groundPlusThree
+          - groundPlusFour
+        recipient:
+          type: string
+          description: Full name of recipient.
+        externalId:
+          type: string
+          description: Any ID you want to associate with this order, e.g. your order ID.
+        merchantId:
+          type: string
+          description: If you are shipping on behalf of a merchant and have registered that merchant with us, supply that ID here.
+        company:
+          type: string
+          description: Recipient's company, if applicable.
+        phone:
+          type: string
+          description: Recipient's phone number (used for SMS).
+        email:
+          type: string
+          format: email
+          description: Recipient's email address. Used for delivery notifications and verification communications. May be required depending on your account configuration and delivery verification settings.
+        instructions:
+          type: string
+          description: Any additional delivery instructions provided by recipient to assist driver with delivery.
+        slaDeliveryDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: 'A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package must be delivered.  The date must be the next day or greater. If not included, Veho will generate one for you. By standard, that date will be the first scan in a Veho warehouse + days from service class.
+
+
+            Note: Veho will disregard any date provided in slaDeliveryDate for  any package marked as premiumEconomy in the serviceClass.'
+        consumerExpectedServiceDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$
+          description: A string in the ISO 8601 calendar date and time extended format, e.g. 2023-05-19T12:34:56.789Z, representing the date and time by which the customer is expecting the package to be delivered.
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageResponse'
+        rate:
+          type: number
+          description: Deprecated rate field
+          deprecated: true
+          x-internal: true
+      description: The Order is the container for any number of Packages going to the same recipient and address. An Order can have a single Package, or you can add as my packages to an order as you like.
+    OrderAddress:
+      title: Order Address
+      type: object
+      description: Delivery address
+      required:
+      - zipCode
+      - street
+      - city
+      - state
+      properties:
+        street:
+          type: string
+          description: Street address
+        city:
+          type: string
+          description: City
+        state:
+          type: string
+          description: State. 2 letter postal code or full state name
+          example: CO
+        zipCode:
+          type: string
+          description: ZIP code
+          pattern: ^\d{5}(-?\d{4})?$
+        apartment:
+          type: string
+          description: Apartment number, suite number or any info on the second line of an address
+        country:
+          type: string
+          description: 2 letter ISO country code
+    OrderRequestPackage:
+      type: object
+      title: Order Request Package
+      additionalProperties: false
+      x-examples:
+        example-1:
+          externalId: myPackageId1
+          length: 12
+          width: 10
+          height: 9
+          weight: 25
+          declaredValue: 7500
+          barCode: GqN8v5wvGNxmnFu4Y
+          quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
+      examples:
+      - externalId: myPackageId1
+        length: 12
+        width: 10
+        height: 9
+        weight: 25
+        declaredValue: 7500
+        barCode: GqN8v5wvGNxmnFu4Y
+        quoteId: dd4b0d81-a237-44c6-89f1-3be7650bb7ff
+      properties:
+        externalId:
+          type: string
+          description: Any ID you want to associate with this package. Note that you should associate an Order ID with the Order object.
+        length:
+          type: number
+          maximum: 48
+          description: 'Length (inches) of the package. Required if requesting a quote with a
+
+            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
+        lengthDim:
+          type: integer
+          maximum: 48
+          description: Alias for length. Do not use as future support is not guaranteed
+          deprecated: true
+        width:
+          type: number
+          maximum: 48
+          description: 'Width (inches) of the package. Required if requesting a quote with a
+
+            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
+        height:
+          type: number
+          maximum: 48
+          description: 'Height (inches) of the package. Required if requesting a quote with a
+
+            new order. The package volume (length * width * height) cannot exceed 9849.6 cubic inches (5.7 cubic feet).'
+        weight:
+          type: number
+          maximum: 50
+          description: 'Weight (pounds) of the package. Required if requesting a quote with a
+
+            new order'
+        declaredValue:
+          type: number
+          description: Declared value of package, in USD pennies (5000 is $50 USD).
+        signatureRequired:
+          description: Specify whether recipient has to sign for this package. Not currently supported by operations and will always be set to false.
+          default: false
+          deprecated: true
+        barCode:
+          type: string
+          description: The unique alphanumeric barcode printed on the package label. Must be between 14 and 20 characters. For packages handled by a Veho delivery partner,  the submitted barcode will be ignored, and trackingId will be used as the barcode instead.
+          minLength: 14
+          maxLength: 20
+          pattern: ^[a-zA-Z0-9]+$
+        description:
+          type: string
+          description: Description of the package. Note that this description will appear on the label.
+        specialHandling:
+          $ref: '#/components/schemas/SpecialHandling'
+        attendedDelivery:
+          $ref: '#/components/schemas/AttendedDelivery'
+        quoteId:
+          type: string
+          description: The ID of the quote that was used to rate this package. Represented as a UUID.
+          format: uuid
+        dispatchDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to depart your facility. The date must be today or later. It cannot be in the past. If the dispatch date is not included, the current timestamp will be used.
+        shipDate:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: A string in the ISO 8601 calendar date extended format, e.g. 2019-08-13, representing the day on which the package is expected to be tendered. The date must be today or greater. It cannot be in the past.
+        tenderFacilityId:
+          $ref: '#/components/schemas/FacilityId'
+    AttendedDelivery:
+      title: Attended Delivery
+      additionalProperties: false
+      type: object
+      description: Configuration for attended delivery on this package. Attended delivery requires interaction between the driver and the recipient to confirm delivery. Currently only PIN verification is supported. Required fields within this object  may vary based on your account configuration.
+      required:
+      - verificationType
+      properties:
+        verificationType:
+          type: string
+          enum:
+          - pinVerification
+          description: 'The type of delivery verification required for this package.
+
+            pinVerification — A unique PIN is sent to the recipient and must be provided to the driver to release the package.'
+    SpecialHandling:
+      title: Special Handling
+      additionalProperties: false
+      type: object
+      description: Special handling modifiers.
+      properties:
+        dryIce:
+          $ref: '#/components/schemas/DryIce'
+        hazmat:
+          $ref: '#/components/schemas/Hazmat'
+    DryIce:
+      title: Dry Ice
+      additionalProperties: false
+      deprecated: true
+      type: object
+      description: Note that Veho no longer supports shipping dry ice, and will reject packages containing dry ice. Indicates that this package contains dry ice (carbon dioxide, solid).
+      required:
+      - weight
+      properties:
+        weight:
+          type: number
+          description: Weight of dry ice, in pounds. Will be rounded to 3 decimal places if more than 3 are provided.
+          minimum: 0
   responses:
-    '429':
-      description: Too Many Requests
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
     '422':
       description: Unprocessable Entity -- The request was well formatted, but failed validation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '429':
+      description: Too Many Requests
+    '200':
+      description: successful operation with no body returned
+    '503':
+      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
     '404':
       description: Not Found -- The requested resource could not be found.
     '400':
@@ -1233,10 +1237,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    '503':
-      description: Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
-    '200':
-      description: successful operation with no body returned
     '401':
       description: Unauthorized -- The header did not include a valid apiKey header.
   securitySchemes:

@@ -284,7 +284,81 @@ paths:
       - apiKey: []
       operationId: replayWebhookEvents
 components:
+  responses:
+    '404':
+      description: Not Found -- The requested resource could not be found.
+    '403':
+      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
+    '200':
+      description: successful operation with no body returned
+    '500':
+      description: Internal Server Error -- We had a problem with our server. Try again later.
   schemas:
+    WebhookConfigurationListResponse:
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookConfigurationResponse'
+    WebhookConfigurationResponse:
+      description: Webhook Configurations define what endpoint Veho will send webhook events to, and which package milestone events it will send them for.
+      type: object
+      properties:
+        id:
+          type: string
+          example: abcd1234
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2021-01-30T08:30:00Z'
+        endpoint:
+          description: The URL that Veho will send webhook events to for this configuration
+          type: string
+          format: url
+          example: https://www.example.com
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        serviceType:
+          $ref: '#/components/schemas/ServiceType'
+        customHeaders:
+          description: Headers needed to call the endpoint correctly, ex. an API key
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            KEY-1: SOMETHING-1
+            KEY-2: SOMETHING-2
+    EventType:
+      description: Type of package milestone event associated with the webhook
+      type: string
+      enum:
+      - package.created
+      - package.pickedUpFromClient
+      - package.droppedOffAtVeho
+      - package.pickedUpFromVeho
+      - package.delivered
+      - package.cancelled
+      - package.misdelivered
+      - package.discarded
+      - package.notReceivedFromClient
+      - package.pendingReturnToClient
+      - package.returnedToClient
+      - package.rescheduled
+      - package.delayed
+      - package.arrivedAtFacility
+      - package.departedFromFacility
+      - package.hadDeliveryIssue
+      - package.outForPickup
+      - package.pickedUpFromConsumer
+      - package.pickupSkipped
+      - package.pickupDroppedOffAtVeho
+      - package.pickupFailed
+      - package.pickupTransferredToExternalCarrier
     WebhookEvent:
       description: A webhook event represents a single event that Veho attempted to send to a webhook endpoint. Each webhook event contains information about the attempted send, as well as a `payload` field to represent the webhook event object that was sent.
       type: object
@@ -340,70 +414,6 @@ components:
           enum:
           - success
           - failure
-    WebhookConfigurationResponse:
-      description: Webhook Configurations define what endpoint Veho will send webhook events to, and which package milestone events it will send them for.
-      type: object
-      properties:
-        id:
-          type: string
-          example: abcd1234
-        createdAt:
-          type: string
-          format: date-time
-          example: '2021-01-30T08:30:00Z'
-        updatedAt:
-          type: string
-          format: date-time
-          example: '2021-01-30T08:30:00Z'
-        endpoint:
-          description: The URL that Veho will send webhook events to for this configuration
-          type: string
-          format: url
-          example: https://www.example.com
-        eventType:
-          $ref: '#/components/schemas/EventType'
-        serviceType:
-          $ref: '#/components/schemas/ServiceType'
-        customHeaders:
-          description: Headers needed to call the endpoint correctly, ex. an API key
-          type: object
-          additionalProperties:
-            type: string
-          example:
-            KEY-1: SOMETHING-1
-            KEY-2: SOMETHING-2
-    ServiceType:
-      description: Type of service associated, delivery or pickup
-      type: string
-      enum:
-      - delivery
-      - pickup
-    EventType:
-      description: Type of package milestone event associated with the webhook
-      type: string
-      enum:
-      - package.created
-      - package.pickedUpFromClient
-      - package.droppedOffAtVeho
-      - package.pickedUpFromVeho
-      - package.delivered
-      - package.cancelled
-      - package.misdelivered
-      - package.discarded
-      - package.notReceivedFromClient
-      - package.pendingReturnToClient
-      - package.returnedToClient
-      - package.rescheduled
-      - package.delayed
-      - package.arrivedAtFacility
-      - package.departedFromFacility
-      - package.hadDeliveryIssue
-      - package.outForPickup
-      - package.pickedUpFromConsumer
-      - package.pickupSkipped
-      - package.pickupDroppedOffAtVeho
-      - package.pickupFailed
-      - package.pickupTransferredToExternalCarrier
     WebhookConfigurationRequest:
       description: Defines a webhook configuration
       type: object
@@ -429,22 +439,12 @@ components:
       - endpoint
       - serviceType
       - eventType
-    WebhookConfigurationListResponse:
-      type: object
-      properties:
-        configurations:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookConfigurationResponse'
-  responses:
-    '404':
-      description: Not Found -- The requested resource could not be found.
-    '403':
-      description: Forbidden -- The requested resource cannot be accessed with this apiKey.
-    '500':
-      description: Internal Server Error -- We had a problem with our server. Try again later.
-    '200':
-      description: successful operation with no body returned
+    ServiceType:
+      description: Type of service associated, delivery or pickup
+      type: string
+      enum:
+      - delivery
+      - pickup
   securitySchemes:
     apiKey:
       name: apikey
