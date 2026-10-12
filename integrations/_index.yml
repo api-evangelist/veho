@@ -20,7 +20,7 @@
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
     spec_url: https://docs.goshippo.com/spec/shippoapi/public-api.yaml
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: veho-karrio
   label: karrio
@@ -38,5 +38,5 @@
     property: schemas.TrackingData.carrier_name
     detected_by: detect-carrier-edges.py
     detected: '2026-10-12'
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
