@@ -64,6 +64,155 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Veho is a company surfaced as a portfolio company of ggv-capital, softbank-vision-fund and added to the API Evangelist network as a stub for enrichment. Sector: logistics. This profile is a lead awaiting the enrichment pipeline.
+Veho is a US last-mile delivery and returns carrier built for e-commerce brands, pairing a crowdsourced driver network with purpose-built logistics software. The Veho API (Version 2) is a REST/JSON API for shippers and 3PLs to create delivery orders, manage packages and shipping labels (PDF/PNG/ZPL), quote rates, check serviceable ZIP codes, manage merchants under a client account, and subscribe to 22 package milestone webhook event types, with a full sandbox environment and bulk manifest uploads over S3 or SFTP.
 
-Backed by: ggv-capital, softbank-vision-fund — https://www.shipveho.com/
+**Areas:** Company · Logistics · Shipping · Last Mile Delivery · Package Tracking · E-Commerce · Webhook · Delivery
+
+## Veho on APIs.io
+
+Everything profiled for Veho is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/veho/](https://apis.io/providers/veho/)** — or go straight to one of the APIs or properties below.
+
+### APIs (8)
+
+- [Veho Labels API](https://apis.io/apis/veho/veho-labels-api/) — Labels
+- [Veho Manifests API](https://apis.io/apis/veho/veho-manifests-api/) — Manifests
+- [Veho Merchants API](https://apis.io/apis/veho/veho-merchants-api/) — Merchants
+- [Veho Orders API](https://apis.io/apis/veho/veho-orders-api/) — Orders
+- [Veho Packages API](https://apis.io/apis/veho/veho-packages-api/) — Packages
+- [Veho Quotes API](https://apis.io/apis/veho/veho-quotes-api/) — Quotes
+- [Veho Webhooks API](https://apis.io/apis/veho/veho-webhooks-api/) — Webhooks
+- [Veho Zips API](https://apis.io/apis/veho/veho-zips-api/) — Serviceable Zips
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Veho Webhooks](https://apis.io/asyncapis/veho/veho-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [veho](https://apis.io/servers/veho/veho/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Veho Agentic Access](https://apis.io/agentic-access/veho/veho-agentic-access/)
+
+#### JSON Schema (8)
+
+The data models the API reads and writes.
+
+- [ErrorResponse](https://apis.io/schemas/veho/veho-error-response/)
+- [MerchantResponse](https://apis.io/schemas/veho/veho-merchant/)
+- [OrderResponse](https://apis.io/schemas/veho/veho-order/)
+- [OrderRequest](https://apis.io/schemas/veho/veho-order-request/)
+- [PackageResponse](https://apis.io/schemas/veho/veho-package/)
+- [SimpleQuoteRequest](https://apis.io/schemas/veho/veho-quote-request/)
+- [WebhookConfigurationRequest](https://apis.io/schemas/veho/veho-webhook-configuration-request/)
+- [WebhookEvent](https://apis.io/schemas/veho/veho-webhook-event/)
+
+#### Collections (8)
+
+Postman and Open Collection request collections.
+
+- [Veho labels API](https://apis.io/collections/veho/open-veho-labels-api/)
+- [Veho labels manifests API](https://apis.io/collections/veho/open-veho-manifests-api/)
+- [Veho labels merchants API](https://apis.io/collections/veho/open-veho-merchants-api/)
+- [Veho labels orders API](https://apis.io/collections/veho/open-veho-orders-api/)
+- [Veho labels packages API](https://apis.io/collections/veho/open-veho-packages-api/)
+- [Veho labels quotes API](https://apis.io/collections/veho/open-veho-quotes-api/)
+- [Veho labels webhooks API](https://apis.io/collections/veho/open-veho-webhooks-api/)
+- [Veho labels zips API](https://apis.io/collections/veho/open-veho-zips-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Veho Api Overlay](https://apis.io/overlays/veho/veho-api-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Veho Authentication](https://apis.io/security/veho/veho-authentication/)
+- [Veho Domain Security](https://apis.io/security/veho/veho-domain-security/)
+- [Veho Trust Center](https://apis.io/security/veho/veho-trust-center/)
+- [Veho Vulnerability Disclosure](https://apis.io/security/veho/veho-vulnerability-disclosure/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.shipveho.com/)
+- [Documentation](https://docs.api.shipveho.com/docs/veho-api/j2rbld9w9jm76-introduction)
+- [Getting started](https://docs.api.shipveho.com/docs/veho-api/j2rbld9w9jm76-introduction)
+- [API reference](https://docs.api.shipveho.com/docs/veho-api/e777wryv1msks-veho-api)
+- [Support](https://www.shipveho.com/contact-us)
+- [Blog](https://www.shipveho.com/resource-center)
+- [Security](https://www.shipveho.com/security)
+- [Compliance](https://www.shipveho.com/security)
+- [Terms of service](https://www.shipveho.com/legal)
+- [Privacy policy](https://www.shipveho.com/privacy)
+- [GitHub](https://github.com/veho-technologies)
+
+## API Evangelist rating
+
+**Kin Score 56.1** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 63.4 |
+| Contract governance | 18.2 |
+| Operational transparency | 44.7 |
+| Developer ergonomics | 66.1 |
+| Access clarity | 36.8 |
+
+**Agent readiness 30.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 35.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/veho/](https://apis.io/providers/veho/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Veho: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/veho/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
